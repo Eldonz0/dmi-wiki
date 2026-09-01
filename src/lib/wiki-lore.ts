@@ -1,3 +1,5 @@
+import iconFiles from "@/lib/icon-files.json";
+
 export type Lore = {
   jp?: string;
   form?: string;
@@ -7,10 +9,9 @@ export type Lore = {
   family?: string;
 };
 
-export type EvoNode = {
-  name: string;
-  icon: string;
-  slug?: string;
+export type EvoTree = {
+  rows: string[][];
+  branches?: { from: string; name: string }[];
 };
 
 /** Extra encyclopedia fields + DMO-wiki evo trees. Stats still come from the PDF. */
@@ -106,7 +107,6 @@ export const ICONS: Record<string, string> = {
   Flaremon: "/wiki-icons/flaremon.png",
   Apollomon: "/wiki-icons/apollomon.png",
   "Apollomon Burst Mode": "/wiki-icons/apollomon-burst-mode.png",
-  Marsmon: "/wiki-icons/marsmon.png",
   "Apollomon Whispered": "/wiki-icons/apollomon-whispered.png",
   Bearmon: "/wiki-icons/bearmon.png",
   "Agumon [Classic]": "/wiki-icons/agumon.png",
@@ -127,63 +127,371 @@ export const ICONS: Record<string, string> = {
   SkullSatamon: "/wiki-icons/skullsatamon.png",
 };
 
-export const APOLLOMON_TREE = {
-  main: [
-    "Sunmon",
-    "Coronamon",
-    "Firamon",
-    "Flaremon",
-    "Apollomon",
-    "Apollomon Burst Mode",
-  ],
-  branches: [
-    { from: "Firamon", name: "Marsmon" },
-    { from: "Flaremon", name: "Apollomon Whispered" },
-  ],
+const t = (
+  rows: string[][],
+  branches: { from: string; name: string }[] = [],
+): EvoTree => ({ rows, branches });
+
+/** DMO wiki lines for the U / U+ forms the tamer listed. */
+export const TREES: Record<string, EvoTree> = {
+  apollomon: t(
+    [
+      [
+        "Sunmon",
+        "Coronamon",
+        "Firamon",
+        "Flaremon",
+        "Apollomon",
+        "Apollomon Burst Mode",
+      ],
+    ],
+    [{ from: "Flaremon", name: "Apollomon Whispered" }],
+  ),
+  "agumon-classic": t([
+    [
+      "Koromon",
+      "Agumon [Classic]",
+      "Greymon",
+      "MetalGreymon",
+      "WarGreymon",
+      "Omegamon Extreme",
+    ],
+  ]),
+  agumon: t([
+    [
+      "Koromon",
+      "Agumon [Classic]",
+      "Greymon",
+      "MetalGreymon",
+      "WarGreymon",
+      "Omegamon Extreme",
+    ],
+  ]),
+  "omegamon-extreme": t([
+    [
+      "Agumon X",
+      "Greymon X",
+      "MetalGreymon X",
+      "WarGreymon X",
+      "Omegamon X",
+      "Omegamon Extreme",
+    ],
+    [
+      "Gabumon X",
+      "Garurumon X",
+      "WereGarurumon X",
+      "MetalGarurumon X",
+      "Omegamon X",
+      "Omegamon Extreme",
+    ],
+  ]),
+  "omegamon-x-extreme": t([
+    [
+      "Agumon X",
+      "Greymon X",
+      "MetalGreymon X",
+      "WarGreymon X",
+      "Omegamon X",
+      "Omegamon Extreme",
+    ],
+    [
+      "Gabumon X",
+      "Garurumon X",
+      "WereGarurumon X",
+      "MetalGarurumon X",
+      "Omegamon X",
+      "Omegamon Extreme",
+    ],
+  ]),
+  "omegamon-merciful-mode": t([
+    [
+      "Agumon [Classic]",
+      "Greymon",
+      "MetalGreymon",
+      "WarGreymon",
+      "Omegamon",
+      "Omegamon [Merciful Mode]",
+    ],
+    [
+      "Gabumon",
+      "Garurumon",
+      "WereGarurumon",
+      "MetalGarurumon",
+      "Omegamon",
+      "Omegamon [Merciful Mode]",
+    ],
+  ]),
+  "last-evolution-kizuna": t([
+    [
+      "Agumon [Classic]",
+      "Greymon",
+      "MetalGreymon",
+      "WarGreymon",
+      "Agumon [Bond of Bravery]",
+      "Last Evolution: Kizuna",
+    ],
+    [
+      "Gabumon",
+      "Garurumon",
+      "WereGarurumon",
+      "MetalGarurumon",
+      "Gabumon [Bond of Friendship]",
+      "Last Evolution: Kizuna",
+    ],
+  ]),
+  donedevimon: t(
+    [["Tsukaimon [Demon]", "Devimon", "SkullSatamon", "DoneDevimon"]],
+    [{ from: "Devimon", name: "IceDevimon" }],
+  ),
+  bloomlordmon: t([
+    [
+      "Palmon [Original]",
+      "Togemon",
+      "Lillymon",
+      "Rosemon",
+      "Bloomlordmon",
+    ],
+  ]),
+  "eosmon-lv6": t([["Eosmon [Lv4]", "Eosmon [Lv5]", "Eosmon [Lv6]"]]),
+  "gallantmon-crimson-mode-awaken": t([
+    [
+      "Guilmon",
+      "Growlmon",
+      "WarGrowlmon",
+      "Gallantmon",
+      "Gallantmon [Crimson Mode]",
+      "Gallantmon [Crimson Mode-Awaken]",
+    ],
+  ]),
+  goddramon: t([
+    ["Patamon", "Angemon", "MagnaAngemon", "Goddramon"],
+  ]),
+  holydramon: t([
+    [
+      "Salamon",
+      "Gatomon",
+      "Angewomon",
+      "HolyDramon",
+    ],
+  ]),
+  "imperialdramon-paladin-mode-awaken": t([
+    [
+      "V-mon [ImperialDramon]",
+      "ExV-mon",
+      "Paildramon",
+      "ImperialDramon",
+      "ImperialDramon [Fighter Mode]",
+      "Imperialdramon [Paladin Mode]",
+      "Imperialdramon [Paladin Mode-Awaken]",
+    ],
+    [
+      "Wormmon [ImperialDramon]",
+      "Stingmon",
+      "Paildramon",
+      "ImperialDramon",
+      "ImperialDramon [Fighter Mode]",
+      "Imperialdramon [Paladin Mode]",
+      "Imperialdramon [Paladin Mode-Awaken]",
+    ],
+  ]),
+  "alphamon-ouryuken-extreme": t([
+    [
+      "Dorumon [RaptorDramon]",
+      "RaptorDramon",
+      "Grademon",
+      "Alphamon",
+      "Alphamon Ouryuken",
+      "Alphamon Ouryuken [Awaken]",
+      "Alphamon Ouryuken [Extreme]",
+    ],
+    [
+      "Ryudamon",
+      "GinRyuumon",
+      "HishaRyuumon",
+      "OuRyuumon",
+      "Alphamon Ouryuken",
+      "Alphamon Ouryuken [Awaken]",
+      "Alphamon Ouryuken [Extreme]",
+    ],
+  ]),
+  "kuzuhamon-miko-mode": t([
+    [
+      "Renamon",
+      "Kyubimon",
+      "Taomon",
+      "Kuzuhamon",
+      "Kuzuhamon [Miko Mode]",
+    ],
+  ]),
+  "lilithmon-x-awaken": t([
+    [
+      "Salamon [Lilithmon]",
+      "Mikemon",
+      "Bastemon",
+      "Lilithmon",
+      "Lilithmon X",
+      "Lilithmon X [Awaken]",
+    ],
+  ]),
+  "lucemon-satan-mode-extreme": t([
+    [
+      "Lucemon",
+      "Lucemon [Falldown Mode]",
+      "Lucemon [Satan Mode]",
+      "Lucemon [Satan Mode-Awaken]",
+      "Lucemon [Satan Mode-Extreme]",
+    ],
+  ]),
+  "shoutmon-x7-superior-mode": t([
+    [
+      "Shoutmon",
+      "Shoutmon [X2]",
+      "Shoutmon [X3]",
+      "Shoutmon [X4]",
+      "Shoutmon [X5]",
+      "Shoutmon [X7]",
+      "Shoutmon [X7-Superior Mode]",
+    ],
+    ["Greymon(C)", "MetalGreymon [C]", "ZekeGreymon"],
+    ["Mailbirdramon"],
+  ]),
+  "susanoomon-extreme": t([
+    [
+      "KaiserGreymon",
+      "Susanoomon",
+      "Susanoomon [Awaken]",
+      "Susanoomon [Extreme]",
+    ],
+    ["MagnaGarurumon", "Susanoomon", "Susanoomon [Awaken]", "Susanoomon [Extreme]"],
+  ]),
+  "zeedmillenniummon-awaken": t([
+    [
+      "Agumon [Black-Millenniumon]",
+      "DarkTyranomon",
+      "MetalTyrannomon",
+      "MoonMillenniumon",
+      "ZeedMillenniumon",
+      "ZeedMillenniummon [Awaken]",
+    ],
+    [
+      "Gazimon [Millenniumon]",
+      "Deltamon",
+      "Chimairamon",
+      "Millenniumon",
+      "ZeedMillenniumon",
+      "ZeedMillenniummon [Awaken]",
+    ],
+  ]),
+  abbadomon: t([
+    ["Negamon", "Negamon [Evolved Form]", "Abbadomon", "Abbadomon Core"],
+  ]),
+  "abbadomon-core": t([
+    ["Negamon", "Negamon [Evolved Form]", "Abbadomon", "Abbadomon Core"],
+  ]),
+  negamon: t([
+    ["Negamon", "Negamon [Evolved Form]", "Abbadomon", "Abbadomon Core"],
+  ]),
+  "negamon-evolved-form": t([
+    ["Negamon", "Negamon [Evolved Form]", "Abbadomon", "Abbadomon Core"],
+  ]),
+  quantumon: t([["Quantumon"]]),
 };
 
-export const AGUMON_TREE = {
-  main: [
-    "Koromon",
-    "Agumon [Classic]",
-    "Greymon",
-    "MetalGreymon",
-    "WarGreymon",
-    "Omegamon Extreme",
-  ],
-  branches: [] as { from: string; name: string }[],
-};
+const ICON_FILES = new Set(iconFiles as string[]);
 
-export const OMEGAMON_TREE = {
-  main: [
-    "Agumon [Classic]",
-    "Gabumon",
-    "WarGreymon",
-    "MetalGarurumon",
-    "Omegamon Extreme",
-  ],
-  branches: [] as { from: string; name: string }[],
-};
+function fileSlug(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
-export const DONEDEVIMON_TREE = {
-  main: ["PicoDevimon", "Devimon", "SkullSatamon", "DoneDevimon"],
-  branches: [] as { from: string; name: string }[],
-};
-
-export const TREES: Record<
-  string,
-  { main: string[]; branches: { from: string; name: string }[] }
-> = {
-  apollomon: APOLLOMON_TREE,
-  "agumon-classic": AGUMON_TREE,
-  agumon: AGUMON_TREE,
-  "omegamon-extreme": OMEGAMON_TREE,
-  "omegamon-x-extreme": OMEGAMON_TREE,
-  donedevimon: DONEDEVIMON_TREE,
+const ICON_ALIAS: Record<string, string> = {
+  "Palmon [Original]": "palmon",
+  HolyDramon: "holydramon",
+  MagnaAngemon: "magnaangemon",
+  Gatomon: "gatomon",
+  Salamon: "salamon",
+  "Salamon [Lilithmon]": "salamon",
+  "Salamon [Silphymon]": "salamon",
+  Lillymon: "lillymon",
+  Growlmon: "growlmon",
+  Guilmon: "guilmon",
+  Gallantmon: "gallantmon",
+  "Gallantmon [Crimson Mode]": "gallantmon",
+  "Gallantmon [Crimson Mode-Awaken]": "gallantmon",
+  "Dorumon [RaptorDramon]": "dorumon",
+  RaptorDramon: "raptordramon",
+  "V-mon [ImperialDramon]": "v-mon",
+  "ExV-mon": "exv-mon",
+  "Wormmon [ImperialDramon]": "wormmon",
+  "Tsukaimon [Demon]": "picodevimon",
+  "Greymon(C)": "greymon",
+  "MetalGreymon [C]": "metalgreymon",
+  "Omegamon X": "omegamon",
+  "Omegamon [Merciful Mode]": "omegamon",
+  "Agumon X": "agumon-x",
+  "Gabumon X": "gabumon-x",
+  "WarGreymon X": "wargreymon-x",
+  "MetalGarurumon X": "metalgarurumon-x",
+  "Greymon X": "greymon",
+  "MetalGreymon X": "metalgreymon",
+  "Garurumon X": "garurumon",
+  "WereGarurumon X": "garurumon",
+  WereGarurumon: "gabumon",
+  "Lucemon [Falldown Mode]": "lucemon",
+  "Lucemon [Satan Mode]": "lucemon",
+  "Lucemon [Satan Mode-Awaken]": "lucemon",
+  "Lucemon [Satan Mode-Extreme]": "lucemon",
+  "Shoutmon [X2]": "shoutmon",
+  "Shoutmon [X3]": "shoutmon",
+  "Shoutmon [X4]": "shoutmon",
+  "Shoutmon [X5]": "shoutmon",
+  "Shoutmon [X7]": "shoutmon",
+  "Shoutmon [X7-Superior Mode]": "shoutmon",
+  "KaiserGreymon": "kaisergreymon",
+  "MagnaGarurumon": "magnagarurumon",
+  "Susanoomon": "susanoomon",
+  "Susanoomon [Awaken]": "susanoomon",
+  "Susanoomon [Extreme]": "susanoomon",
+  "Alphamon Ouryuken": "alphamon",
+  "Alphamon Ouryuken [Awaken]": "alphamon",
+  "Alphamon Ouryuken [Extreme]": "alphamon",
+  "Lilithmon X": "lilithmon",
+  "Lilithmon X [Awaken]": "lilithmon",
+  "Negamon [Evolved Form]": "negamon",
+  "MoonMillenniumon": "millenniumon",
+  "ZeedMillenniumon": "millenniumon",
+  "ZeedMillenniummon [Awaken]": "millenniumon",
+  "ImperialDramon": "paildramon",
+  "ImperialDramon [Fighter Mode]": "paildramon",
+  "Imperialdramon [Paladin Mode]": "paildramon",
+  "Imperialdramon [Paladin Mode-Awaken]": "paildramon",
+  "Paildramon": "paildramon",
+  "Last Evolution: Kizuna": "agumon",
+  "Agumon [Bond of Bravery]": "agumon",
+  "Gabumon [Bond of Friendship]": "gabumon",
+  "Kyubimon": "kyubimon",
+  "Kuzuhamon": "kuzuhamon",
+  "Kuzuhamon [Miko Mode]": "kuzuhamon",
+  "Abbadomon": "negamon",
+  "Abbadomon Core": "negamon",
 };
 
 export function iconFor(name: string) {
-  return ICONS[name] ?? ICONS[name.replace(/ \[.*/, "")] ?? undefined;
+  if (ICONS[name]) return ICONS[name];
+  const alias = ICON_ALIAS[name];
+  const tries = [
+    alias,
+    fileSlug(name),
+    fileSlug(name.replace(/ \[.*/, "")),
+    fileSlug(name.replace(/[()]/g, " ")),
+  ].filter(Boolean) as string[];
+  for (const stem of tries) {
+    if (ICON_FILES.has(stem)) return `/wiki-icons/${stem}.png`;
+  }
+  return undefined;
 }
 
 export function artFor(name: string) {

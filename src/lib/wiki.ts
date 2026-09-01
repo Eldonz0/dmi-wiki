@@ -24,6 +24,8 @@ export const NEW_DIGIMON: { name: string; href: string; thumb?: string }[] = [
   { name: "Lucemon (Satan Mode) (Extreme)", href: "/digimon/lucemon-satan-mode-extreme" },
   { name: "Alphamon Ouryuken (Extreme)", href: "/digimon/alphamon-ouryuken-extreme" },
   { name: "Imperialdramon Paladin Mode (Awaken)", href: "/digimon/imperialdramon-paladin-mode-awaken" },
+  { name: "Omegamon Extreme", href: "/digimon/omegamon-extreme", thumb: "/wiki/Omegamon.png" },
+  { name: "Quantumon", href: "/digimon/quantumon" },
 ];
 
 export const PAGES: NavItem[] = [

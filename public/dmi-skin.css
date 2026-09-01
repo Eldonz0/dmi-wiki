@@ -869,10 +869,10 @@ a.evo-card:hover {
 .evo-board {
   clear: both;
   margin: 0.5rem 0 1.1rem;
-  padding: 0.55rem 0.6rem;
-  background: #f4f4f4;
+  padding: 0.65rem 0.7rem 0.8rem;
+  background: #0c1028;
   border: 1px solid var(--mw-line);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow-x: auto;
 }
 
@@ -885,30 +885,45 @@ a.evo-card:hover {
 
 .evo-cell {
   display: flex;
-  align-items: center;
-  width: 4.6rem;
-  flex: 0 0 4.6rem;
+  align-items: flex-start;
+  width: 5.4rem;
+  flex: 0 0 5.4rem;
   justify-content: flex-start;
 }
 
-.evo-arrow,
-.evo-elbow {
-  color: #666;
-  margin-right: 0.15rem;
-  font-size: 14px;
+.evo-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  max-width: 4.6rem;
+}
+
+.evo-chip em {
+  font-style: normal;
+  font-size: 10px;
+  line-height: 1.15;
+  color: var(--mw-muted);
+  text-align: center;
 }
 
 .evo-icon-link {
-  line-height: 0;
+  line-height: 1.15;
+  text-decoration: none !important;
 }
 
-.evo-icon {
+.evo-icon-link:hover em {
+  color: var(--cyan);
+}
+
+.evo-arrow,
   display: inline-block;
   width: 52px;
   height: 52px;
-  border: 2px solid #1c3a7a;
-  background: #0a1020;
+  border: 2px solid #3d6ec9;
+  background: #121838;
   overflow: hidden;
+  border-radius: 2px;
 }
 
 .evo-icon img {

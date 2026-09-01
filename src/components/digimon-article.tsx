@@ -153,21 +153,15 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
       </table>
 
       <h2 id="digivolution">Digivolution Line</h2>
-      <p className="section-lead">
-        Square headshots follow the DMO wiki chip style (blue frame, red frame
-        on this page’s Digimon). The Apollomon tree matches the dmowiki
-        Sunmon→Burst layout; DMI still assigns Apollomon to the Bearmon egg.
-      </p>
       {tree ? (
         <EvoBoard
-          main={tree.main}
+          rows={tree.rows}
           branches={tree.branches}
           current={digimon.name}
         />
       ) : (
         <EvoBoard
-          main={[...lineNames, digimon.name]}
-          branches={[]}
+          rows={[[...lineNames, digimon.name]]}
           current={digimon.name}
         />
       )}
@@ -194,29 +188,32 @@ function NameLink({ name }: { name: string }) {
 }
 
 function EvoBoard({
-  main,
+  rows,
   branches,
   current,
 }: {
-  main: string[];
-  branches: { from: string; name: string }[];
+  rows: string[][];
+  branches?: { from: string; name: string }[];
   current: string;
 }) {
+  const primary = rows[0] ?? [];
   return (
     <div className="evo-board">
-      <div className="evo-row">
-        {main.map((name, i) => (
-          <span key={name} className="evo-cell">
-            {i > 0 ? <span className="evo-arrow">→</span> : null}
-            <EvoIcon name={name} current={current} />
-          </span>
-        ))}
-      </div>
-      {branches.map((b) => {
-        const idx = main.indexOf(b.from);
+      {rows.map((row, r) => (
+        <div key={r} className="evo-row">
+          {row.map((name, i) => (
+            <span key={`${r}-${name}-${i}`} className="evo-cell">
+              {i > 0 ? <span className="evo-arrow">→</span> : null}
+              <EvoIcon name={name} current={current} />
+            </span>
+          ))}
+        </div>
+      ))}
+      {(branches ?? []).map((b) => {
+        const idx = primary.indexOf(b.from);
         return (
           <div key={b.name} className="evo-row evo-branch">
-            {main.map((name, i) => (
+            {primary.map((name, i) => (
               <span key={name + b.name} className="evo-cell">
                 {i === idx + 1 ? (
                   <>
@@ -238,15 +235,20 @@ function EvoBoard({
 function EvoIcon({ name, current }: { name: string; current: string }) {
   const slug = slugForName(name);
   const src = iconFor(name);
-  const on = name === current || name.replace(/ \[.*/, "") === current.replace(/ \[.*/, "");
+  const on =
+    name === current ||
+    name.replace(/ \[.*/, "") === current.replace(/ \[.*/, "");
   const inner = (
-    <span className={on ? "evo-icon is-current" : "evo-icon"} title={name}>
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={name} width={52} height={52} />
-      ) : (
-        <span className="evo-fallback">{name.slice(0, 2)}</span>
-      )}
+    <span className="evo-chip">
+      <span className={on ? "evo-icon is-current" : "evo-icon"} title={name}>
+        {src ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={src} alt="" width={52} height={52} />
+        ) : (
+          <span className="evo-fallback">{name.slice(0, 2)}</span>
+        )}
+      </span>
+      <em>{name}</em>
     </span>
   );
   if (!slug) return inner;
