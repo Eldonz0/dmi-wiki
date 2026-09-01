@@ -34,16 +34,16 @@ export default function AgumonPage() {
       </p>
 
       <h2>Digivolution</h2>
-      <div className="evo">
-        <span className="evo-step">Koromon</span>
-        <span className="evo-arrow">→</span>
-        <span className="evo-step">Agumon</span>
-        <span className="evo-arrow">→</span>
-        <span className="evo-step">Greymon</span>
-        <span className="evo-arrow">→</span>
-        <span className="evo-step">MetalGreymon</span>
-        <span className="evo-arrow">→</span>
-        <span className="evo-step">WarGreymon</span>
+      <div className="digiRow">
+        <span className="digiChip">Koromon</span>
+        <span className="digiArrow">→</span>
+        <span className="digiChip">Agumon</span>
+        <span className="digiArrow">→</span>
+        <span className="digiChip">Greymon</span>
+        <span className="digiArrow">→</span>
+        <span className="digiChip">MetalGreymon</span>
+        <span className="digiArrow">→</span>
+        <span className="digiChip">WarGreymon</span>
       </div>
       <p>
         DMO also ships GeoGreymon / ShineGreymon as a parallel vaccine line.

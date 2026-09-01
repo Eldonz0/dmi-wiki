@@ -28,6 +28,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${sourceSans.variable} ${sourceSerif.variable} h-full`}
     >
+      <head>
+        <link rel="stylesheet" href="/wiki-skin.css" />
+      </head>
       <body className="min-h-full flex flex-col">
         <WikiShell>{children}</WikiShell>
       </body>

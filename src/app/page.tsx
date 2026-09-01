@@ -4,13 +4,13 @@ import { PortalBox } from "@/components/wiki-article";
 export default function HomePage() {
   return (
     <article className="mw-article">
-      <div className="wiki-banner">
+      <div className="hero-banner">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/banner.png"
           alt="Digital World islands and partner Digimon over a data ocean"
         />
-        <div className="wiki-banner-caption">
+        <div className="hero-caption">
           <strong>Digimon Master Online — DMI</strong>
           <span>Private-server encyclopedia. Same bones as classic DMO wikis.</span>
         </div>

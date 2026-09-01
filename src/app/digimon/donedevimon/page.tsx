@@ -35,14 +35,14 @@ export default function DoneDevimonPage() {
       </p>
 
       <h2>Digivolution</h2>
-      <div className="evo">
-        <span className="evo-step">Tsukaimon / PicoDevimon</span>
-        <span className="evo-arrow">→</span>
-        <span className="evo-step">Devimon</span>
-        <span className="evo-arrow">→</span>
-        <span className="evo-step">SkullSatamon</span>
-        <span className="evo-arrow">→</span>
-        <span className="evo-step">DoneDevimon</span>
+      <div className="digiRow">
+        <span className="digiChip">Tsukaimon / PicoDevimon</span>
+        <span className="digiArrow">→</span>
+        <span className="digiChip">Devimon</span>
+        <span className="digiArrow">→</span>
+        <span className="digiChip">SkullSatamon</span>
+        <span className="digiArrow">→</span>
+        <span className="digiChip">DoneDevimon</span>
       </div>
       <p>
         IceDevimon sometimes sits as an alternate Ultimate in DMO data. Treat

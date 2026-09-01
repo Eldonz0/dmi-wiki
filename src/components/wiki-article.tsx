@@ -49,7 +49,7 @@ export function Infobox({
       <tbody>
         {image ? (
           <tr>
-            <td colSpan={2} className="infobox-art">
+            <td colSpan={2} className="box-art">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={image} alt={imageAlt ?? title} />
             </td>
