@@ -485,6 +485,7 @@
   flex-shrink: 0;
   border: 1px solid #7ec8ff;
   object-fit: cover;
+  object-position: top center;
   background: #121838;
 }
 
