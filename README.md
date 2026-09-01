@@ -27,8 +27,11 @@ Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired e
 On each form you can:
 
 - edit rank, role, and the four sheet stats
-- build evolution lines (add boxes, pick names from the sheet)
-- add branches (for example Apollomon → Apollomon Whispered)
+- drag evolution chips on a grid and draw arrows between them
+- upload a chip icon (png / jpg / webp)
+- save — the same board is copied to every form that shares the line
+
+Every form in the assignment PDF gets a starting board: all sheet-mates on the same egg line, ordered by rank then HP. A few U / U+ lines (Apollomon, Omegamon Extreme, …) start from the DMO wiki layout instead. Public chips always link to that Digimon’s page.
 
 ## Digimon pages
 

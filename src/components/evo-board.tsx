@@ -1,104 +1,112 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
+import type { EvoTree } from "@/lib/digimon-types";
+import {
+  EVO_CHIP,
+  EVO_COL,
+  EVO_ICON,
+  EVO_ROW,
+  boardSize,
+  edgePath,
+  normalizeTree,
+} from "@/lib/evo-layout";
 import { iconFor } from "@/lib/wiki-lore";
 
-/** Chip column 88px + arrow gutter 36px. Branch pads use fromIndex * EVO_COL. */
-export const EVO_CHIP = 88;
-export const EVO_ARROW = 36;
-export const EVO_COL = EVO_CHIP + EVO_ARROW;
-
-export type EvoTreeView = {
-  rows: string[][];
-  branches?: { from: string; name: string }[];
-};
+export { EVO_CHIP, EVO_ARROW, EVO_COL, EVO_ROW } from "@/lib/evo-layout";
 
 export function EvoBoard({
-  rows,
-  branches,
+  tree,
   current,
   hrefFor,
+  icons,
 }: {
-  rows: string[][];
-  branches?: { from: string; name: string }[];
+  tree: EvoTree;
   current: string;
-  hrefFor?: (name: string) => string | undefined;
+  hrefFor: (name: string) => string;
+  icons?: Record<string, string>;
 }) {
-  const primary = rows[0] ?? [];
+  const layout = normalizeTree(tree);
+  const { width, height } = boardSize(layout.nodes);
+  const byId = Object.fromEntries(layout.nodes.map((n) => [n.id, n]));
+
   return (
     <div
       className="evo-board"
       style={
         {
           "--evo-chip": `${EVO_CHIP}px`,
-          "--evo-arrow": `${EVO_ARROW}px`,
+          "--evo-arrow": "36px",
           "--evo-col": `${EVO_COL}px`,
-          "--evo-icon": "52px",
+          "--evo-icon": `${EVO_ICON}px`,
+          "--evo-row": `${EVO_ROW}px`,
         } as CSSProperties
       }
     >
-      {rows.map((row, r) => (
-        <div key={r} className="evo-row">
-          {row.map((name, i) => (
-            <span key={`${r}-${name}-${i}`} className="evo-step">
-              {i > 0 ? <EvoArrow /> : null}
-              <EvoIcon name={name} current={current} href={hrefFor?.(name)} />
-            </span>
-          ))}
-        </div>
-      ))}
-      {(branches ?? []).map((b) => {
-        const idx = primary.indexOf(b.from);
-        const col = idx < 0 ? 0 : idx;
-        return (
-          <div key={b.name} className="evo-row evo-branch">
-            <span
-              className="evo-branch-pad"
-              style={{ width: col * EVO_COL, flex: `0 0 ${col * EVO_COL}px` }}
+      <div className="evo-plane" style={{ width, height }}>
+        <svg
+          className="evo-wires"
+          width={width}
+          height={height}
+          aria-hidden
+        >
+          <defs>
+            <marker
+              id="evo-head"
+              markerWidth="8"
+              markerHeight="8"
+              refX="7"
+              refY="4"
+              orient="auto"
+            >
+              <path d="M 0 0 L 8 4 L 0 8 z" fill="#b7c9e0" />
+            </marker>
+          </defs>
+          {layout.edges.map((e) => {
+            const from = byId[e.from];
+            const to = byId[e.to];
+            if (!from || !to) return null;
+            return (
+              <path
+                key={`${e.from}-${e.to}`}
+                d={edgePath(from, to)}
+                fill="none"
+                stroke="#b7c9e0"
+                strokeWidth="1.25"
+                markerEnd="url(#evo-head)"
+              />
+            );
+          })}
+        </svg>
+        {layout.nodes.map((node) => (
+          <div
+            key={node.id}
+            className="evo-abs"
+            style={{ left: node.x * EVO_COL, top: node.y * EVO_ROW }}
+          >
+            <EvoIcon
+              name={node.name}
+              current={current}
+              href={hrefFor(node.name)}
+              src={icons?.[node.name] || iconFor(node.name)}
             />
-            <span className="evo-step">
-              <span className="evo-chip evo-chip-ghost" aria-hidden />
-              <EvoElbow />
-              <EvoIcon name={b.name} current={current} href={hrefFor?.(b.name)} />
-            </span>
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }
 
-function EvoArrow() {
-  return (
-    <span className="evo-arrow-slot" aria-hidden>
-      <svg viewBox="0 0 36 52" width="36" height="52">
-        <line x1="2" y1="26" x2="24" y2="26" />
-        <polyline points="20,20 28,26 20,32" />
-      </svg>
-    </span>
-  );
-}
-
-function EvoElbow() {
-  return (
-    <span className="evo-arrow-slot evo-elbow" aria-hidden>
-      <svg viewBox="0 0 36 64" width="36" height="64">
-        <polyline points="0,0 0,38 24,38" />
-        <polyline points="18,32 26,38 18,44" />
-      </svg>
-    </span>
-  );
-}
-
-function EvoIcon({
+export function EvoIcon({
   name,
   current,
   href,
+  src,
 }: {
   name: string;
   current: string;
   href?: string;
+  src?: string;
 }) {
-  const src = iconFor(name);
   const on =
     name === current ||
     name.replace(/ \[.*/, "") === current.replace(/ \[.*/, "");

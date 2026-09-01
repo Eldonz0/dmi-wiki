@@ -7,6 +7,7 @@ import { SOURCE } from "@/lib/wiki";
 import {
   STAT_LABELS,
   evoTree,
+  iconMap,
   slugForName,
   type DigimonRecord,
 } from "@/lib/digimon";
@@ -14,6 +15,11 @@ import {
 export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
   const tree = evoTree(digimon.slug);
   const lineNames = digimon.lines.filter((n) => n && n !== "?");
+  const icons = iconMap();
+  const hrefFor = (name: string) => {
+    const s = slugForName(name);
+    return s ? `/digimon/${s}` : "/digimon";
+  };
 
   return (
     <article className="mw-article dmo-page">
@@ -112,6 +118,13 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
         <RoleBadge role={digimon.role} /> on the DMI assignment sheet
         (HP / AT / DE / AS). Those four numbers are copied from{" "}
         <code>digimon_role_assignment_all_forms_new.pdf</code> — not guessed.
+        {digimon.listed === false ? (
+          <>
+            {" "}
+            This name is on an evolution line but not a numbered row in the
+            assignment PDF — sign in to add stats and an icon.
+          </>
+        ) : null}
         {lineNames.length ? (
           <>
             {" "}
@@ -153,26 +166,12 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
       </table>
 
       <h2 id="digivolution">Digivolution Line</h2>
-      {tree ? (
-        <EvoBoard
-          rows={tree.rows}
-          branches={tree.branches}
-          current={digimon.name}
-          hrefFor={(name) => {
-            const s = slugForName(name);
-            return s ? `/digimon/${s}` : undefined;
-          }}
-        />
-      ) : (
-        <EvoBoard
-          rows={[[...lineNames, digimon.name]]}
-          current={digimon.name}
-          hrefFor={(name) => {
-            const s = slugForName(name);
-            return s ? `/digimon/${s}` : undefined;
-          }}
-        />
-      )}
+      <EvoBoard
+        tree={tree}
+        current={digimon.name}
+        hrefFor={hrefFor}
+        icons={icons}
+      />
 
       <div className="catlinks">
         <strong>Categories:</strong>{" "}

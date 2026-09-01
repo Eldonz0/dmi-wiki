@@ -8,6 +8,7 @@ export {
   digimonByRank,
   evoTree,
   resolveSlug,
+  iconMap,
 } from "@/lib/catalog";
 
 export const STAT_LABELS = [

@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import type { CatalogForm } from "@/lib/digimon-types";
-import type { EvoTree } from "@/lib/digimon-types";
-import { EvoBoard } from "@/components/evo-board";
+import { useState } from "react";
+import type { CatalogForm, EvoTree } from "@/lib/digimon-types";
+import { EvoCanvas } from "@/components/evo-canvas";
 import { RANKS } from "@/lib/ranks";
+import { normalizeTree } from "@/lib/evo-layout";
 
 const ROLES = ["AA", "TA", "SK", "SUP"] as const;
 
@@ -14,29 +14,20 @@ export function FormEditor({
   form,
   tree,
   names,
-  slugs,
+  icons,
 }: {
   form: CatalogForm;
   tree: EvoTree;
   names: string[];
-  slugs: { name: string; slug: string }[];
+  slugs?: { name: string; slug: string }[];
+  icons: Record<string, string>;
 }) {
   const router = useRouter();
   const [draft, setDraft] = useState(form);
-  const [rows, setRows] = useState<string[][]>(
-    tree.rows.length ? tree.rows : [[form.name]],
-  );
-  const [branches, setBranches] = useState(tree.branches ?? []);
+  const [layout, setLayout] = useState<EvoTree>(() => normalizeTree(tree));
+  const [iconBag, setIconBag] = useState(icons);
+  const [chipName, setChipName] = useState(form.name);
   const [status, setStatus] = useState("");
-
-  const hrefFor = useMemo(() => {
-    return (name: string) => {
-      const hit =
-        slugs.find((s) => s.name === name) ??
-        slugs.find((s) => s.name.replace(/ \[.*/, "") === name);
-      return hit ? `/digimon/${hit.slug}` : undefined;
-    };
-  }, [slugs]);
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -46,27 +37,39 @@ export function FormEditor({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         form: draft,
-        tree: { rows: rows.filter((r) => r.length), branches },
+        tree: layout,
       }),
     });
     if (!res.ok) {
       setStatus("Save failed — are you signed in?");
       return;
     }
-    setStatus("Saved. Wiki pages now read these numbers.");
+    setStatus(
+      "Saved. Public pages and every form on this line now use this layout.",
+    );
     router.refresh();
   }
 
-  function setNode(r: number, c: number, name: string) {
-    setRows((prev) =>
-      prev.map((row, i) =>
-        i === r ? row.map((n, j) => (j === c ? name : n)) : row,
-      ),
-    );
+  async function uploadIcon(file: File) {
+    const body = new FormData();
+    body.set("file", file);
+    body.set("name", chipName || draft.name);
+    setStatus("Uploading icon…");
+    const res = await fetch("/api/icons", { method: "POST", body });
+    if (!res.ok) {
+      setStatus("Icon upload failed.");
+      return;
+    }
+    const data = (await res.json()) as { url: string; name: string };
+    setIconBag((prev) => ({ ...prev, [data.name]: data.url }));
+    if (data.name === draft.name) {
+      setDraft((d) => ({ ...d, icon: data.url }));
+    }
+    setStatus(`Icon saved for ${data.name}.`);
   }
 
   return (
-    <form className="editor" onSubmit={save}>
+    <form className="editor editor-wide-page" onSubmit={save}>
       <p>
         <Link href="/admin">← Catalog</Link>
         {" · "}
@@ -137,120 +140,36 @@ export function FormEditor({
         </label>
       </div>
 
-      <h2>Evolution connections</h2>
+      <h2>Chip icon</h2>
       <p className="section-lead">
-        Each row is a line (jogress uses two). Pick who sits in each box, then
-        add a branch under a form. Preview uses the same chip layout as the
-        wiki.
+        Upload a square portrait. It is used on this chip everywhere the name
+        appears. Selected chip: <strong>{chipName || draft.name}</strong>
       </p>
-      {rows.map((row, r) => (
-        <div key={r} className="editor-line">
-          <strong>Line {r + 1}</strong>
-          <div className="editor-nodes">
-            {row.map((name, c) => (
-              <span key={`${r}-${c}`} className="editor-node">
-                {c > 0 ? <span className="evo-arrow-slot">→</span> : null}
-                <span>
-                  <input
-                    list="dmi-names"
-                    value={name}
-                    onChange={(e) => setNode(r, c, e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setRows((prev) =>
-                        prev.map((line, i) =>
-                          i === r ? line.filter((_, j) => j !== c) : line,
-                        ),
-                      )
-                    }
-                  >
-                    ×
-                  </button>
-                </span>
-              </span>
-            ))}
-            <button
-              type="button"
-              onClick={() =>
-                setRows((prev) =>
-                  prev.map((line, i) => (i === r ? [...line, ""] : line)),
-                )
-              }
-            >
-              Add form
-            </button>
-            {rows.length > 1 ? (
-              <button
-                type="button"
-                onClick={() => setRows((prev) => prev.filter((_, i) => i !== r))}
-              >
-                Remove line
-              </button>
-            ) : null}
-          </div>
-        </div>
-      ))}
       <p>
-        <button type="button" onClick={() => setRows((prev) => [...prev, [""]])}>
-          Add jogress / extra line
-        </button>
+        <input
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void uploadIcon(file);
+          }}
+        />
       </p>
 
-      <h3>Branches</h3>
-      {branches.map((b, i) => (
-        <p key={i} className="editor-branch">
-          From{" "}
-          <input
-            list="dmi-names"
-            value={b.from}
-            onChange={(e) =>
-              setBranches((prev) =>
-                prev.map((x, j) => (j === i ? { ...x, from: e.target.value } : x)),
-              )
-            }
-          />{" "}
-          to{" "}
-          <input
-            list="dmi-names"
-            value={b.name}
-            onChange={(e) =>
-              setBranches((prev) =>
-                prev.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)),
-              )
-            }
-          />
-          <button
-            type="button"
-            onClick={() => setBranches((prev) => prev.filter((_, j) => j !== i))}
-          >
-            ×
-          </button>
-        </p>
-      ))}
-      <p>
-        <button
-          type="button"
-          onClick={() =>
-            setBranches((prev) => [...prev, { from: draft.name, name: "" }])
-          }
-        >
-          Add branch
-        </button>
+      <h2>Evolution board</h2>
+      <p className="section-lead">
+        Initials come from the assignment sheet (everyone who shares this egg /
+        line, sorted by rank then HP) plus any DMO line we already wired. Drag
+        chips onto the grid, draw arrows from one form to the next, then save.
+        Public chips stay clickable.
       </p>
-      <datalist id="dmi-names">
-        {names.map((n) => (
-          <option key={n} value={n} />
-        ))}
-      </datalist>
-
-      <h3>Preview</h3>
-      <EvoBoard
-        rows={rows.map((row) => row.filter(Boolean))}
-        branches={branches.filter((b) => b.from && b.name)}
+      <EvoCanvas
+        tree={layout}
         current={draft.name}
-        hrefFor={hrefFor}
+        names={names}
+        icons={iconBag}
+        onChange={setLayout}
+        onSelectName={setChipName}
       />
 
       <p>

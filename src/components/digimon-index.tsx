@@ -28,9 +28,9 @@ export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
       <div className="mw-pre-title">From DMI Wiki · Digimon</div>
       <h1 className="mw-firstHeading">Digimon</h1>
       <p>
-        {forms.length} forms from the live catalog (
-        <code>data/catalog.json</code>). Sign in to edit stats and evolution
-        connections. See <Link href="/digimon/apollomon">Apollomon</Link>.
+        Every form from the assignment sheet has a public page and a starting
+        evolution board (sheet-mates on the same egg line, ranked by rank then
+        HP). Sign in to drag chips, draw arrows, and upload icons.
       </p>
       <p className="digi-filter">
         <input
@@ -75,7 +75,7 @@ export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.slice(0, 200).map((d) => {
+          {rows.map((d) => {
             const icon = iconFor(d.name);
             return (
               <tr key={d.slug}>
@@ -106,9 +106,6 @@ export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
           })}
         </tbody>
       </table>
-      {rows.length > 200 ? (
-        <p>First 200 matches — tighten the filter to see the rest.</p>
-      ) : null}
     </article>
   );
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { allNames, evoTree, getForm, listDigimon } from "@/lib/catalog";
+import { allNames, evoTree, getForm, iconMap, listDigimon } from "@/lib/catalog";
 import { FormEditor } from "@/components/form-editor";
 
 export const dynamic = "force-dynamic";
@@ -17,12 +17,7 @@ export default async function AdminFormPage({ params }: Props) {
   const { slug } = await params;
   const form = getForm(slug);
   if (!form) notFound();
-  const stored = evoTree(slug);
-  const fallbackLine = [
-    ...form.lines.filter((n) => n && n !== "?" && n !== form.name),
-    form.name,
-  ];
-  const tree = stored ?? { rows: [fallbackLine], branches: [] };
+  const tree = evoTree(slug);
   const names = allNames();
   const slugs = listDigimon().map((d) => ({ name: d.name, slug: d.slug }));
   return (
@@ -34,6 +29,7 @@ export default async function AdminFormPage({ params }: Props) {
         tree={tree}
         names={names}
         slugs={slugs}
+        icons={iconMap()}
       />
     </article>
   );

@@ -21,9 +21,25 @@ export type CatalogForm = SheetForm & {
   element?: string;
   type?: string;
   family?: string;
+  icon?: string;
+  listed?: boolean;
+};
+
+export type EvoNode = {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+};
+
+export type EvoEdge = {
+  from: string;
+  to: string;
 };
 
 export type EvoTree = {
-  rows: string[][];
+  nodes?: EvoNode[];
+  edges?: EvoEdge[];
+  rows?: string[][];
   branches?: { from: string; name: string }[];
 };

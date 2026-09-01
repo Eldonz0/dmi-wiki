@@ -1,4 +1,5 @@
 import iconFiles from "@/lib/icon-files.json";
+import type { EvoTree } from "@/lib/digimon-types";
 
 export type Lore = {
   jp?: string;
@@ -9,10 +10,7 @@ export type Lore = {
   family?: string;
 };
 
-export type EvoTree = {
-  rows: string[][];
-  branches?: { from: string; name: string }[];
-};
+export type { EvoTree };
 
 /** Extra encyclopedia fields + DMO-wiki evo trees. Stats still come from the PDF. */
 export const LORE: Record<string, Lore> = {
