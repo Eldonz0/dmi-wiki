@@ -268,6 +268,104 @@
   border-collapse: collapse;
 }
 
+.infobox-art {
+  text-align: center;
+  background: #fff;
+  padding: 0.4rem !important;
+}
+
+.infobox-art img {
+  width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  background: #eef1f4;
+}
+
+.wiki-banner {
+  position: relative;
+  margin: 0 0 0.9rem;
+  border: 1px solid #c8ccd1;
+  overflow: hidden;
+  min-height: 180px;
+}
+
+.wiki-banner img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.wiki-banner-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.7rem 0.9rem 0.75rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+  color: #fff;
+}
+
+.wiki-banner-caption strong {
+  display: block;
+  font-size: 1.15rem;
+}
+
+.wiki-banner-caption span {
+  font-size: 12.5px;
+  opacity: 0.92;
+}
+
+.partner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin: 0.2rem 0 0.4rem;
+}
+
+.partner-card {
+  display: block;
+  border: 1px solid #c8ccd1;
+  background: #f8f9fa;
+  text-align: center;
+  text-decoration: none !important;
+  color: #0645ad !important;
+}
+
+.partner-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  background: #e8edf2;
+}
+
+.partner-card span {
+  display: block;
+  padding: 0.35rem 0.4rem 0.5rem;
+  font-weight: 650;
+  font-size: 13px;
+}
+
+.evo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.evo-step {
+  border: 1px solid #a2a9b1;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  font-size: 13px;
+}
+
+.evo-arrow {
+  color: #54595d;
+}
+
 .infobox th,
 .infobox td {
   border: 1px solid #eaecf0;
@@ -398,6 +496,10 @@
     float: none;
     width: 100%;
     margin: 0 0 1rem;
+  }
+
+  .partner-grid {
+    grid-template-columns: 1fr;
   }
 
   .portal-grid {

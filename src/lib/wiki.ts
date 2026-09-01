@@ -10,36 +10,22 @@ export type SidebarGroup = {
 };
 
 export const PAGES: NavItem[] = [
-  {
-    href: "/",
-    label: "Main Page",
-    description: "Welcome portal for Digimon Master Online — DMI",
-  },
-  {
-    href: "/rules",
-    label: "Server rules",
-    description: "F2P policy, macros, two-account cap",
-  },
-  {
-    href: "/party",
-    label: "Party system",
-    description: "How kill EXP is shared in a party",
-  },
-  {
-    href: "/guild",
-    label: "Guild system",
-    description: "Member caps, Guild Points, and GSP",
-  },
-  {
-    href: "/hatching",
-    label: "Hatching",
-    description: "Spirit Digimon, Raremon, hatch GP",
-  },
-  {
-    href: "/events",
-    label: "Events",
-    description: "Distorted Data Village and Raremon notes",
-  },
+  { href: "/", label: "Main Page", description: "Welcome portal" },
+  { href: "/rules", label: "Server rules", description: "F2P, macros, accounts" },
+  { href: "/party", label: "Party system", description: "Kill EXP share" },
+  { href: "/guild", label: "Guild system", description: "Caps, GP, GSP" },
+  { href: "/hatching", label: "Hatching", description: "Hatch GP" },
+  { href: "/events", label: "Events", description: "Village and Raremon" },
+  { href: "/combat", label: "Combat", description: "Level gap, hit, block, defence" },
+  { href: "/roles", label: "Roles", description: "AA, TA, SK, SUP" },
+  { href: "/exp", label: "EXP boosters", description: "Membership and boosters" },
+  { href: "/fruits", label: "Size fruits", description: "Hatch grade size items" },
+  { href: "/sets", label: "Carries sets", description: "Role set bonuses" },
+  { href: "/drops", label: "Boss fruit boxes", description: "Dungeon and Verdandi boxes" },
+  { href: "/verdandi", label: "Verdandi", description: "Map rules and chests" },
+  { href: "/digimon", label: "Digimon", description: "Partner index" },
+  { href: "/digimon/donedevimon", label: "DoneDevimon", description: "Mega fallen angel" },
+  { href: "/digimon/agumon", label: "Agumon", description: "Starter rookie" },
 ];
 
 export const SIDEBAR: SidebarGroup[] = [
@@ -47,7 +33,7 @@ export const SIDEBAR: SidebarGroup[] = [
     title: "Navigation",
     items: [
       { href: "/", label: "Main page" },
-      { href: "/search", label: "Recent articles" },
+      { href: "/digimon", label: "Digimon" },
       { href: "/random", label: "Random page" },
     ],
   },
@@ -62,6 +48,23 @@ export const SIDEBAR: SidebarGroup[] = [
     ],
   },
   {
+    title: "Mechanics",
+    items: [
+      { href: "/combat", label: "Combat" },
+      { href: "/roles", label: "Roles" },
+      { href: "/exp", label: "EXP boosters" },
+      { href: "/fruits", label: "Size fruits" },
+      { href: "/sets", label: "Carries sets" },
+    ],
+  },
+  {
+    title: "World",
+    items: [
+      { href: "/verdandi", label: "Verdandi" },
+      { href: "/drops", label: "Boss fruit boxes" },
+    ],
+  },
+  {
     title: "Tools",
     items: [
       { href: "/search", label: "Search" },
@@ -71,32 +74,21 @@ export const SIDEBAR: SidebarGroup[] = [
 ];
 
 export const SEARCH_INDEX = [
-  {
-    href: "/rules",
-    title: "Server rules",
-    text: "free to play f2p evo items 4-5 months macros auto play two accounts IP ban hatching hard",
-  },
-  {
-    href: "/party",
-    title: "Party system",
-    text: "party exp killer 100% 40% 60% 80% members share base experience",
-  },
-  {
-    href: "/guild",
-    title: "Guild system",
-    text: "guild level members gp gsp hatching raid quest 10000 skill 14 days",
-  },
-  {
-    href: "/hatching",
-    title: "Hatching",
-    text: "spirit digimon raremon hatch level 3 4 5 points egg hard",
-  },
-  {
-    href: "/events",
-    title: "Events",
-    text: "distorted data village raremon silk 17:00 two hours ocs ncs digisoul",
-  },
-] as const;
+  { href: "/rules", title: "Server rules", text: "f2p macros two accounts auto play" },
+  { href: "/party", title: "Party system", text: "party exp killer 40 60 80" },
+  { href: "/guild", title: "Guild system", text: "guild 60 members gp gsp 10000" },
+  { href: "/hatching", title: "Hatching", text: "spirit raremon hatch points" },
+  { href: "/events", title: "Events", text: "distorted data village raremon silk" },
+  { href: "/combat", title: "Combat", text: "level gap hit chance block defence boss skills" },
+  { href: "/roles", title: "Roles", text: "AA TA SK SUP auto attacker tank skill support" },
+  { href: "/exp", title: "EXP boosters", text: "masters membership amplification expbooster 200 500 1000" },
+  { href: "/fruits", title: "Size fruits", text: "champion overload genesis hades yggdrasil miracle growth" },
+  { href: "/sets", title: "Carries sets", text: "carries AA TA SK mismatched set half stats" },
+  { href: "/drops", title: "Boss fruit boxes", text: "fanglongmon yin yang verdandi kaisergreymon giga box" },
+  { href: "/verdandi", title: "Verdandi", text: "rookie x-digimon 500 hp susanoomon" },
+  { href: "/digimon/donedevimon", title: "DoneDevimon", text: "mega virus fallen angel nightmare skullsatamon" },
+  { href: "/digimon/agumon", title: "Agumon", text: "starter rookie vaccine reptile greymon" },
+];
 
 export const PARTY_ROWS = [
   { size: 2, killer: "100% base EXP", others: "40% base EXP" },
@@ -105,7 +97,7 @@ export const PARTY_ROWS = [
 ] as const;
 
 export const GUILD_LEVELS = [
-  { level: "1", members: 50 },
+  { level: "1", members: 60 },
   { level: "2", members: 80 },
   { level: "3", members: 100 },
   { level: "4", members: 130 },
@@ -126,4 +118,4 @@ export const HATCH_PLANNED = [
 ] as const;
 
 export const SOURCE =
-  "Transcribed from Game_Master_DMI posts in Discord #server-informations. Fan wiki for the Digimon Master Online — DMI private server. Not affiliated with Bandai Namco.";
+  "DMI values transcribed from Game_Master_DMI Discord posts. Line lore and page layout follow Digimon Masters Online wiki conventions. Fan site, not affiliated with Bandai Namco.";

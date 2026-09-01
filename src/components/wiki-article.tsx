@@ -30,9 +30,13 @@ export function WikiArticle({
 
 export function Infobox({
   title,
+  image,
+  imageAlt,
   rows,
 }: {
   title: string;
+  image?: string;
+  imageAlt?: string;
   rows: { label: string; value: ReactNode }[];
 }) {
   return (
@@ -43,6 +47,14 @@ export function Infobox({
         </tr>
       </thead>
       <tbody>
+        {image ? (
+          <tr>
+            <td colSpan={2} className="infobox-art">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={image} alt={imageAlt ?? title} />
+            </td>
+          </tr>
+        ) : null}
         {rows.map((row) => (
           <tr key={row.label}>
             <th>{row.label}</th>

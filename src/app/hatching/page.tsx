@@ -17,7 +17,7 @@ export default function HatchingPage() {
             { label: "Type", value: "Progression" },
             { label: "Difficulty", value: "Hard (by design)" },
             { label: "Current GP", value: "30 (Lv3 / spirit / Raremon)" },
-            { label: "See also", value: <Link href="/guild">Guild system</Link> },
+            { label: "See also", value: <Link href="/fruits">Size fruits</Link> },
           ]}
         />
       }
@@ -57,6 +57,11 @@ export default function HatchingPage() {
           ))}
         </tbody>
       </table>
+      <p>
+        After the hatch, size is a fruit problem — see{" "}
+        <Link href="/fruits">Size fruits</Link>. Keep a Rookie around for{" "}
+        <Link href="/verdandi">Verdandi</Link>.
+      </p>
     </WikiArticle>
   );
 }

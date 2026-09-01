@@ -15,6 +15,7 @@ export default function GuildPage() {
           rows={[
             { label: "Type", value: "Social / progression" },
             { label: "Max size", value: "150 (level 5+)" },
+            { label: "Level 1 cap", value: "60 members" },
             { label: "GSP rate", value: "1 per 10,000 GP" },
             { label: "Skill duration", value: "14 days" },
           ]}

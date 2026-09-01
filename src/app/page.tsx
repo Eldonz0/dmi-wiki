@@ -4,36 +4,62 @@ import { PortalBox } from "@/components/wiki-article";
 export default function HomePage() {
   return (
     <article className="mw-article">
+      <div className="wiki-banner">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/banner.png"
+          alt="Digital World islands and partner Digimon over a data ocean"
+        />
+        <div className="wiki-banner-caption">
+          <strong>Digimon Master Online — DMI</strong>
+          <span>Private-server encyclopedia. Same bones as classic DMO wikis.</span>
+        </div>
+      </div>
+
       <h1 className="mw-firstHeading">Main Page</h1>
 
       <PortalBox title="Welcome!">
         <p>
-          Welcome to the <strong>Digimon Master Online — DMI Wiki</strong>, the
-          player encyclopedia for the DMI private server. This wiki is a work in
-          progress. The first articles come from Game Master posts in Discord{" "}
-          <strong>#server-informations</strong>.
+          Welcome to the <strong>DMI Wiki</strong>. Combat, hatching, guilds, and
+          fruit tables below come from Game Master posts. Partner pages use the
+          same infobox-and-line layout you know from DMO wikis.
         </p>
-        <p>
-          Need something that is not here yet? Check{" "}
-          <Link href="/search">pages still on Discord</Link> or paste a
-          screenshot of another channel.
-        </p>
+      </PortalBox>
+
+      <PortalBox title="Featured Digimon">
+        <div className="partner-grid">
+          <Link href="/digimon/agumon" className="partner-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/digimon/agumon.png" alt="Agumon" />
+            <span>Agumon</span>
+          </Link>
+          <Link href="/digimon/donedevimon" className="partner-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/digimon/donedevimon.png" alt="DoneDevimon" />
+            <span>DoneDevimon</span>
+          </Link>
+          <Link href="/fruits" className="partner-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/digimon/spirit.png" alt="Spirit warrior" />
+            <span>Spirit / Hybrid fruits</span>
+          </Link>
+        </div>
       </PortalBox>
 
       <div className="portal-grid">
         <PortalBox title="Game system">
           <ul>
             <li>
-              <Link href="/party">Party system</Link>
+              <Link href="/combat">Combat</Link> — level-gap punch-back, hit chance, block, boss defence
             </li>
             <li>
-              <Link href="/guild">Guild system</Link>
+              <Link href="/roles">Roles</Link> — AA · TA · SK · SUP
             </li>
             <li>
-              <Link href="/hatching">Hatching</Link>
+              <Link href="/exp">EXP boosters</Link> — membership + system buffs stack additively
             </li>
             <li>
-              <Link href="/events">Events</Link>
+              <Link href="/party">Party EXP</Link> · <Link href="/guild">Guilds</Link>
             </li>
           </ul>
         </PortalBox>
@@ -44,67 +70,42 @@ export default function HomePage() {
               <Link href="/rules">Server rules</Link>
             </li>
             <li>
-              <Link href="/rules">Account limit</Link> (2 per person)
+              <Link href="/sets">Carries sets</Link> — full stats if the set matches your role
             </li>
             <li>
-              <Link href="/rules">Macros / Auto Play</Link>
-            </li>
-            <li>
-              <Link href="/rules">Free-to-play delay</Link>
+              <Link href="/fruits">Size fruits</Link> — Champion through Super Growth
             </li>
           </ul>
         </PortalBox>
 
-        <PortalBox title="Digimon">
+        <PortalBox title="World">
           <ul>
             <li>
-              <Link href="/hatching">Spirit Digimon hatching</Link>
+              <Link href="/verdandi">Verdandi</Link> — Rookie / X-Antibody only, or 500 HP every 5s
             </li>
             <li>
-              <Link href="/events">Raremon</Link>
+              <Link href="/drops">Boss fruit boxes</Link>
             </li>
             <li>
-              <Link href="/hatching">Hatch levels &amp; guild points</Link>
+              <Link href="/events">Distorted Data Village</Link>
             </li>
           </ul>
         </PortalBox>
 
-        <PortalBox title="Updates">
+        <PortalBox title="Did you know…">
           <ul>
             <li>
-              <Link href="/events">Distorted Data Village</Link> — 17:00, 2-hour respawn
+              Fighting 31 levels up gives the mob <Link href="/combat">+40% attack</Link>.
             </li>
             <li>
-              <Link href="/events">Bounded silk Raremon</Link> maintenance fix
+              Chat EXP is <code>total(+bonus)</code>. Base is total minus bonus.
             </li>
             <li>
-              <Link href="/events">OCS/NCS ↔ Digisoul</Link> rate
+              Guild level 1 holds <Link href="/guild">60 members</Link>, not 50.
             </li>
           </ul>
         </PortalBox>
       </div>
-
-      <PortalBox title="Guides">
-        <ul>
-          <li>
-            <Link href="/rules">New tamer rules</Link>
-          </li>
-          <li>
-            <Link href="/party">How party EXP works on DMI</Link>
-          </li>
-          <li>
-            <Link href="/guild">Guild points and skills</Link>
-          </li>
-        </ul>
-      </PortalBox>
-
-      <PortalBox title="Extra information">
-        <p>
-          Still only on Discord: <strong>#boss-locations</strong>,{" "}
-          <strong>#new-players-guide</strong>, <strong>#dungeon-reward-rules</strong>,{" "}
-          <strong>#download-link</strong>, <strong>#digimon-roles</strong>.
-        </p>
-      </PortalBox>
     </article>
   );
 }
