@@ -1,6 +1,6 @@
 # DMI Wiki
 
-Fan encyclopedia for **Digimon Masters Infinite** (DMI), a Digimon Masters Online private server. Dark Infinite chrome, DMO-wiki article shape.
+Fan encyclopedia for **Digimon Masters Infinite** (DMI). Dark Infinite chrome, DMO-wiki Digimon articles.
 
 ## Run locally
 
@@ -13,26 +13,30 @@ Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
 ## Digimon pages
 
-Partner articles follow [dmowiki Apollomon](https://dmowiki.com/Apollomon) / [Omegamon X Extreme](https://dmowiki.com/Omegamon_X_Extreme):
+Articles follow [dmowiki Apollomon](https://dmowiki.com/Apollomon) / [dmowiki Agumon](https://dmowiki.com/Agumon):
 
-- Right infobox: art, form, attribute, element, type, family, **rank badge**, **DMI role** (SK / AA / TA / SUP)
-- Default stats: HP, DS, DE, AT, AS, CT, HT, EV, BL
-- Attacks (F1 / F2 / F3, DS, cooldown)
-- Digivolution chips with encyclopedia portraits
-- Category links including rank
+- Striped infobox header (English + Japanese), 250px 3D portrait
+- Rank badge and DMI role (SK / AA / TA / SUP)
+- Default stats **HP / AT / DE / AS** from the assignment PDF
+- Square 52×52 digivolution chips (blue frame, red on the current form)
 
-Full pages currently: Agumon line, Apollomon line, DoneDevimon, Omegamon X Extreme.
+`/digimon` lists all **646** forms from the sheet. Featured portraits: Apollomon, Agumon, Omegamon Extreme, DoneDevimon, Bearmon.
 
 ## Rank
 
-Same ladder as [dmowiki Rank System](https://dmowiki.com/Rank_System): **N, A, A+, S, S+, SS, SS+, SSS, SSS+, U, U+**.
+Same ladder as [dmowiki Rank System](https://dmowiki.com/Rank_System): **N, A, A+, S, S+, SS, SS+, SSS, SSS+, U, U+**. Unranked sheet rows are filed as N.
 
-- `/rank-system` — ladder
-- `/rank/u` — Category: Digimon Rank U (see [dmowiki Rank U](https://dmowiki.com/Category:Digimon_Rank_U))
+- `/rank-system`
+- `/rank/u-plus` — Apollomon, Omegamon Extreme, Quantumon
+- `/rank/u`
 
 ## Assignment PDF
 
-Ranks and roles for every form live in `digimon_role_assignment_all_forms_new.pdf`. Put that file in `/data`. Until then, articles mark rank/role as pending.
+`data/digimon_role_assignment_all_forms_new.pdf` is parsed into `src/lib/sheet.json`. Refresh with:
+
+```bash
+python3 scripts/parse_sheet.py
+```
 
 ## Stack
 

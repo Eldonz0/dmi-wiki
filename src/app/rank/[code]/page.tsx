@@ -39,8 +39,7 @@ export default async function RankCategoryPage({ params }: Props) {
       </p>
       {list.length === 0 ? (
         <p className="sheet-note">
-          No partner on this wiki is stamped Rank {rank} yet. Import the
-          assignment PDF to fill the category.
+          No form on the assignment sheet is stamped Rank {rank}.
         </p>
       ) : (
         <table className="wikitable">
@@ -56,8 +55,10 @@ export default async function RankCategoryPage({ params }: Props) {
             {list.map((d) => (
               <tr key={d.slug}>
                 <td className="thumb-cell">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={d.image} alt="" width={40} height={40} />
+                  {d.icon ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={d.icon} alt="" width={40} height={40} />
+                  ) : null}
                 </td>
                 <td>
                   <Link href={`/digimon/${d.slug}`}>{d.name}</Link>
@@ -82,8 +83,7 @@ export default async function RankCategoryPage({ params }: Props) {
         ))}
       </p>
       <p>
-        {DIGIMON.length} Digimon currently have articles. Rank stamps are
-        pending PDF.
+        {DIGIMON.length} forms on the assignment sheet.
       </p>
     </article>
   );

@@ -104,11 +104,9 @@ export default function RankSystemPage() {
       </p>
       <h2 id="sheet">Assignment sheet</h2>
       <p>
-        Official DMI ranks and roles live in{" "}
-        <code>digimon_role_assignment_all_forms_new.pdf</code>. That file is
-        on the tamer’s Windows machine and is not in this repo yet. Until it is
-        dropped into <code>/data</code>, every article marks rank/role as
-        pending.
+        Ranks, roles, and HP / AT / DE / AS are taken from{" "}
+        <code>data/digimon_role_assignment_all_forms_new.pdf</code> (
+        {DIGIMON.length} forms). Unranked sheet rows are filed as Rank N.
       </p>
     </WikiArticle>
   );

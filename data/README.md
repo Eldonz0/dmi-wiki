@@ -1,5 +1,5 @@
-Drop the DMI assignment workbook here:
+Drop the DMI assignment workbook here as:
 
 `digimon_role_assignment_all_forms_new.pdf`
 
-That sheet stamps every form with rank (N … U+) and role (SK, AA, TA, SUP). Until the file is in this folder, partner pages show DMO-informed placeholders marked “pending PDF”.
+The wiki already parsed the copy in this folder (646 forms → `src/lib/sheet.json`). Replace the PDF and run `python3 scripts/parse_sheet.py` to refresh ranks, roles, and HP/AT/DE/AS.

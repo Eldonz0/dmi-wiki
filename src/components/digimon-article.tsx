@@ -5,92 +5,91 @@ import { rankSlug } from "@/lib/ranks";
 import { SOURCE } from "@/lib/wiki";
 import {
   STAT_LABELS,
+  evoTree,
+  slugForName,
   type DigimonRecord,
 } from "@/lib/digimon";
+import { iconFor } from "@/lib/wiki-lore";
 
 export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
-  const from = digimon.evolvesFrom;
-  const to = digimon.evolvesTo;
+  const tree = evoTree(digimon.slug);
+  const lineNames = digimon.lines.filter((n) => n && n !== "?");
 
   return (
     <article className="mw-article dmo-page">
       <div className="mw-pre-title">From DMI Wiki · Digimon</div>
       <h1 className="mw-firstHeading">{digimon.name}</h1>
 
-      <table className="infobox infobox-digimon">
+      <table className="dmo-ibox">
         <thead>
           <tr>
-            <th colSpan={2}>{digimon.name}</th>
+            <th colSpan={2}>
+              <span className="dmo-ibox-en">{digimon.name}</span>
+              {digimon.jp ? (
+                <span className="dmo-ibox-jp">({digimon.jp})</span>
+              ) : null}
+              <span className="dmo-ibox-arrow" aria-hidden>
+                ▸
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td colSpan={2} className="box-art">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={digimon.image} alt={digimon.name} />
+            <td colSpan={2} className="dmo-ibox-art">
+              {digimon.art ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={digimon.art} alt={digimon.name} width={250} />
+              ) : (
+                <span className="dmo-ibox-placeholder">{digimon.name}</span>
+              )}
             </td>
           </tr>
-          <tr>
-            <td colSpan={2} className="box-form">
-              {digimon.form}
-            </td>
-          </tr>
-          <Row label="Attribute" value={digimon.attribute} />
-          <Row label="Elemental Attribute" value={digimon.element} />
-          <Row label="Type" value={digimon.type} />
-          <Row label="Family" value={digimon.family} />
-          {digimon.riding ? <Row label="Riding" value={digimon.riding} /> : null}
-          {digimon.hatchable ? (
-            <Row label="Hatchable" value={digimon.hatchable} />
+          {digimon.form ? (
+            <tr>
+              <td colSpan={2} className="box-form">
+                {digimon.form}
+              </td>
+            </tr>
           ) : null}
+          {digimon.attribute ? (
+            <Row label="Attribute" value={digimon.attribute} />
+          ) : null}
+          {digimon.element ? (
+            <Row label="Elemental Attribute" value={digimon.element} />
+          ) : null}
+          {digimon.type ? <Row label="Type" value={digimon.type} /> : null}
+          {digimon.family ? <Row label="Family" value={digimon.family} /> : null}
           <tr>
             <th>Rank</th>
             <td>
-              <RankBadge rank={digimon.rank} href={`/rank/${rankSlug(digimon.rank)}`} />
-              {digimon.pendingSheet ? (
-                <span className="pending-tag"> pending PDF</span>
-              ) : null}
+              <RankBadge
+                rank={digimon.rank}
+                href={`/rank/${rankSlug(digimon.rank)}`}
+              />
             </td>
           </tr>
           <tr>
             <th>Role</th>
             <td>
               <RoleBadge role={digimon.role} />
-              {digimon.pendingSheet ? (
-                <span className="pending-tag"> pending PDF</span>
-              ) : null}
             </td>
           </tr>
-          {from ? (
-            <Row
-              label="Digivolves from"
-              value={
-                from.slug ? (
-                  <Link href={`/digimon/${from.slug}`}>{from.name}</Link>
-                ) : (
-                  from.name
-                )
-              }
-            />
-          ) : null}
-          {to && to.length > 0 ? (
-            <Row
-              label="Digivolves to"
-              value={to.map((item, i) => (
-                <span key={item.name}>
-                  {i > 0 ? ", " : null}
-                  {item.slug ? (
-                    <Link href={`/digimon/${item.slug}`}>{item.name}</Link>
-                  ) : (
-                    item.name
-                  )}
-                </span>
-              ))}
-            />
-          ) : null}
-          {digimon.location ? (
-            <Row label="Location" value={digimon.location} />
-          ) : null}
+          <Row
+            label="Evolution line(s)"
+            value={
+              lineNames.length ? (
+                lineNames.map((name, i) => (
+                  <span key={name}>
+                    {i > 0 ? ", " : null}
+                    <NameLink name={name} />
+                  </span>
+                ))
+              ) : (
+                "—"
+              )
+            }
+          />
         </tbody>
       </table>
 
@@ -101,38 +100,37 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
             <a href="#default-stats">Default Stats</a>
           </li>
           <li>
-            <a href="#attacks">Attacks</a>
-          </li>
-          <li>
             <a href="#digivolution">Digivolution Line</a>
-          </li>
-          {digimon.drops ? (
-            <li>
-              <a href="#drops">Drop Item</a>
-            </li>
-          ) : null}
-          <li>
-            <a href="#notes">Notes</a>
           </li>
         </ol>
       </div>
 
-      {digimon.pendingSheet ? (
-        <p className="sheet-note">
-          Rank and role are placeholders until{" "}
-          <code>digimon_role_assignment_all_forms_new.pdf</code> is in{" "}
-          <code>/data</code>. Stats are DMO-typical defaults (size 100%), not
-          a live DMI dump.
-        </p>
-      ) : null}
-
-      <p>{digimon.intro}</p>
+      <p>
+        <strong>{digimon.name}</strong>
+        {digimon.jp ? <> ({digimon.jp})</> : null} is stamped{" "}
+        <RankBadge rank={digimon.rank} href={`/rank/${rankSlug(digimon.rank)}`} />{" "}
+        <RoleBadge role={digimon.role} /> on the DMI assignment sheet
+        (HP / AT / DE / AS). Those four numbers are copied from{" "}
+        <code>digimon_role_assignment_all_forms_new.pdf</code> — not guessed.
+        {lineNames.length ? (
+          <>
+            {" "}
+            Egg / line end{lineNames.length > 1 ? "s" : ""}:{" "}
+            {lineNames.map((n, i) => (
+              <span key={n}>
+                {i > 0 ? ", " : null}
+                <NameLink name={n} />
+              </span>
+            ))}
+            .
+          </>
+        ) : null}
+      </p>
 
       <h2 id="default-stats">Default Stats</h2>
       <p className="section-lead">
-        The values shown are the encyclopedia defaults DMO-style pages list
-        (HP, DS, DE, AT, AS, CT, HT, EV, BL). Size fruits, hatch grade, and
-        Carries sets stack on top.
+        Sheet values only. DMI does not list DS / CT / HT / EV / BL on this
+        workbook.
       </p>
       <table className="wikitable stats-table">
         <thead>
@@ -148,85 +146,114 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
                 {row.label}{" "}
                 <span className="stat-hint">{row.hint}</span>
               </th>
-              <td>{digimon.stats[row.key]}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <h2 id="attacks">Attacks</h2>
-      <table className="wikitable skill-table">
-        <thead>
-          <tr>
-            <th>Slot</th>
-            <th>Attack</th>
-            <th>DS</th>
-            <th>Cooldown</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {digimon.skills.map((skill) => (
-            <tr key={skill.slot + skill.name}>
-              <td>
-                <strong>{skill.slot}</strong>
-              </td>
-              <td>{skill.name}</td>
-              <td>{skill.ds}</td>
-              <td>{skill.cd}</td>
-              <td>{skill.desc}</td>
+              <td>{digimon[row.key]}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
       <h2 id="digivolution">Digivolution Line</h2>
-      <div className="evo-gallery">
-        {digimon.line.map((chip, i) => (
-          <div key={chip.name + i} className="evo-wrap">
-            {i > 0 ? <span className="evo-arrow">→</span> : null}
-            {chip.slug ? (
-              <Link href={`/digimon/${chip.slug}`} className="evo-card">
-                <EvoFace chip={chip} />
-              </Link>
-            ) : (
-              <div className="evo-card">
-                <EvoFace chip={chip} />
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {digimon.drops ? (
-        <>
-          <h2 id="drops">Drop Item</h2>
-          <ul>
-            {digimon.drops.map((drop) => (
-              <li key={drop}>{drop}</li>
-            ))}
-          </ul>
-        </>
-      ) : null}
-
-      <h2 id="notes">Notes</h2>
-      <ul>
-        {digimon.notes.map((note) => (
-          <li key={note}>{note}</li>
-        ))}
-      </ul>
+      <p className="section-lead">
+        Square headshots follow the DMO wiki chip style (blue frame, red frame
+        on this page’s Digimon). The Apollomon tree matches the dmowiki
+        Sunmon→Burst layout; DMI still assigns Apollomon to the Bearmon egg.
+      </p>
+      {tree ? (
+        <EvoBoard
+          main={tree.main}
+          branches={tree.branches}
+          current={digimon.name}
+        />
+      ) : (
+        <EvoBoard
+          main={[...lineNames, digimon.name]}
+          branches={[]}
+          current={digimon.name}
+        />
+      )}
 
       <div className="catlinks">
         <strong>Categories:</strong>{" "}
-        {digimon.categories.map((cat, i) => (
-          <span key={cat.href}>
-            {i > 0 ? " | " : null}
-            <Link href={cat.href}>{cat.label}</Link>
-          </span>
-        ))}
+        <Link href="/digimon">Digimon</Link>
+        {" | "}
+        <Link href={`/rank/${rankSlug(digimon.rank)}`}>
+          Digimon Rank {digimon.rank}
+        </Link>
+        {" | "}
+        <Link href="/roles">{digimon.role}</Link>
       </div>
       <p className="mw-source">{SOURCE}</p>
     </article>
+  );
+}
+
+function NameLink({ name }: { name: string }) {
+  const slug = slugForName(name);
+  if (!slug) return <>{name}</>;
+  return <Link href={`/digimon/${slug}`}>{name}</Link>;
+}
+
+function EvoBoard({
+  main,
+  branches,
+  current,
+}: {
+  main: string[];
+  branches: { from: string; name: string }[];
+  current: string;
+}) {
+  return (
+    <div className="evo-board">
+      <div className="evo-row">
+        {main.map((name, i) => (
+          <span key={name} className="evo-cell">
+            {i > 0 ? <span className="evo-arrow">→</span> : null}
+            <EvoIcon name={name} current={current} />
+          </span>
+        ))}
+      </div>
+      {branches.map((b) => {
+        const idx = main.indexOf(b.from);
+        return (
+          <div key={b.name} className="evo-row evo-branch">
+            {main.map((name, i) => (
+              <span key={name + b.name} className="evo-cell">
+                {i === idx + 1 ? (
+                  <>
+                    <span className="evo-elbow">↳</span>
+                    <EvoIcon name={b.name} current={current} />
+                  </>
+                ) : (
+                  <span className="evo-spacer" />
+                )}
+              </span>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function EvoIcon({ name, current }: { name: string; current: string }) {
+  const slug = slugForName(name);
+  const src = iconFor(name);
+  const on = name === current || name.replace(/ \[.*/, "") === current.replace(/ \[.*/, "");
+  const inner = (
+    <span className={on ? "evo-icon is-current" : "evo-icon"} title={name}>
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={name} width={52} height={52} />
+      ) : (
+        <span className="evo-fallback">{name.slice(0, 2)}</span>
+      )}
+    </span>
+  );
+  if (!slug) return inner;
+  return (
+    <Link href={`/digimon/${slug}`} className="evo-icon-link">
+      {inner}
+    </Link>
   );
 }
 
@@ -242,24 +269,5 @@ function Row({
       <th>{label}</th>
       <td>{value}</td>
     </tr>
-  );
-}
-
-function EvoFace({
-  chip,
-}: {
-  chip: { name: string; image?: string; form: string };
-}) {
-  return (
-    <>
-      {chip.image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={chip.image} alt="" />
-      ) : (
-        <span className="evo-empty">{chip.name.slice(0, 2)}</span>
-      )}
-      <strong>{chip.name}</strong>
-      <em>{chip.form}</em>
-    </>
   );
 }

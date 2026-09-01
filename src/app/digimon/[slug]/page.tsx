@@ -6,7 +6,11 @@ import { DIGIMON, getDigimon } from "@/lib/digimon";
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return DIGIMON.map((d) => ({ slug: d.slug }));
+  return [
+    ...DIGIMON.map((d) => ({ slug: d.slug })),
+    { slug: "agumon" },
+    { slug: "omegamon-x-extreme" },
+  ];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

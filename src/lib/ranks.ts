@@ -21,7 +21,7 @@ export const RANK_META: Record<
   N: {
     name: "Normal",
     band: "Starter / filler Megas",
-    note: "Baseline Mega window. Fine for story maps, not for end-game DPS.",
+    note: "Unranked rows on the DMI sheet are filed here, plus filler Megas.",
   },
   A: {
     name: "A",
@@ -36,7 +36,7 @@ export const RANK_META: Record<
   S: {
     name: "S",
     band: "Standard Mega",
-    note: "Workhorse Megas — Apollomon sits here until the assignment PDF says otherwise.",
+    note: "Workhorse Megas on official DMO. DMI Apollomon is U+, not S.",
   },
   "S+": {
     name: "S+",
@@ -71,7 +71,7 @@ export const RANK_META: Record<
   "U+": {
     name: "Unique+",
     band: "Unique+",
-    note: "Above Unique. Reserved for the handful of forms DMO stamps U+.",
+    note: "Ceiling rank on the DMI sheet. Apollomon, Omegamon Extreme, and Quantumon.",
   },
 };
 

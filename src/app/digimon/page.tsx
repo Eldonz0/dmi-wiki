@@ -1,54 +1,99 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import { DIGIMON } from "@/lib/digimon";
 import { RANKS, rankSlug } from "@/lib/ranks";
 import { RankBadge, RoleBadge } from "@/components/rank-badge";
 
-export const metadata: Metadata = { title: "Digimon" };
-
 export default function DigimonIndexPage() {
+  const [q, setQ] = useState("");
+  const [rank, setRank] = useState("all");
+  const needle = q.trim().toLowerCase();
+
+  const rows = useMemo(() => {
+    return DIGIMON.filter((d) => {
+      if (rank !== "all" && d.rank !== rank) return false;
+      if (!needle) return true;
+      return (
+        d.name.toLowerCase().includes(needle) ||
+        d.role.toLowerCase().includes(needle) ||
+        d.lines.join(" ").toLowerCase().includes(needle)
+      );
+    });
+  }, [needle, rank]);
+
   return (
     <article className="mw-article">
       <div className="mw-pre-title">From DMI Wiki · Digimon</div>
       <h1 className="mw-firstHeading">Digimon</h1>
       <p>
-        Partner pages match the DMO wiki shape: right-hand infobox (form,
-        attribute, element, type, family, rank badge, DMI role), default stats
-        (HP / DS / DE / AT / AS / CT / HT / EV / BL), attacks, and a
-        chip digivolution line.{" "}
-        <Link href="/rank-system">Rank System</Link> uses the same ladder as{" "}
-        <a href="https://dmowiki.com/Rank_System">dmowiki Rank System</a> (N
-        through U+).
+        {DIGIMON.length} forms from{" "}
+        <code>digimon_role_assignment_all_forms_new.pdf</code>. Infobox art
+        uses DMO wiki-style 3D portraits and 52×52 line chips (see{" "}
+        <Link href="/digimon/apollomon">Apollomon</Link>,{" "}
+        <Link href="/digimon/agumon">Agumon</Link>). Stats are HP / AT / DE /
+        AS only — that is all the sheet lists.
       </p>
-      <p className="sheet-note">
-        Put <code>digimon_role_assignment_all_forms_new.pdf</code> in{" "}
-        <code>/data</code> and every form can pick up SK / AA / TA / SUP and
-        rank from the sheet instead of the placeholders below.
+      <p className="digi-filter">
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Filter by name, role, or egg line"
+          aria-label="Filter Digimon"
+        />
+        <select
+          value={rank}
+          onChange={(e) => setRank(e.target.value)}
+          aria-label="Filter by rank"
+        >
+          <option value="all">All ranks</option>
+          {RANKS.map((code) => (
+            <option key={code} value={code}>
+              {code}
+            </option>
+          ))}
+        </select>
+      </p>
+      <p className="rank-strip">
+        {RANKS.map((code) => (
+          <RankBadge
+            key={code}
+            rank={code}
+            href={`/rank/${rankSlug(code)}`}
+          />
+        ))}
+      </p>
+      <p className="section-lead">
+        Showing {rows.length} form{rows.length === 1 ? "" : "s"}.
       </p>
       <table className="wikitable">
         <thead>
           <tr>
             <th></th>
             <th>Name</th>
-            <th>Form</th>
-            <th>Attribute</th>
             <th>Rank</th>
             <th>Role</th>
+            <th>HP</th>
+            <th>AT</th>
+            <th>DE</th>
+            <th>AS</th>
+            <th>Line</th>
           </tr>
         </thead>
         <tbody>
-          {DIGIMON.map((d) => (
+          {rows.slice(0, 200).map((d) => (
             <tr key={d.slug}>
               <td className="thumb-cell">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={d.image} alt="" width={40} height={40} />
+                {d.icon ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={d.icon} alt="" width={40} height={40} />
+                ) : (
+                  <span className="evo-fallback">{d.name.slice(0, 2)}</span>
+                )}
               </td>
               <td>
                 <Link href={`/digimon/${d.slug}`}>{d.name}</Link>
-              </td>
-              <td>{d.form}</td>
-              <td>
-                {d.attribute} / {d.element}
               </td>
               <td>
                 <RankBadge
@@ -59,20 +104,18 @@ export default function DigimonIndexPage() {
               <td>
                 <RoleBadge role={d.role} />
               </td>
+              <td>{d.hp}</td>
+              <td>{d.at}</td>
+              <td>{d.de}</td>
+              <td>{d.as}</td>
+              <td>{d.lines.filter((n) => n !== "?").join(", ")}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <h2>Browse by rank</h2>
-      <p className="rank-strip">
-        {RANKS.map((code) => (
-          <RankBadge
-            key={code}
-            rank={code}
-            href={`/rank/${rankSlug(code)}`}
-          />
-        ))}
-      </p>
+      {rows.length > 200 ? (
+        <p>First 200 matches — tighten the filter to see the rest.</p>
+      ) : null}
     </article>
   );
 }

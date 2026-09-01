@@ -5,14 +5,24 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { WikiSearchForm } from "@/components/wiki-search";
 import { SEARCH_INDEX } from "@/lib/wiki";
+import { DIGIMON } from "@/lib/digimon";
 
 function Results() {
   const params = useSearchParams();
   const q = (params.get("q") ?? "").trim();
   const needle = q.toLowerCase();
 
+  const catalog = [
+    ...SEARCH_INDEX,
+    ...DIGIMON.map((d) => ({
+      href: `/digimon/${d.slug}`,
+      title: d.name,
+      text: `${d.role} ${d.rank} ${d.lines.join(" ")} ${d.hp}`,
+    })),
+  ];
+
   const hits = needle
-    ? SEARCH_INDEX.filter(
+    ? catalog.filter(
         (page) =>
           page.title.toLowerCase().includes(needle) ||
           page.text.toLowerCase().includes(needle),
@@ -34,7 +44,7 @@ function Results() {
       ) : (
         <ul>
           {hits.map((hit) => (
-            <li key={hit.href}>
+          <li key={hit.href + hit.title}>
               <Link href={hit.href}>{hit.title}</Link>
             </li>
           ))}

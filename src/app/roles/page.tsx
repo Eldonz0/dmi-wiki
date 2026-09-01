@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Infobox, WikiArticle } from "@/components/wiki-article";
 import { ROLES } from "@/lib/content";
+import { DIGIMON } from "@/lib/digimon";
 
 export const metadata: Metadata = { title: "Roles" };
 
@@ -56,9 +57,10 @@ export default function RolesPage() {
         </tbody>
       </table>
       <p>
-        The form-by-form assignment PDF (`digimon_role_assignment_all_forms_new.pdf`)
-        is not in this repo yet. Drop it in <code>/data</code>. Until then, every
-        partner page marks SK / AA / TA / SUP as pending.
+        The form-by-form assignment PDF is loaded from{" "}
+        <code>data/digimon_role_assignment_all_forms_new.pdf</code> (
+        {DIGIMON.length} forms). Partner pages show those HP / AT / DE / AS
+        numbers and the SK / AA / TA / SUP stamp.
       </p>
     </WikiArticle>
   );
