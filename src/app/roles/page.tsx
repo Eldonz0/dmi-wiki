@@ -56,9 +56,9 @@ export default function RolesPage() {
         </tbody>
       </table>
       <p>
-        The full form-by-form assignment PDF was not in this workspace yet. Until
-        it is, treat partner pages’ role field as a DMO-informed guess, not GM
-        gospel.
+        The form-by-form assignment PDF (`digimon_role_assignment_all_forms_new.pdf`)
+        is not in this repo yet. Drop it in <code>/data</code>. Until then, every
+        partner page marks SK / AA / TA / SUP as pending.
       </p>
     </WikiArticle>
   );

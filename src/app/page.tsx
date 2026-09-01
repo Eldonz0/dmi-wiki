@@ -39,6 +39,9 @@ export default function HomePage() {
         <PortalBox title="Game system">
           <ul>
             <li>
+              <Link href="/rank-system">Rank System</Link> — N through U+
+            </li>
+            <li>
               <Link href="/combat">Combat</Link> — level gap, hit, block, defence
             </li>
             <li>

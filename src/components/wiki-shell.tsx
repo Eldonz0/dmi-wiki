@@ -71,6 +71,15 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
             Digimon
           </Link>
           <Link
+            href="/rank-system"
+            className={cn(
+              (pathname.startsWith("/rank") || pathname === "/rank-system") &&
+                "is-on",
+            )}
+          >
+            Rank
+          </Link>
+          <Link
             href="/combat"
             className={cn(pathname === "/combat" && "is-on")}
           >

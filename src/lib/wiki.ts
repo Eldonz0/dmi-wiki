@@ -10,7 +10,7 @@ export type SidebarGroup = {
 };
 
 export const NEW_DIGIMON: { name: string; href: string; thumb?: string }[] = [
-  { name: "Apollomon", href: "/digimon", thumb: "/digimon/apollomon.jpg" },
+  { name: "Apollomon", href: "/digimon/apollomon", thumb: "/digimon/apollomon.jpg" },
   { name: "Abbadomon Core", href: "/digimon" },
   { name: "Negamon", href: "/digimon" },
   { name: "Negamon (Evolved Form)", href: "/digimon" },
@@ -41,6 +41,10 @@ export const PAGES: NavItem[] = [
   { href: "/drops", label: "Boss fruit boxes", description: "Dungeon and Verdandi boxes" },
   { href: "/verdandi", label: "Verdandi", description: "Map rules and chests" },
   { href: "/digimon", label: "Digimon", description: "Partner index" },
+  { href: "/rank-system", label: "Rank System", description: "N through U+" },
+  { href: "/rank/u", label: "Digimon Rank U", description: "Unique rank category" },
+  { href: "/digimon/apollomon", label: "Apollomon", description: "Sun Mega, SK" },
+  { href: "/digimon/omegamon-x-extreme", label: "Omegamon X Extreme", description: "Rank U jogress" },
   { href: "/digimon/donedevimon", label: "DoneDevimon", description: "Mega fallen angel" },
   { href: "/digimon/agumon", label: "Agumon", description: "Starter rookie" },
 ];
@@ -51,6 +55,8 @@ export const SIDEBAR: SidebarGroup[] = [
     items: [
       { href: "/", label: "Main page" },
       { href: "/digimon", label: "Digimon" },
+      { href: "/rank-system", label: "Rank System" },
+      { href: "/rank/u", label: "Rank U" },
       { href: "/random", label: "Random page" },
     ],
   },
@@ -103,6 +109,10 @@ export const SEARCH_INDEX = [
   { href: "/sets", title: "Carries sets", text: "carries AA TA SK mismatched set half stats" },
   { href: "/drops", title: "Boss fruit boxes", text: "fanglongmon yin yang verdandi kaisergreymon giga box" },
   { href: "/verdandi", title: "Verdandi", text: "rookie x-digimon 500 hp susanoomon" },
+  { href: "/rank-system", title: "Rank System", text: "rank n a s ss sss u unique infobox" },
+  { href: "/rank/u", title: "Digimon Rank U", text: "unique omegamon x extreme" },
+  { href: "/digimon/apollomon", title: "Apollomon", text: "god beast fire vaccine solblaster coronamon sk rank s" },
+  { href: "/digimon/omegamon-x-extreme", title: "Omegamon X Extreme", text: "jogress grey sword garuru cannon rank u sk" },
   { href: "/digimon/donedevimon", title: "DoneDevimon", text: "mega virus fallen angel nightmare skullsatamon" },
   { href: "/digimon/agumon", title: "Agumon", text: "starter rookie vaccine reptile greymon" },
 ];
