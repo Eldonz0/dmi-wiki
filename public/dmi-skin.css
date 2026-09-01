@@ -76,9 +76,10 @@
   font-style: normal;
   font-weight: 800;
   letter-spacing: 0.14em;
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  background: linear-gradient(90deg, #00fff2, #b300ff);
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: transparent;
 }
 
@@ -478,8 +479,9 @@
 
 .newItem img,
 .newMark {
-  width: 36px;
-  height: 36px;
+  width: 36px !important;
+  height: 36px !important;
+  max-width: 36px;
   flex-shrink: 0;
   border: 1px solid #7ec8ff;
   object-fit: cover;

@@ -116,7 +116,7 @@ function NewRow({
     <Link href={item.href} className="newItem">
       {item.thumb ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.thumb} alt="" />
+        <img src={item.thumb} alt="" width={36} height={36} />
       ) : (
         <span className="newMark">{item.name.slice(0, 2)}</span>
       )}

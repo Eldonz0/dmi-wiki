@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`dark ${rajdhani.variable} ${orbitron.variable} h-full`}
     >
       <head>
-        <link rel="stylesheet" href="/wiki-skin.css" />
+        <link rel="stylesheet" href="/dmi-skin.css" />
       </head>
       <body className="min-h-full flex flex-col">
         <WikiShell>{children}</WikiShell>
