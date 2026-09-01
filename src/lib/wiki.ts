@@ -10,7 +10,7 @@ export type SidebarGroup = {
 };
 
 export const NEW_DIGIMON: { name: string; href: string; thumb?: string }[] = [
-  { name: "Apollomon", href: "/digimon" },
+  { name: "Apollomon", href: "/digimon", thumb: "/digimon/apollomon.jpg" },
   { name: "Abbadomon Core", href: "/digimon" },
   { name: "Negamon", href: "/digimon" },
   { name: "Negamon (Evolved Form)", href: "/digimon" },
