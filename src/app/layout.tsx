@@ -1,34 +1,34 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { WikiShell } from "@/components/wiki-shell";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "DMI Codex — Digimon Masters Infinite wiki",
-    template: "%s — DMI Codex",
+    default: "Main Page — DMI Wiki",
+    template: "%s — DMI Wiki",
   },
   description:
-    "Player wiki for Digimon Masters Infinite: server rules, party EXP, guild ranks, hatching, and events from #server-informations.",
+    "Wiki for Digimon Master Online — DMI, a Digimon Masters Online private server. Server rules, party EXP, guilds, hatching, and events.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${sourceSans.variable} ${sourceSerif.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col">
         <WikiShell>{children}</WikiShell>
       </body>
     </html>

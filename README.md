@@ -1,8 +1,8 @@
-# DMI Codex
+# DMI Wiki
 
-Unofficial player wiki for **Digimon Masters Infinite**. The first pages transcribe Game Master posts from Discord `#server-informations`: server rules, party EXP, guild ranks, hatching points, and event notes.
+Fan encyclopedia for **Digimon Master Online — DMI**, a Digimon Masters Online private server. Layout follows the classic DMO wiki look (dark MediaWiki skin, orange portal boxes, infoboxes) without copying dmowiki.com artwork.
 
-This is a fan site. It is not affiliated with Bandai Namco.
+First articles are transcribed from Discord `#server-informations`.
 
 ## Run locally
 
@@ -17,12 +17,13 @@ Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
 | Path | Content |
 | --- | --- |
-| `/` | Overview |
+| `/` | Main Page portals |
 | `/rules` | F2P delay, macros, two-account cap |
 | `/party` | Party EXP table |
 | `/guild` | Member caps, GP, GSP |
 | `/hatching` | Spirit / Raremon hatch points |
 | `/events` | Distorted Data Village and Raremon notes |
+| `/search` | Article search |
 
 ## Stack
 

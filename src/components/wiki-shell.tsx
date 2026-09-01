@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
+import { useState } from "react";
 import { Crest } from "@/components/crest";
-import { NAV } from "@/lib/wiki";
+import { WikiSearchForm } from "@/components/wiki-search";
+import { SIDEBAR } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -14,97 +16,113 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
-function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
+function Portlets({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-1">
-      {NAV.map((item) => {
-        const active =
-          item.href === "/"
-            ? pathname === "/"
-            : pathname.startsWith(item.href);
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            className={cn(
-              "rounded-lg px-3 py-2 text-sm transition-colors",
-              active
-                ? "bg-sidebar-accent text-primary"
-                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
-            )}
-          >
-            <span className="block font-medium">{item.label}</span>
-            <span className="mt-0.5 block text-xs opacity-80">
-              {item.description}
-            </span>
-          </Link>
-        );
-      })}
-    </nav>
+    <div className="mw-portlets">
+      {SIDEBAR.map((group) => (
+        <nav key={group.title} className="mw-portlet">
+          <h3>{group.title}</h3>
+          <ul>
+            {group.items.map((item) => {
+              const active =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname === item.href || pathname.startsWith(`${item.href}?`);
+              return (
+                <li key={item.href + item.label}>
+                  <Link
+                    href={item.href}
+                    onClick={onNavigate}
+                    className={cn(active && "is-active")}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      ))}
+    </div>
   );
 }
 
 export function WikiShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const tabLabel = pathname === "/" ? "Main Page" : "Article";
 
   return (
-    <div className="flex min-h-full flex-1">
-      <aside className="sticky top-0 hidden h-svh w-64 shrink-0 border-r border-sidebar-border bg-sidebar p-4 md:flex md:flex-col">
-        <Link href="/" className="mb-6 flex items-center gap-2 px-1">
-          <Crest className="size-9" />
-          <div>
-            <p className="text-sm font-semibold tracking-tight">DMI Codex</p>
-            <p className="text-[11px] text-muted-foreground">
-              Digimon Masters Infinite
-            </p>
-          </div>
-        </Link>
-        <NavLinks />
-        <p className="mt-auto px-2 pt-8 text-[11px] leading-relaxed text-muted-foreground">
-          Unofficial player wiki. Numbers come from GM posts in{" "}
-          <span className="text-foreground/80">#server-informations</span>.
-        </p>
-      </aside>
+    <div className="mw-skin">
+      <div className="mw-personal">
+        <span>DMI Wiki</span>
+        <span className="mw-dot">·</span>
+        <span>Digimon Master Online — DMI</span>
+      </div>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border/80 bg-background/80 px-4 py-3 backdrop-blur md:hidden">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger
-              render={
-                <Button
-                  variant="outline"
-                  size="icon"
-                  aria-label="Open wiki menu"
-                />
-              }
-            >
-              <Menu className="size-4" />
-            </SheetTrigger>
-            <SheetContent side="left" className="w-72 bg-sidebar">
-              <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <Crest className="size-8" />
-                  DMI Codex
-                </SheetTitle>
-              </SheetHeader>
-              <div className="px-2">
-                <NavLinks onNavigate={() => setOpen(false)} />
-              </div>
-            </SheetContent>
-          </Sheet>
-          <Link href="/" className="flex items-center gap-2">
-            <Crest className="size-8" />
-            <span className="font-semibold">DMI Codex</span>
+      <div className="mw-frame">
+        <aside className="mw-sidebar">
+          <Link href="/" className="mw-logo">
+            <Crest className="mw-logo-mark" />
+            <span>
+              <strong>DMI Wiki</strong>
+              <em>Master Online</em>
+            </span>
           </Link>
-        </header>
-        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
-          {children}
-        </main>
+          <WikiSearchForm compact />
+          <div className="mw-sidebar-desktop">
+            <Portlets />
+          </div>
+        </aside>
+
+        <div className="mw-workspace">
+          <div className="mw-mobile-bar">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger
+                render={
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    aria-label="Open wiki menu"
+                  />
+                }
+              >
+                <Menu className="size-4" />
+              </SheetTrigger>
+              <SheetContent side="left" className="mw-sheet">
+                <SheetHeader>
+                  <SheetTitle>DMI Wiki</SheetTitle>
+                </SheetHeader>
+                <div className="px-3 pb-6">
+                  <Portlets onNavigate={() => setOpen(false)} />
+                </div>
+              </SheetContent>
+            </Sheet>
+            <Link href="/" className="mw-mobile-brand">
+              DMI Wiki
+            </Link>
+          </div>
+
+          <div className="mw-tabs" aria-label="Page tabs">
+            <span className="is-selected">{tabLabel}</span>
+            <span>Discussion</span>
+            <span>View source</span>
+            <span>History</span>
+          </div>
+
+          <div className="mw-content">{children}</div>
+
+          <footer className="mw-footer">
+            <p>
+              Fan encyclopedia for the <strong>Digimon Master Online — DMI</strong>{" "}
+              private server. Layout inspired by classic DMO wikis. Not affiliated
+              with Bandai Namco or dmowiki.com.
+            </p>
+          </footer>
+        </div>
       </div>
     </div>
   );

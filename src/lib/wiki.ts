@@ -4,26 +4,31 @@ export type NavItem = {
   description: string;
 };
 
-export const NAV: NavItem[] = [
+export type SidebarGroup = {
+  title: string;
+  items: { href: string; label: string }[];
+};
+
+export const PAGES: NavItem[] = [
   {
     href: "/",
-    label: "Overview",
-    description: "What this private server is about",
+    label: "Main Page",
+    description: "Welcome portal for Digimon Master Online — DMI",
   },
   {
     href: "/rules",
     label: "Server rules",
-    description: "F2P policy, accounts, macros",
+    description: "F2P policy, macros, two-account cap",
   },
   {
     href: "/party",
-    label: "Party EXP",
-    description: "How kill credit is shared",
+    label: "Party system",
+    description: "How kill EXP is shared in a party",
   },
   {
     href: "/guild",
     label: "Guild system",
-    description: "Caps, GP, and guild skills",
+    description: "Member caps, Guild Points, and GSP",
   },
   {
     href: "/hatching",
@@ -32,30 +37,72 @@ export const NAV: NavItem[] = [
   },
   {
     href: "/events",
-    label: "Events & drops",
+    label: "Events",
     description: "Distorted Data Village and Raremon notes",
   },
 ];
 
+export const SIDEBAR: SidebarGroup[] = [
+  {
+    title: "Navigation",
+    items: [
+      { href: "/", label: "Main page" },
+      { href: "/search", label: "Search" },
+      { href: "/random", label: "Random page" },
+    ],
+  },
+  {
+    title: "Server",
+    items: [
+      { href: "/rules", label: "Server rules" },
+      { href: "/party", label: "Party system" },
+      { href: "/guild", label: "Guild system" },
+      { href: "/hatching", label: "Hatching" },
+      { href: "/events", label: "Events" },
+    ],
+  },
+  {
+    title: "Coming from Discord",
+    items: [
+      { href: "/search?q=boss", label: "Boss locations" },
+      { href: "/search?q=dungeon", label: "Dungeon rewards" },
+      { href: "/search?q=guide", label: "New player guide" },
+    ],
+  },
+];
+
+export const SEARCH_INDEX = [
+  {
+    href: "/rules",
+    title: "Server rules",
+    text: "free to play f2p evo items 4-5 months macros auto play two accounts IP ban hatching hard",
+  },
+  {
+    href: "/party",
+    title: "Party system",
+    text: "party exp killer 100% 40% 60% 80% members share base experience",
+  },
+  {
+    href: "/guild",
+    title: "Guild system",
+    text: "guild level members gp gsp hatching raid quest 10000 skill 14 days",
+  },
+  {
+    href: "/hatching",
+    title: "Hatching",
+    text: "spirit digimon raremon hatch level 3 4 5 points egg hard",
+  },
+  {
+    href: "/events",
+    title: "Events",
+    text: "distorted data village raremon silk 17:00 two hours ocs ncs digisoul",
+  },
+] as const;
+
 export const PARTY_ROWS = [
-  {
-    size: 2,
-    killer: "100% base EXP",
-    others: "40% base EXP",
-    othersNote: "the other member",
-  },
-  {
-    size: 3,
-    killer: "100% base EXP",
-    others: "60% base EXP each",
-    othersNote: "each other member",
-  },
-  {
-    size: 4,
-    killer: "100% base EXP",
-    others: "80% base EXP each",
-    othersNote: "each other member",
-  },
+  { size: 2, killer: "100% base EXP", others: "40% base EXP" },
+  { size: 3, killer: "100% base EXP", others: "60% base EXP each" },
+  { size: 4, killer: "100% base EXP", others: "80% base EXP each" },
 ] as const;
 
 export const GUILD_LEVELS = [
@@ -80,4 +127,4 @@ export const HATCH_PLANNED = [
 ] as const;
 
 export const SOURCE =
-  "Posted by Game_Master_DMI in #server-informations on Digimon Masters Infinite. This wiki is a fan transcription, not an official Bandai Namco page.";
+  "Transcribed from Game_Master_DMI posts in Discord #server-informations. Fan wiki for the Digimon Master Online — DMI private server. Not affiliated with Bandai Namco.";

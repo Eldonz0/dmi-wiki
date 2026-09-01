@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <div className="space-y-4 py-16 text-center">
-      <h1 className="text-2xl font-semibold">Page not in the Codex</h1>
-      <p className="text-sm text-muted-foreground">
-        That route does not exist. Head back to the overview.
+    <article className="mw-article">
+      <h1 className="mw-firstHeading">There is currently no text in this page</h1>
+      <p>
+        You can <Link href="/">return to the Main Page</Link> or{" "}
+        <Link href="/search">search the wiki</Link>.
       </p>
-      <Button render={<Link href="/" />}>Overview</Button>
-    </div>
+    </article>
   );
 }
