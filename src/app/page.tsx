@@ -8,14 +8,6 @@ export default function HomePage() {
 
   return (
     <article className="mw-article">
-      <div className="notice">
-        <span aria-hidden>⚠</span>
-        <p>
-          New update is live. Combat, fruits, Verdandi, and the first partner
-          pages are on this wiki now.
-        </p>
-      </div>
-
       <section className="newPack">
         <div className="newBar">New Digimon</div>
         <div className="newGrid">
