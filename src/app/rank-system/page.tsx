@@ -3,9 +3,10 @@ import Link from "next/link";
 import { Infobox, WikiArticle } from "@/components/wiki-article";
 import { RankBadge } from "@/components/rank-badge";
 import { RANK_META, RANKS, rankSlug } from "@/lib/ranks";
-import { DIGIMON } from "@/lib/digimon";
+import { listDigimon } from "@/lib/digimon";
 
 export const metadata: Metadata = { title: "Rank System" };
+export const dynamic = "force-dynamic";
 
 export default function RankSystemPage() {
   return (
@@ -66,7 +67,7 @@ export default function RankSystemPage() {
         <tbody>
           {RANKS.map((code) => {
             const meta = RANK_META[code];
-            const count = DIGIMON.filter((d) => d.rank === code).length;
+            const count = listDigimon().filter((d) => d.rank === code).length;
             return (
               <tr key={code}>
                 <td>
@@ -106,7 +107,7 @@ export default function RankSystemPage() {
       <p>
         Ranks, roles, and HP / AT / DE / AS are taken from{" "}
         <code>data/digimon_role_assignment_all_forms_new.pdf</code> (
-        {DIGIMON.length} forms). Unranked sheet rows are filed as Rank N.
+        {listDigimon().length} forms). Unranked sheet rows are filed as Rank N.
       </p>
     </WikiArticle>
   );

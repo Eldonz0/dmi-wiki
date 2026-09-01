@@ -1,63 +1,18 @@
-"use client";
-
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { WikiSearchForm } from "@/components/wiki-search";
-import { SEARCH_INDEX } from "@/lib/wiki";
-import { DIGIMON } from "@/lib/digimon";
+import { listDigimon } from "@/lib/catalog";
+import { SearchResults } from "@/components/search-results";
 
-function Results() {
-  const params = useSearchParams();
-  const q = (params.get("q") ?? "").trim();
-  const needle = q.toLowerCase();
-
-  const catalog = [
-    ...SEARCH_INDEX,
-    ...DIGIMON.map((d) => ({
-      href: `/digimon/${d.slug}`,
-      title: d.name,
-      text: `${d.role} ${d.rank} ${d.lines.join(" ")} ${d.hp}`,
-    })),
-  ];
-
-  const hits = needle
-    ? catalog.filter(
-        (page) =>
-          page.title.toLowerCase().includes(needle) ||
-          page.text.toLowerCase().includes(needle),
-      )
-    : SEARCH_INDEX;
-
-  return (
-    <article className="mw-article">
-      <div className="mw-pre-title">Special page</div>
-      <h1 className="mw-firstHeading">Search</h1>
-      <WikiSearchForm initial={q} />
-      <p style={{ marginTop: "0.8rem" }}>
-        {q
-          ? `${hits.length} page${hits.length === 1 ? "" : "s"} matching “${q}”.`
-          : "Type a term, or browse every article below."}
-      </p>
-      {hits.length === 0 ? (
-        <p>No matching pages yet. Boss maps and dungeon tables are still on Discord.</p>
-      ) : (
-        <ul>
-          {hits.map((hit) => (
-          <li key={hit.href + hit.title}>
-              <Link href={hit.href}>{hit.title}</Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </article>
-  );
-}
+export const dynamic = "force-dynamic";
 
 export default function SearchPage() {
+  const extras = listDigimon().map((d) => ({
+    href: `/digimon/${d.slug}`,
+    title: d.name,
+    text: `${d.role} ${d.rank} ${d.lines.join(" ")} ${d.hp}`,
+  }));
   return (
     <Suspense fallback={<p>Loading search…</p>}>
-      <Results />
+      <SearchResults extras={extras} />
     </Suspense>
   );
 }

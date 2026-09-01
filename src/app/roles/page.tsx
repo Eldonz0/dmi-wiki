@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Infobox, WikiArticle } from "@/components/wiki-article";
 import { ROLES } from "@/lib/content";
-import { DIGIMON } from "@/lib/digimon";
+import { listDigimon } from "@/lib/digimon";
 
 export const metadata: Metadata = { title: "Roles" };
+export const dynamic = "force-dynamic";
 
 export default function RolesPage() {
   return (
@@ -59,7 +60,7 @@ export default function RolesPage() {
       <p>
         The form-by-form assignment PDF is loaded from{" "}
         <code>data/digimon_role_assignment_all_forms_new.pdf</code> (
-        {DIGIMON.length} forms). Partner pages show those HP / AT / DE / AS
+        {listDigimon().length} forms). Partner pages show those HP / AT / DE / AS
         numbers and the SK / AA / TA / SUP stamp.
       </p>
     </WikiArticle>

@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DigimonArticle } from "@/components/digimon-article";
-import { DIGIMON, getDigimon } from "@/lib/digimon";
+import { getDigimon, listDigimon } from "@/lib/digimon";
+
+export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
   return [
-    ...DIGIMON.map((d) => ({ slug: d.slug })),
+    ...listDigimon().map((d) => ({ slug: d.slug })),
     { slug: "agumon" },
     { slug: "omegamon-x-extreme" },
   ];

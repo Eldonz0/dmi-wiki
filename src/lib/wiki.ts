@@ -95,6 +95,8 @@ export const SIDEBAR: SidebarGroup[] = [
     items: [
       { href: "/search", label: "Search" },
       { href: "/random", label: "Random page" },
+      { href: "/login", label: "Sign in" },
+      { href: "/admin", label: "Catalog editor" },
     ],
   },
 ];

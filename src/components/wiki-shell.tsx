@@ -85,6 +85,16 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
           >
             Combat
           </Link>
+          <Link
+            href="/login"
+            className={cn(
+              (pathname.startsWith("/login") ||
+                pathname.startsWith("/admin")) &&
+                "is-on",
+            )}
+          >
+            Sign in
+          </Link>
           <a
             href="https://www.digimonmastersinfinite.com/index.html"
             target="_blank"

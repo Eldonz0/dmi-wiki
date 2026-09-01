@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { RankBadge, RoleBadge } from "@/components/rank-badge";
-import { DIGIMON, digimonByRank } from "@/lib/digimon";
+import { listDigimon, digimonByRank } from "@/lib/digimon";
 import { RANK_META, RANKS, rankFromSlug, rankSlug } from "@/lib/ranks";
+
+export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ code: string }> };
 
@@ -83,7 +85,7 @@ export default async function RankCategoryPage({ params }: Props) {
         ))}
       </p>
       <p>
-        {DIGIMON.length} forms on the assignment sheet.
+        {listDigimon().length} forms in the catalog.
       </p>
     </article>
   );

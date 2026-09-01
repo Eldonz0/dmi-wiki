@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { EvoBoard } from "@/components/evo-board";
 import { RankBadge, RoleBadge } from "@/components/rank-badge";
 import { rankSlug } from "@/lib/ranks";
 import { SOURCE } from "@/lib/wiki";
@@ -9,7 +10,6 @@ import {
   slugForName,
   type DigimonRecord,
 } from "@/lib/digimon";
-import { iconFor } from "@/lib/wiki-lore";
 
 export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
   const tree = evoTree(digimon.slug);
@@ -158,11 +158,19 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
           rows={tree.rows}
           branches={tree.branches}
           current={digimon.name}
+          hrefFor={(name) => {
+            const s = slugForName(name);
+            return s ? `/digimon/${s}` : undefined;
+          }}
         />
       ) : (
         <EvoBoard
           rows={[[...lineNames, digimon.name]]}
           current={digimon.name}
+          hrefFor={(name) => {
+            const s = slugForName(name);
+            return s ? `/digimon/${s}` : undefined;
+          }}
         />
       )}
 
@@ -175,6 +183,8 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
         </Link>
         {" | "}
         <Link href="/roles">{digimon.role}</Link>
+        {" | "}
+        <Link href={`/admin/${digimon.slug}`}>Edit in catalog</Link>
       </div>
       <p className="mw-source">{SOURCE}</p>
     </article>
@@ -185,78 +195,6 @@ function NameLink({ name }: { name: string }) {
   const slug = slugForName(name);
   if (!slug) return <>{name}</>;
   return <Link href={`/digimon/${slug}`}>{name}</Link>;
-}
-
-function EvoBoard({
-  rows,
-  branches,
-  current,
-}: {
-  rows: string[][];
-  branches?: { from: string; name: string }[];
-  current: string;
-}) {
-  const primary = rows[0] ?? [];
-  return (
-    <div className="evo-board">
-      {rows.map((row, r) => (
-        <div key={r} className="evo-row">
-          {row.map((name, i) => (
-            <span key={`${r}-${name}-${i}`} className="evo-cell">
-              {i > 0 ? <span className="evo-arrow">→</span> : null}
-              <EvoIcon name={name} current={current} />
-            </span>
-          ))}
-        </div>
-      ))}
-      {(branches ?? []).map((b) => {
-        const idx = primary.indexOf(b.from);
-        return (
-          <div key={b.name} className="evo-row evo-branch">
-            {primary.map((name, i) => (
-              <span key={name + b.name} className="evo-cell">
-                {i === idx + 1 ? (
-                  <>
-                    <span className="evo-elbow">↳</span>
-                    <EvoIcon name={b.name} current={current} />
-                  </>
-                ) : (
-                  <span className="evo-spacer" />
-                )}
-              </span>
-            ))}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function EvoIcon({ name, current }: { name: string; current: string }) {
-  const slug = slugForName(name);
-  const src = iconFor(name);
-  const on =
-    name === current ||
-    name.replace(/ \[.*/, "") === current.replace(/ \[.*/, "");
-  const inner = (
-    <span className="evo-chip">
-      <span className={on ? "evo-icon is-current" : "evo-icon"} title={name}>
-        {src ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt="" width={52} height={52} />
-        ) : (
-          <span className="evo-fallback">{name.slice(0, 2)}</span>
-        )}
-      </span>
-      <em>{name}</em>
-    </span>
-  );
-  if (!slug) return inner;
-  return (
-    <Link href={`/digimon/${slug}`} className="evo-icon-link">
-      {inner}
-    </Link>
-  );
 }
 
 function Row({

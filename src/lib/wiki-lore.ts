@@ -145,7 +145,7 @@ export const TREES: Record<string, EvoTree> = {
         "Apollomon Burst Mode",
       ],
     ],
-    [{ from: "Flaremon", name: "Apollomon Whispered" }],
+    [{ from: "Apollomon", name: "Apollomon Whispered" }],
   ),
   "agumon-classic": t([
     [
