@@ -1,6 +1,6 @@
 # DMI Wiki
 
-Fan encyclopedia for **Digimon Master Online — DMI**, a Digimon Masters Online private server. The site uses a light MediaWiki layout in the style of dmowiki.com (left sidebar, striped portal headers, infoboxes) with original DMI content.
+Fan encyclopedia for **Digimon Master Online — DMI**, a Digimon Masters Online private server. The site uses a dark Infinite-style chrome (cyan/purple, Orbitron) with the same wiki article structure. Compact New Digimon list on the Main Page.
 
 First articles are transcribed from Discord `#server-informations`.
 

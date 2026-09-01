@@ -52,22 +52,42 @@ function Portlets({ onNavigate }: { onNavigate?: () => void }) {
 export function WikiShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const tabLabel = pathname === "/" ? "Main Page" : "Article";
 
   return (
     <div className="mw-skin">
-      <div className="mw-personal">
-        <span>DMI Wiki</span>
-        <span className="mw-dot">·</span>
-        <span>Digimon Master Online — DMI</span>
-      </div>
+      <header className="dmi-top">
+        <Link href="/" className="dmi-brand">
+          <strong>DIGIMON MASTERS</strong>
+          <em>INFINITE</em>
+        </Link>
+        <nav className="dmi-top-nav">
+          <Link href="/" className={cn(pathname === "/" && "is-on")}>
+            Main page
+          </Link>
+          <Link
+            href="/digimon"
+            className={cn(pathname.startsWith("/digimon") && "is-on")}
+          >
+            Digimon
+          </Link>
+          <Link
+            href="/combat"
+            className={cn(pathname === "/combat" && "is-on")}
+          >
+            Combat
+          </Link>
+          <a
+            href="https://www.digimonmastersinfinite.com/index.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Official site
+          </a>
+        </nav>
+      </header>
 
       <div className="mw-frame">
         <aside className="mw-sidebar">
-          <Link href="/" className="mw-wordmark">
-            <span className="line1">DIGIMON MASTER ONLINE</span>
-            <span className="line2">DMI WIKI</span>
-          </Link>
           <WikiSearchForm compact />
           <div className="mw-sidebar-desktop">
             <Portlets />
@@ -98,24 +118,17 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
               </SheetContent>
             </Sheet>
             <Link href="/" className="mw-mobile-brand">
-              DMI Wiki
+              DMI WIKI
             </Link>
-          </div>
-
-          <div className="mw-tabs" aria-label="Page tabs">
-            <span className="is-selected">{tabLabel}</span>
-            <span>Discussion</span>
-            <span>View source</span>
-            <span>History</span>
           </div>
 
           <div className="mw-content">{children}</div>
 
           <footer className="mw-footer">
             <p>
-              Fan encyclopedia for the <strong>Digimon Master Online — DMI</strong>{" "}
-              private server. Layout inspired by classic DMO wikis. Not affiliated
-              with Bandai Namco or dmowiki.com.
+              Fan wiki for <strong>Digimon Masters Infinite</strong>. Same
+              article structure as a DMO wiki, skinned like the official DMI
+              site. Not affiliated with Bandai Namco.
             </p>
           </footer>
         </div>

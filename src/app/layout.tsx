@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import { Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { WikiShell } from "@/components/wiki-shell";
 
-const sourceSans = Source_Sans_3({
-  variable: "--font-source-sans",
+const rajdhani = Rajdhani({
+  variable: "--font-rajdhani",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
   subsets: ["latin"],
+  weight: ["400", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -19,14 +21,14 @@ export const metadata: Metadata = {
     template: "%s — DMI Wiki",
   },
   description:
-    "Wiki for Digimon Master Online — DMI, a Digimon Masters Online private server. Server rules, party EXP, guilds, hatching, and events.",
+    "Wiki for Digimon Masters Infinite — DMI. Server rules, combat, guilds, hatching, and Digimon.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sourceSans.variable} ${sourceSerif.variable} h-full`}
+      className={`dark ${rajdhani.variable} ${orbitron.variable} h-full`}
     >
       <head>
         <link rel="stylesheet" href="/wiki-skin.css" />

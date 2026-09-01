@@ -9,6 +9,23 @@ export type SidebarGroup = {
   items: { href: string; label: string }[];
 };
 
+export const NEW_DIGIMON: { name: string; href: string; thumb?: string }[] = [
+  { name: "Apollomon", href: "/digimon" },
+  { name: "Abbadomon Core", href: "/digimon" },
+  { name: "Negamon", href: "/digimon" },
+  { name: "Negamon (Evolved Form)", href: "/digimon" },
+  { name: "Abbadomon", href: "/digimon" },
+  { name: "DoneDevimon", href: "/digimon/donedevimon", thumb: "/digimon/donedevimon.png" },
+  { name: "Lilithmon (X-Antibody) (Awaken)", href: "/digimon" },
+  { name: "Goddramon", href: "/digimon" },
+  { name: "Holydramon (Awaken)", href: "/digimon" },
+  { name: "Susanoomon (Extreme)", href: "/verdandi" },
+  { name: "Last Evolution: Kizuna", href: "/digimon" },
+  { name: "Lucemon (Satan Mode) (Extreme)", href: "/digimon" },
+  { name: "Alphamon Ouryuken (Extreme)", href: "/drops" },
+  { name: "Imperialdramon Paladin Mode (Awaken)", href: "/digimon" },
+];
+
 export const PAGES: NavItem[] = [
   { href: "/", label: "Main Page", description: "Welcome portal" },
   { href: "/rules", label: "Server rules", description: "F2P, macros, accounts" },
