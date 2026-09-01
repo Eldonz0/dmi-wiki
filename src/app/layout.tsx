@@ -26,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`dark ${sourceSans.variable} ${sourceSerif.variable} h-full`}
+      className={`${sourceSans.variable} ${sourceSerif.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
         <WikiShell>{children}</WikiShell>

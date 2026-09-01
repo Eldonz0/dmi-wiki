@@ -47,7 +47,7 @@ export const SIDEBAR: SidebarGroup[] = [
     title: "Navigation",
     items: [
       { href: "/", label: "Main page" },
-      { href: "/search", label: "Search" },
+      { href: "/search", label: "Recent articles" },
       { href: "/random", label: "Random page" },
     ],
   },
@@ -62,11 +62,10 @@ export const SIDEBAR: SidebarGroup[] = [
     ],
   },
   {
-    title: "Coming from Discord",
+    title: "Tools",
     items: [
-      { href: "/search?q=boss", label: "Boss locations" },
-      { href: "/search?q=dungeon", label: "Dungeon rewards" },
-      { href: "/search?q=guide", label: "New player guide" },
+      { href: "/search", label: "Search" },
+      { href: "/random", label: "Random page" },
     ],
   },
 ];

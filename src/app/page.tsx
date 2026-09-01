@@ -3,101 +3,108 @@ import { PortalBox } from "@/components/wiki-article";
 
 export default function HomePage() {
   return (
-    <div>
-      <div className="hero">
-        <div className="hero-inner">
-          <div className="hero-kicker">Digimon Master Online — DMI</div>
-          <h1>Welcome to the DMI Wiki</h1>
-          <p>
-            The player encyclopedia for <strong>Digimon Master Online — DMI</strong>,
-            a Digimon Masters Online private server. Anyone in the community can
-            help fill it in; this first slice is transcribed from Game Master
-            posts in <strong>#server-informations</strong>.
-          </p>
-        </div>
-      </div>
+    <article className="mw-article">
+      <h1 className="mw-firstHeading">Main Page</h1>
+
+      <PortalBox title="Welcome!">
+        <p>
+          Welcome to the <strong>Digimon Master Online — DMI Wiki</strong>, the
+          player encyclopedia for the DMI private server. This wiki is a work in
+          progress. The first articles come from Game Master posts in Discord{" "}
+          <strong>#server-informations</strong>.
+        </p>
+        <p>
+          Need something that is not here yet? Check{" "}
+          <Link href="/search">pages still on Discord</Link> or paste a
+          screenshot of another channel.
+        </p>
+      </PortalBox>
 
       <div className="portal-grid">
-        <PortalBox title="Getting started">
-          <p>
-            DMI is built to stay free-to-play friendly. Newest Digimon evo items
-            sit behind a short pay window, then rotate in for everyone else.
-          </p>
+        <PortalBox title="Game system">
           <ul>
             <li>
-              <Link href="/rules">Server rules</Link> — F2P delay, macros, account cap
+              <Link href="/party">Party system</Link>
             </li>
             <li>
-              <Link href="/rules">Two accounts</Link> maximum per person (IP checked)
+              <Link href="/guild">Guild system</Link>
             </li>
-            <li>Use the in-game Auto Play button. Third-party macros are banned.</li>
+            <li>
+              <Link href="/hatching">Hatching</Link>
+            </li>
+            <li>
+              <Link href="/events">Events</Link>
+            </li>
           </ul>
         </PortalBox>
 
-        <PortalBox title="Tamer systems">
-          <p>How parties and guilds actually pay out on this server.</p>
+        <PortalBox title="Tamer">
           <ul>
             <li>
-              <Link href="/party">Party system</Link> — killer 100% base EXP; allies scale with party size
+              <Link href="/rules">Server rules</Link>
             </li>
             <li>
-              <Link href="/guild">Guild system</Link> — member caps, GP, 14-day skills
+              <Link href="/rules">Account limit</Link> (2 per person)
+            </li>
+            <li>
+              <Link href="/rules">Macros / Auto Play</Link>
+            </li>
+            <li>
+              <Link href="/rules">Free-to-play delay</Link>
             </li>
           </ul>
         </PortalBox>
 
         <PortalBox title="Digimon">
-          <p>Hatching is intentionally hard. Spirit partners and Raremon still feed the guild.</p>
           <ul>
             <li>
-              <Link href="/hatching">Hatching</Link> — current 30 GP, planned Lv3–Lv5 split
+              <Link href="/hatching">Spirit Digimon hatching</Link>
             </li>
             <li>
-              <Link href="/events">Raremon</Link> — silk fixes, Lv3 eggs, drop questions
+              <Link href="/events">Raremon</Link>
+            </li>
+            <li>
+              <Link href="/hatching">Hatch levels &amp; guild points</Link>
             </li>
           </ul>
         </PortalBox>
 
-        <PortalBox title="Events & maps">
-          <p>Timed content called out by the GM, plus currency notes.</p>
+        <PortalBox title="Updates">
           <ul>
             <li>
-              <Link href="/events">Distorted Data Village</Link> — 17:00 start, 2-hour respawn
+              <Link href="/events">Distorted Data Village</Link> — 17:00, 2-hour respawn
             </li>
             <li>
-              <Link href="/events">OCS / NCS</Link> trade rate vs Digisoul
+              <Link href="/events">Bounded silk Raremon</Link> maintenance fix
+            </li>
+            <li>
+              <Link href="/events">OCS/NCS ↔ Digisoul</Link> rate
             </li>
           </ul>
         </PortalBox>
       </div>
 
-      <PortalBox title="Did you know…">
+      <PortalBox title="Guides">
         <ul>
           <li>
-            A four-person party does not split one 100% pool. The killer still
-            receives <Link href="/party">100% base EXP</Link>, and each other
-            member receives 80%.
+            <Link href="/rules">New tamer rules</Link>
           </li>
           <li>
-            Guilds convert <Link href="/guild">10,000 GP into 1 GSP</Link>, then
-            burn that GSP to keep a skill running for 14 days.
+            <Link href="/party">How party EXP works on DMI</Link>
           </li>
           <li>
-            Latest cash-shop evo items stay exclusive for{" "}
-            <Link href="/rules">4–5 months</Link> before F2P catch-up.
+            <Link href="/guild">Guild points and skills</Link>
           </li>
         </ul>
       </PortalBox>
 
-      <PortalBox title="Still on Discord">
+      <PortalBox title="Extra information">
         <p>
-          These channels exist on the DMI server but are not transcribed yet:
-          <strong> #boss-locations</strong>, <strong>#new-players-guide</strong>,{" "}
-          <strong>#dungeon-reward-rules</strong>, <strong>#download-link</strong>,{" "}
-          <strong>#digimon-roles</strong>. Screenshot or paste them and they
-          become wiki pages.
+          Still only on Discord: <strong>#boss-locations</strong>,{" "}
+          <strong>#new-players-guide</strong>, <strong>#dungeon-reward-rules</strong>,{" "}
+          <strong>#download-link</strong>, <strong>#digimon-roles</strong>.
         </p>
       </PortalBox>
-    </div>
+    </article>
   );
 }

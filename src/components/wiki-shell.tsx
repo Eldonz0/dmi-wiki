@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { useState } from "react";
-import { Crest } from "@/components/crest";
 import { WikiSearchForm } from "@/components/wiki-search";
 import { SIDEBAR } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
@@ -65,12 +64,9 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
 
       <div className="mw-frame">
         <aside className="mw-sidebar">
-          <Link href="/" className="mw-logo">
-            <Crest className="mw-logo-mark" />
-            <span>
-              <strong>DMI Wiki</strong>
-              <em>Master Online</em>
-            </span>
+          <Link href="/" className="mw-wordmark">
+            <span className="line1">DIGIMON MASTER ONLINE</span>
+            <span className="line2">DMI WIKI</span>
           </Link>
           <WikiSearchForm compact />
           <div className="mw-sidebar-desktop">
