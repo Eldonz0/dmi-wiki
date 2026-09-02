@@ -102,6 +102,16 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
         </tbody>
       </table>
 
+      <section className="evo-section" id="digivolution">
+        <h2>Digivolution Line</h2>
+        <EvoBoard
+          tree={tree}
+          current={digimon.name}
+          hrefFor={hrefFor}
+          icons={icons}
+        />
+      </section>
+
       <div className="toc">
         <strong>Contents</strong>
         <ol>
@@ -177,14 +187,6 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
           ))}
         </tbody>
       </table>
-
-      <h2 id="digivolution">Digivolution Line</h2>
-      <EvoBoard
-        tree={tree}
-        current={digimon.name}
-        hrefFor={hrefFor}
-        icons={icons}
-      />
 
       <div className="catlinks">
         <strong>Categories:</strong>{" "}

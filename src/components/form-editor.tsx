@@ -9,7 +9,7 @@ import { EvoCanvas } from "@/components/evo-canvas";
 import { RankBadge, RoleBadge } from "@/components/rank-badge";
 import { RANKS, rankSlug } from "@/lib/ranks";
 import { normalizeTree } from "@/lib/evo-layout";
-import { STAT_LABELS, defaultBlurb } from "@/lib/digimon";
+import { STAT_LABELS, defaultBlurb } from "@/lib/digimon-client";
 import { SOURCE } from "@/lib/wiki";
 
 const ROLES = ["AA", "TA", "SK", "SUP"] as const;
@@ -280,6 +280,22 @@ export function FormEditor({
         </tbody>
       </table>
 
+      <section className="evo-section" id="digivolution">
+        <h2>Digivolution Line</h2>
+        <p className="section-lead">
+          Drag chips, draw arrows. Selected chip for icon upload:{" "}
+          <strong>{chipName || draft.name}</strong>
+        </p>
+        <EvoCanvas
+          tree={layout}
+          current={draft.name}
+          names={names}
+          icons={iconBag}
+          onChange={setLayout}
+          onSelectName={setChipName}
+        />
+      </section>
+
       <div className="toc">
         <strong>Contents</strong>
         <ol>
@@ -335,20 +351,6 @@ export function FormEditor({
           ))}
         </tbody>
       </table>
-
-      <h2 id="digivolution">Digivolution Line</h2>
-      <p className="section-lead">
-        Same board as the public page. Drag chips, draw arrows. Selected chip
-        for icon upload: <strong>{chipName || draft.name}</strong>
-      </p>
-      <EvoCanvas
-        tree={layout}
-        current={draft.name}
-        names={names}
-        icons={iconBag}
-        onChange={setLayout}
-        onSelectName={setChipName}
-      />
 
       <div className="catlinks">
         <strong>Categories:</strong>{" "}

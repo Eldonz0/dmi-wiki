@@ -277,6 +277,10 @@
   border-bottom: 1px solid var(--mw-line);
 }
 
+.mw-article h2#default-stats {
+  clear: both;
+}
+
 .mw-article h3 {
   margin: 1rem 0 0.3rem;
   font-size: 1.05rem;
@@ -799,6 +803,28 @@ a.evo-card:hover {
   margin-right: 1rem;
 }
 
+.evo-section {
+  overflow: auto;
+  margin: 0 0 1rem;
+}
+
+.evo-section h2 {
+  margin-top: 0;
+}
+
+.evo-board {
+  --evo-icon: 52px;
+  --evo-chip: 88px;
+  --evo-arrow: 36px;
+  --evo-col: 124px;
+  --evo-row: 100px;
+  margin: 0.35rem 0 0.6rem;
+  padding: 0.5rem 0.35rem 0.65rem;
+  background: #0a1230;
+  overflow: auto;
+  max-width: 100%;
+}
+
 .dmo-ibox {
   float: right;
   width: 17.5rem;
@@ -880,19 +906,6 @@ a.evo-card:hover {
   min-height: 180px;
   color: #444;
   font-weight: 700;
-}
-
-.evo-board {
-  --evo-icon: 52px;
-  --evo-chip: 88px;
-  --evo-arrow: 36px;
-  --evo-col: 124px;
-  --evo-row: 100px;
-  clear: both;
-  margin: 0.5rem 0 1.1rem;
-  padding: 0.75rem 0.5rem 1rem;
-  background: #0a1230;
-  overflow: auto;
 }
 
 .evo-plane {
