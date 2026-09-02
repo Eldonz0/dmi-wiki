@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { CatalogForm, EvoTree } from "@/lib/digimon-types";
+import type { RankCode } from "@/lib/ranks";
 import { EvoCanvas } from "@/components/evo-canvas";
-import { RANKS } from "@/lib/ranks";
+import { RankBadge, RoleBadge } from "@/components/rank-badge";
+import { RANKS, rankSlug } from "@/lib/ranks";
 import { normalizeTree } from "@/lib/evo-layout";
+import { STAT_LABELS, defaultBlurb } from "@/lib/digimon";
+import { SOURCE } from "@/lib/wiki";
 
 const ROLES = ["AA", "TA", "SK", "SUP"] as const;
 
@@ -15,19 +19,34 @@ export function FormEditor({
   tree,
   names,
   icons,
+  art,
+  rankIcons: rankIconStart,
 }: {
   form: CatalogForm;
   tree: EvoTree;
   names: string[];
   slugs?: { name: string; slug: string }[];
   icons: Record<string, string>;
+  art: Record<string, string>;
+  rankIcons: Record<string, string>;
 }) {
   const router = useRouter();
   const [draft, setDraft] = useState(form);
   const [layout, setLayout] = useState<EvoTree>(() => normalizeTree(tree));
   const [iconBag, setIconBag] = useState(icons);
+  const [artBag, setArtBag] = useState(art);
+  const [rankBag, setRankBag] = useState(rankIconStart);
   const [chipName, setChipName] = useState(form.name);
   const [status, setStatus] = useState("");
+
+  const thumb =
+    draft.art || artBag[draft.name] || iconBag[draft.name] || "";
+  const blurb = draft.blurb ?? defaultBlurb(draft);
+
+  const lineNames = useMemo(
+    () => draft.lines.filter((n) => n && n !== "?"),
+    [draft.lines],
+  );
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -36,7 +55,7 @@ export function FormEditor({
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        form: draft,
+        form: { ...draft, blurb },
         tree: layout,
       }),
     });
@@ -44,124 +63,283 @@ export function FormEditor({
       setStatus("Save failed — are you signed in?");
       return;
     }
-    setStatus(
-      "Saved. Public pages and every form on this line now use this layout.",
-    );
+    setStatus("Saved. The public page matches this layout.");
     router.refresh();
   }
 
-  async function uploadIcon(file: File) {
+  async function upload(kind: "chip" | "art" | "rank", key: string, file: File) {
     const body = new FormData();
     body.set("file", file);
-    body.set("name", chipName || draft.name);
-    setStatus("Uploading icon…");
+    body.set("name", key);
+    body.set("kind", kind);
+    setStatus("Uploading…");
     const res = await fetch("/api/icons", { method: "POST", body });
     if (!res.ok) {
-      setStatus("Icon upload failed.");
+      setStatus("Upload failed.");
       return;
     }
-    const data = (await res.json()) as { url: string; name: string };
-    setIconBag((prev) => ({ ...prev, [data.name]: data.url }));
-    if (data.name === draft.name) {
-      setDraft((d) => ({ ...d, icon: data.url }));
+    const data = (await res.json()) as {
+      url: string;
+      name: string;
+      kind: string;
+    };
+    if (data.kind === "chip") {
+      setIconBag((prev) => ({ ...prev, [data.name]: data.url }));
+      if (data.name === draft.name) {
+        setDraft((d) => ({ ...d, icon: data.url }));
+      }
+    } else if (data.kind === "art") {
+      setArtBag((prev) => ({ ...prev, [data.name]: data.url }));
+      setDraft((d) => ({ ...d, art: data.url }));
+    } else {
+      setRankBag((prev) => ({ ...prev, [data.name]: data.url }));
     }
-    setStatus(`Icon saved for ${data.name}.`);
+    setStatus("Image saved.");
   }
 
-  return (
-    <form className="editor editor-wide-page" onSubmit={save}>
-      <p>
-        <Link href="/admin">← Catalog</Link>
-        {" · "}
-        <Link href={`/digimon/${form.slug}`}>Public page</Link>
-      </p>
-
-      <h2>Sheet stats</h2>
-      <div className="editor-grid">
-        <label>
-          Name
-          <input
-            value={draft.name}
-            onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-          />
-        </label>
-        <label>
-          Rank
-          <select
-            value={draft.rank}
-            onChange={(e) =>
-              setDraft({ ...draft, rank: e.target.value as CatalogForm["rank"] })
-            }
-          >
-            {RANKS.map((r) => (
-              <option key={r}>{r}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Role
-          <select
-            value={draft.role}
-            onChange={(e) =>
-              setDraft({ ...draft, role: e.target.value as CatalogForm["role"] })
-            }
-          >
-            {ROLES.map((r) => (
-              <option key={r}>{r}</option>
-            ))}
-          </select>
-        </label>
-        {(["hp", "at", "de", "as"] as const).map((key) => (
-          <label key={key}>
-            {key.toUpperCase()}
-            <input
-              type="number"
-              value={draft[key]}
-              onChange={(e) =>
-                setDraft({ ...draft, [key]: Number(e.target.value) })
-              }
-            />
-          </label>
-        ))}
-        <label className="editor-wide">
-          Egg / evolution line(s) from the sheet (comma separated)
-          <input
-            value={draft.lines.join(", ")}
-            onChange={(e) =>
-              setDraft({
-                ...draft,
-                lines: e.target.value
-                  .split(",")
-                  .map((s) => s.trim())
-                  .filter(Boolean),
-              })
-            }
-          />
-        </label>
-      </div>
-
-      <h2>Chip icon</h2>
-      <p className="section-lead">
-        Upload a square portrait. It is used on this chip everywhere the name
-        appears. Selected chip: <strong>{chipName || draft.name}</strong>
-      </p>
-      <p>
+  function FileBtn({
+    label,
+    kind,
+    name,
+  }: {
+    label: string;
+    kind: "chip" | "art" | "rank";
+    name: string;
+  }) {
+    return (
+      <label className="live-file">
+        {label}
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp,image/gif"
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) void uploadIcon(file);
+            if (file) void upload(kind, name, file);
+            e.target.value = "";
           }}
         />
-      </p>
+      </label>
+    );
+  }
 
-      <h2>Evolution board</h2>
+  return (
+    <form className="editor editor-wide-page dmo-page" onSubmit={save}>
+      <div className="live-bar">
+        <Link href="/admin">← Catalog</Link>
+        {" · "}
+        <Link href={`/digimon/${form.slug}`}>View public page</Link>
+        <button type="submit">Save page</button>
+        {status ? <span className="editor-status">{status}</span> : null}
+      </div>
+
+      <div className="mw-pre-title">From DMI Wiki · Digimon · editing</div>
+      <input
+        className="live-title"
+        value={draft.name}
+        onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+        aria-label="Name"
+      />
+
+      <table className="dmo-ibox">
+        <thead>
+          <tr>
+            <th colSpan={2}>
+              <input
+                className="live-ibox-en"
+                value={draft.name}
+                onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+              />
+              <input
+                className="live-ibox-jp"
+                placeholder="Japanese name"
+                value={draft.jp ?? ""}
+                onChange={(e) => setDraft({ ...draft, jp: e.target.value })}
+              />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colSpan={2} className="dmo-ibox-art">
+              {thumb ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={thumb} alt={draft.name} width={250} />
+              ) : (
+                <span className="dmo-ibox-placeholder">{draft.name}</span>
+              )}
+              <div className="live-art-actions">
+                <FileBtn label="Upload thumbnail" kind="art" name={draft.name} />
+                <FileBtn
+                  label="Upload chip icon"
+                  kind="chip"
+                  name={chipName || draft.name}
+                />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} className="box-form">
+              <input
+                className="live-plain"
+                placeholder="Form (Rookie, Mega…)"
+                value={draft.form ?? ""}
+                onChange={(e) => setDraft({ ...draft, form: e.target.value })}
+              />
+            </td>
+          </tr>
+          <IboxField
+            label="Attribute"
+            value={draft.attribute ?? ""}
+            onChange={(v) => setDraft({ ...draft, attribute: v })}
+          />
+          <IboxField
+            label="Elemental Attribute"
+            value={draft.element ?? ""}
+            onChange={(v) => setDraft({ ...draft, element: v })}
+          />
+          <IboxField
+            label="Type"
+            value={draft.type ?? ""}
+            onChange={(v) => setDraft({ ...draft, type: v })}
+          />
+          <IboxField
+            label="Family"
+            value={draft.family ?? ""}
+            onChange={(v) => setDraft({ ...draft, family: v })}
+          />
+          <tr>
+            <th>Rank</th>
+            <td>
+              <div className="live-rank-row">
+                <RankBadge
+                  rank={draft.rank}
+                  src={rankBag[draft.rank]}
+                />
+                <select
+                  value={draft.rank}
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      rank: e.target.value as RankCode,
+                    })
+                  }
+                >
+                  {RANKS.map((r) => (
+                    <option key={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
+              <p className="live-hint">
+                Letter badges N → U+ stay. Optional image sits beside them for
+                later custom rank art.
+              </p>
+              <FileBtn
+                label="Upload rank icon"
+                kind="rank"
+                name={draft.rank}
+              />
+            </td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td>
+              <select
+                value={draft.role}
+                onChange={(e) =>
+                  setDraft({
+                    ...draft,
+                    role: e.target.value as CatalogForm["role"],
+                  })
+                }
+              >
+                {ROLES.map((r) => (
+                  <option key={r}>{r}</option>
+                ))}
+              </select>{" "}
+              <RoleBadge role={draft.role} />
+            </td>
+          </tr>
+          <tr>
+            <th>Evolution line(s)</th>
+            <td>
+              <input
+                className="live-plain"
+                value={draft.lines.join(", ")}
+                onChange={(e) =>
+                  setDraft({
+                    ...draft,
+                    lines: e.target.value
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  })
+                }
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div className="toc">
+        <strong>Contents</strong>
+        <ol>
+          <li>
+            <a href="#default-stats">Default Stats</a>
+          </li>
+          <li>
+            <a href="#digivolution">Digivolution Line</a>
+          </li>
+        </ol>
+      </div>
+
+      <textarea
+        className="live-blurb"
+        rows={5}
+        value={blurb}
+        onChange={(e) => setDraft({ ...draft, blurb: e.target.value })}
+      />
+      {lineNames.length ? (
+        <p className="section-lead">
+          Egg / line: {lineNames.join(", ")}
+        </p>
+      ) : null}
+
+      <h2 id="default-stats">Default Stats</h2>
       <p className="section-lead">
-        Initials come from the assignment sheet (everyone who shares this egg /
-        line, sorted by rank then HP) plus any DMO line we already wired. Drag
-        chips onto the grid, draw arrows from one form to the next, then save.
-        Public chips stay clickable.
+        Sheet values. Click a number to change it.
+      </p>
+      <table className="wikitable stats-table">
+        <thead>
+          <tr>
+            <th>Stat</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {STAT_LABELS.map((row) => (
+            <tr key={row.key}>
+              <th title={row.hint}>
+                {row.label} <span className="stat-hint">{row.hint}</span>
+              </th>
+              <td>
+                <input
+                  className="live-stat"
+                  type="number"
+                  value={draft[row.key]}
+                  onChange={(e) =>
+                    setDraft({ ...draft, [row.key]: Number(e.target.value) })
+                  }
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2 id="digivolution">Digivolution Line</h2>
+      <p className="section-lead">
+        Same board as the public page. Drag chips, draw arrows. Selected chip
+        for icon upload: <strong>{chipName || draft.name}</strong>
       </p>
       <EvoCanvas
         tree={layout}
@@ -172,10 +350,40 @@ export function FormEditor({
         onSelectName={setChipName}
       />
 
-      <p>
-        <button type="submit">Save to catalog</button>
-        {status ? <span className="editor-status"> {status}</span> : null}
-      </p>
+      <div className="catlinks">
+        <strong>Categories:</strong>{" "}
+        <Link href="/digimon">Digimon</Link>
+        {" | "}
+        <Link href={`/rank/${rankSlug(draft.rank)}`}>
+          Digimon Rank {draft.rank}
+        </Link>
+        {" | "}
+        <Link href="/roles">{draft.role}</Link>
+      </div>
+      <p className="mw-source">{SOURCE}</p>
     </form>
+  );
+}
+
+function IboxField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <tr>
+      <th>{label}</th>
+      <td>
+        <input
+          className="live-plain"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </td>
+    </tr>
   );
 }

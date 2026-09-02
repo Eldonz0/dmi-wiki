@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
 import { isAdmin } from "@/lib/auth";
-import { setIcon } from "@/lib/catalog";
+import { setUpload } from "@/lib/catalog";
 import { slugifyName } from "@/lib/evo-layout";
 
 export async function POST(request: Request) {
@@ -12,6 +12,11 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const file = form.get("file");
   const name = String(form.get("name") ?? "").trim();
+  const kindRaw = String(form.get("kind") ?? "chip");
+  const kind =
+    kindRaw === "art" || kindRaw === "rank" || kindRaw === "chip"
+      ? kindRaw
+      : "chip";
   if (!name || !(file instanceof File)) {
     return NextResponse.json({ error: "Missing file or name" }, { status: 400 });
   }
@@ -30,9 +35,15 @@ export async function POST(request: Request) {
   const buf = Buffer.from(await file.arrayBuffer());
   const dir = path.join(process.cwd(), "public", "uploads");
   mkdirSync(dir, { recursive: true });
-  const filename = `${slugifyName(name)}.${ext}`;
+  const stem =
+    kind === "art"
+      ? `${slugifyName(name)}-art`
+      : kind === "rank"
+        ? `rank-${slugifyName(name)}`
+        : slugifyName(name);
+  const filename = `${stem}.${ext}`;
   writeFileSync(path.join(dir, filename), buf);
   const url = `/uploads/${filename}?v=${Date.now()}`;
-  setIcon(name, url);
-  return NextResponse.json({ url, name });
+  setUpload(kind, name, url);
+  return NextResponse.json({ url, name, kind });
 }

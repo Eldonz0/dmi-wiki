@@ -16,6 +16,8 @@ export type Catalog = {
   forms: CatalogForm[];
   trees: Record<string, EvoTree>;
   icons: Record<string, string>;
+  art: Record<string, string>;
+  rankIcons: Record<string, string>;
 };
 
 export type DigimonRecord = CatalogForm & {
@@ -49,7 +51,7 @@ function seed(): Catalog {
   for (const [slug, tree] of Object.entries(TREES)) {
     trees[slug] = normalizeTree(tree);
   }
-  return { forms, trees, icons: {} };
+  return { forms, trees, icons: {}, art: {}, rankIcons: {} };
 }
 
 function loadFile(): Catalog {
@@ -61,6 +63,8 @@ function loadFile(): Catalog {
   const raw = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as Catalog;
   if (!raw.forms?.length) return seed();
   raw.icons ??= {};
+  raw.art ??= {};
+  raw.rankIcons ??= {};
   raw.trees ??= {};
   return raw;
 }
@@ -78,6 +82,14 @@ export function iconMap() {
   return readCatalog().icons ?? {};
 }
 
+export function artMap() {
+  return readCatalog().art ?? {};
+}
+
+export function rankIconMap() {
+  return readCatalog().rankIcons ?? {};
+}
+
 export function resolveIcon(name: string, icons?: Record<string, string>) {
   const map = icons ?? iconMap();
   return map[name] || iconFor(name);
@@ -85,21 +97,27 @@ export function resolveIcon(name: string, icons?: Record<string, string>) {
 
 export function hydrate(
   form: CatalogForm,
-  icons?: Record<string, string>,
+  catalog?: Catalog,
 ): DigimonRecord {
-  const map = icons ?? iconMap();
-  const icon = form.icon || resolveIcon(form.name, map);
+  const c = catalog ?? readCatalog();
+  const icon = form.icon || c.icons?.[form.name] || iconFor(form.name);
+  const art =
+    form.art ||
+    c.art?.[form.name] ||
+    artFor(form.name) ||
+    icon ||
+    "";
   return {
     ...form,
     listed: form.listed !== false,
-    art: artFor(form.name) ?? icon ?? "",
+    art,
     icon,
   };
 }
 
 export function listDigimon(): DigimonRecord[] {
   const catalog = readCatalog();
-  return catalog.forms.map((f) => hydrate(f, catalog.icons));
+  return catalog.forms.map((f) => hydrate(f, catalog));
 }
 
 export function resolveSlug(slug: string) {
@@ -130,7 +148,7 @@ function nameForSlug(slug: string, catalog: Catalog) {
 export function getDigimon(slug: string) {
   const catalog = readCatalog();
   const form = getForm(slug);
-  if (form) return hydrate(form, catalog.icons);
+  if (form) return hydrate(form, catalog);
   const name = nameForSlug(slug, catalog);
   if (!name) return undefined;
   return hydrate(
@@ -146,7 +164,7 @@ export function getDigimon(slug: string) {
       as: 0,
       listed: false,
     },
-    catalog.icons,
+    catalog,
   );
 }
 
@@ -203,14 +221,26 @@ export function upsertForm(slug: string, next: CatalogForm, tree?: EvoTree) {
     }
   }
   saveCatalog(catalog);
-  return hydrate(next, catalog.icons);
+  return hydrate(next, catalog);
 }
 
-export function setIcon(name: string, url: string) {
+export function setUpload(
+  kind: "chip" | "art" | "rank",
+  key: string,
+  url: string,
+) {
   const catalog = readCatalog();
-  catalog.icons[name] = url;
-  const form = catalog.forms.find((f) => f.name === name);
-  if (form) form.icon = url;
+  if (kind === "chip") {
+    catalog.icons[key] = url;
+    const form = catalog.forms.find((f) => f.name === key);
+    if (form) form.icon = url;
+  } else if (kind === "art") {
+    catalog.art[key] = url;
+    const form = catalog.forms.find((f) => f.name === key);
+    if (form) form.art = url;
+  } else {
+    catalog.rankIcons[key] = url;
+  }
   saveCatalog(catalog);
 }
 

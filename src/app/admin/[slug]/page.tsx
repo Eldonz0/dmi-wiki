@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { allNames, evoTree, getForm, iconMap, listDigimon } from "@/lib/catalog";
+import { allNames, artMap, evoTree, getForm, iconMap, listDigimon, rankIconMap } from "@/lib/catalog";
 import { FormEditor } from "@/components/form-editor";
 
 export const dynamic = "force-dynamic";
@@ -22,14 +22,14 @@ export default async function AdminFormPage({ params }: Props) {
   const slugs = listDigimon().map((d) => ({ name: d.name, slug: d.slug }));
   return (
     <article className="mw-article">
-      <div className="mw-pre-title">Tamer · catalog</div>
-      <h1 className="mw-firstHeading">Edit {form.name}</h1>
       <FormEditor
         form={form}
         tree={tree}
         names={names}
         slugs={slugs}
         icons={iconMap()}
+        art={artMap()}
+        rankIcons={rankIconMap()}
       />
     </article>
   );

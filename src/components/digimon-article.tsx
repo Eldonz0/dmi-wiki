@@ -8,6 +8,7 @@ import {
   STAT_LABELS,
   evoTree,
   iconMap,
+  rankIconMap,
   slugForName,
   type DigimonRecord,
 } from "@/lib/digimon";
@@ -16,6 +17,7 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
   const tree = evoTree(digimon.slug);
   const lineNames = digimon.lines.filter((n) => n && n !== "?");
   const icons = iconMap();
+  const rankIcons = rankIconMap();
   const hrefFor = (name: string) => {
     const s = slugForName(name);
     return s ? `/digimon/${s}` : "/digimon";
@@ -72,6 +74,7 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
               <RankBadge
                 rank={digimon.rank}
                 href={`/rank/${rankSlug(digimon.rank)}`}
+                src={rankIcons[digimon.rank]}
               />
             </td>
           </tr>
@@ -112,32 +115,42 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
       </div>
 
       <p>
-        <strong>{digimon.name}</strong>
-        {digimon.jp ? <> ({digimon.jp})</> : null} is stamped{" "}
-        <RankBadge rank={digimon.rank} href={`/rank/${rankSlug(digimon.rank)}`} />{" "}
-        <RoleBadge role={digimon.role} /> on the DMI assignment sheet
-        (HP / AT / DE / AS). Those four numbers are copied from{" "}
-        <code>digimon_role_assignment_all_forms_new.pdf</code> — not guessed.
-        {digimon.listed === false ? (
+        {digimon.blurb?.trim() ? (
+          digimon.blurb
+        ) : (
           <>
-            {" "}
-            This name is on an evolution line but not a numbered row in the
-            assignment PDF — sign in to add stats and an icon.
+            <strong>{digimon.name}</strong>
+            {digimon.jp ? <> ({digimon.jp})</> : null} is stamped{" "}
+            <RankBadge
+              rank={digimon.rank}
+              href={`/rank/${rankSlug(digimon.rank)}`}
+              src={rankIcons[digimon.rank]}
+            />{" "}
+            <RoleBadge role={digimon.role} /> on the DMI assignment sheet
+            (HP / AT / DE / AS). Those four numbers are copied from{" "}
+            <code>digimon_role_assignment_all_forms_new.pdf</code> — not guessed.
+            {digimon.listed === false ? (
+              <>
+                {" "}
+                This name is on an evolution line but not a numbered row in the
+                assignment PDF — sign in to add stats and an icon.
+              </>
+            ) : null}
+            {lineNames.length ? (
+              <>
+                {" "}
+                Egg / line end{lineNames.length > 1 ? "s" : ""}:{" "}
+                {lineNames.map((n, i) => (
+                  <span key={n}>
+                    {i > 0 ? ", " : null}
+                    <NameLink name={n} />
+                  </span>
+                ))}
+                .
+              </>
+            ) : null}
           </>
-        ) : null}
-        {lineNames.length ? (
-          <>
-            {" "}
-            Egg / line end{lineNames.length > 1 ? "s" : ""}:{" "}
-            {lineNames.map((n, i) => (
-              <span key={n}>
-                {i > 0 ? ", " : null}
-                <NameLink name={n} />
-              </span>
-            ))}
-            .
-          </>
-        ) : null}
+        )}
       </p>
 
       <h2 id="default-stats">Default Stats</h2>

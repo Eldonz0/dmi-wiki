@@ -85,8 +85,12 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
           >
             Combat
           </Link>
-          <Link
-            href="/login"
+          <a
+            href={
+              pathname.startsWith("/digimon/") && pathname.split("/").length > 2
+                ? `/api/auth/login?next=/admin/${pathname.split("/")[2]}`
+                : "/api/auth/login?next=/admin"
+            }
             className={cn(
               (pathname.startsWith("/login") ||
                 pathname.startsWith("/admin")) &&
@@ -94,7 +98,7 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
             )}
           >
             Sign in
-          </Link>
+          </a>
           <a
             href="https://www.digimonmastersinfinite.com/index.html"
             target="_blank"

@@ -13,14 +13,9 @@ Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
 ## Tamer catalog (one account)
 
-There is no register page. Sign in at `/login`, then edit every form in `/admin`.
+There is no register page. Click **Sign in** — while we are testing it logs you in immediately and opens the catalog (or the editor for the Digimon page you were on).
 
-Default local account:
-
-- user: `admin`
-- password: `infinite`
-
-Override with `DMI_ADMIN_USER` and `DMI_ADMIN_PASS`. Optional `DMI_SESSION_SECRET` for the session cookie.
+The account is still `admin` / `infinite` if a password form is used later. Override with `DMI_ADMIN_USER` and `DMI_ADMIN_PASS`.
 
 Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired evolution trees). Public Digimon pages read that file — HP / AT / DE / AS are not hardcoded.
 

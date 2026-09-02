@@ -22,6 +22,8 @@ export type CatalogForm = SheetForm & {
   type?: string;
   family?: string;
   icon?: string;
+  art?: string;
+  blurb?: string;
   listed?: boolean;
 };
 

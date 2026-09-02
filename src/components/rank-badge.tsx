@@ -5,13 +5,19 @@ import type { RoleCode } from "@/lib/digimon";
 export function RankBadge({
   rank,
   href,
+  src,
 }: {
   rank: RankCode;
   href?: string;
+  src?: string;
 }) {
   const inner = (
-    <span className={`rank-badge rank-${rank.replace("+", "p")}`} title={`Rank ${rank}`}>
-      {rank}
+    <span className="rank-badge-wrap" title={`Rank ${rank}`}>
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="rank-badge-img" src={src} alt="" />
+      ) : null}
+      <span className={`rank-badge rank-${rank.replace("+", "p")}`}>{rank}</span>
     </span>
   );
   if (href) {
