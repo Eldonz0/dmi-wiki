@@ -689,9 +689,21 @@
 .newGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.15rem 1.25rem;
-  padding: 0.55rem 0.75rem 0.65rem;
+  gap: 0.4rem 1rem;
+  padding: 0.65rem 0.85rem 0.75rem;
   background: #0c1028;
+}
+
+.newGrid[data-cols="1"] {
+  grid-template-columns: 1fr;
+}
+
+.newGrid[data-cols="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.newGrid[data-cols="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .newItem {
@@ -723,7 +735,7 @@
 .newMark {
   display: grid;
   place-items: center;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--cyan);
 }

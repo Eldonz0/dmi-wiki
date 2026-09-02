@@ -84,8 +84,8 @@ export function NewDigimonPack({
     .map((slug) => bySlug.get(slug) ?? items.find((i) => i.slug === slug))
     .filter((d): d is FeaturedPick => Boolean(d));
 
-  const left = visible.filter((_, i) => i % 2 === 0);
-  const right = visible.filter((_, i) => i % 2 === 1);
+  const cols =
+    visible.length <= 1 ? 1 : visible.length <= 4 ? 2 : visible.length <= 9 ? 3 : 4;
 
   const needle = query.trim().toLowerCase();
   const matches = useMemo(() => {
@@ -178,8 +178,8 @@ export function NewDigimonPack({
             />
           </label>
           <p className="section-lead">
-            Pick a Digimon for each slot, then Save. Slot order is left column,
-            then right.
+            Pick a Digimon for each slot, then Save. Order is left to right,
+            then the next row.
           </p>
           <ol className="newSlots">
             {Array.from({ length: count }, (_, i) => {
@@ -237,17 +237,10 @@ export function NewDigimonPack({
         </div>
       ) : null}
 
-      <div className="newGrid">
-        <div>
-          {left.map((item) => (
-            <NewRow key={item.slug} item={item} />
-          ))}
-        </div>
-        <div>
-          {right.map((item) => (
-            <NewRow key={item.slug} item={item} />
-          ))}
-        </div>
+      <div className="newGrid" data-cols={String(cols)}>
+        {visible.map((item) => (
+          <NewRow key={item.slug} item={item} />
+        ))}
       </div>
       <div className="newBar" />
     </section>
