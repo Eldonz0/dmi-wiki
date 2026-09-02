@@ -45,11 +45,7 @@ export function AdminTable({ forms }: { forms: (CatalogForm & { icon?: string })
           ))}
         </select>
       </p>
-      <p className="section-lead">
-        {rows.length} shown. Click a chip to upload — the same picture is used
-        for every evolution chip with that name. Open a form to edit stats and
-        connect evolutions.
-      </p>
+      <p className="section-lead">{rows.length} shown.</p>
       <table className="wikitable">
         <thead>
           <tr>

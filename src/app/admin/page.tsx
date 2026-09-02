@@ -14,11 +14,9 @@ export default function AdminPage() {
       <div className="mw-pre-title">Tamer · database</div>
       <h1 className="mw-firstHeading">Digimon catalog</h1>
       <p>
-        {forms.length} forms loaded from <code>data/catalog.json</code> (seeded
-        from the assignment PDF). Click a chip beside a name to upload its
-        icon — every evolution chip with that same name, including Digivolution
-        Line on the public page, uses the picture. Edit a row to change HP / AT
-        / DE / AS, rank, role, and to wire evolution lines.
+        {forms.length} forms loaded from <code>data/catalog.json</code>. Edit a
+        row for stats and evolutions. Click a chip to change that name’s icon
+        everywhere it appears.
       </p>
       <p>
         <Link href="/digimon">Public index</Link>

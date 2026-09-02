@@ -732,6 +732,10 @@
 .index-chip-wrap {
   position: relative;
   display: inline-block;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  vertical-align: middle;
 }
 
 .index-chip {
@@ -739,6 +743,8 @@
   position: relative;
   vertical-align: middle;
   padding: 0;
+  width: 52px;
+  height: 52px;
 }
 
 .index-chip.is-edit {
@@ -750,29 +756,24 @@
 }
 
 .index-chip-file {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+  display: none !important;
 }
 
 .index-chip.is-busy {
   opacity: 0.65;
 }
 
+.thumb-cell {
+  width: 52px;
+  max-width: 52px;
+  padding: 0.25rem !important;
+  overflow: hidden;
+}
+
 .thumb-cell .index-chip img {
   width: 52px;
   height: 52px;
   pointer-events: none;
-}
-
-.thumb-cell {
-  width: 60px;
-  padding: 0.25rem !important;
 }
 
 .thumb-cell img {

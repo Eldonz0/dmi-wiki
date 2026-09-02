@@ -67,6 +67,8 @@ export function IndexChip({
         className="index-chip-file"
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif"
+        tabIndex={-1}
+        aria-hidden
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) void upload(file);
