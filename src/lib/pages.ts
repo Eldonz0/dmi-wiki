@@ -1,12 +1,13 @@
 import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
+import { dataFile } from "@/lib/paths";
 import type { WikiLandPage } from "@/lib/page-types";
 import { defaultBlocks } from "@/lib/page-types";
 
 export type { WikiLandPage };
 
-const FILE = path.join(process.cwd(), "data/pages.json");
+const FILE = dataFile("pages.json");
 
 const DEFAULTS: Record<string, WikiLandPage> = {
   home: {

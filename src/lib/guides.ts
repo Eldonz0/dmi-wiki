@@ -1,12 +1,13 @@
 import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
+import { dataFile } from "@/lib/paths";
 import { slugifyName } from "@/lib/evo-layout";
 import type { GuideHubArt, GuidePin, GuidePost } from "@/lib/guide-types";
 
 export type { GuideHubArt, GuidePin, GuidePost };
 
-const FILE = path.join(process.cwd(), "data/guides.json");
+const FILE = dataFile("guides.json");
 
 const LEVEL_UP = `This page is how you raise a partner’s **main level** and **skill level** on Digimon Masters Infinite.
 

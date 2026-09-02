@@ -4,6 +4,7 @@ import path from "path";
 import { isAdmin } from "@/lib/auth";
 import { setUpload } from "@/lib/catalog";
 import { slugifyName } from "@/lib/evo-layout";
+import { uploadsDir } from "@/lib/paths";
 
 export async function POST(request: Request) {
   if (!(await isAdmin())) {
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
           ? "gif"
           : "png";
   const buf = Buffer.from(await file.arrayBuffer());
-  const dir = path.join(process.cwd(), "public", "uploads");
+  const dir = uploadsDir();
   mkdirSync(dir, { recursive: true });
   const stem =
     kind === "art"

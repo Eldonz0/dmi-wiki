@@ -2338,3 +2338,43 @@ button.mw-editor-on {
   border-radius: 8px;
 }
 
+.login-form {
+  max-width: 22rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 13px;
+  color: var(--mw-muted);
+}
+
+.login-form input {
+  background: #0a0e27;
+  border: 1px solid var(--mw-line);
+  color: var(--mw-text);
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.login-form button {
+  background: var(--cyan);
+  color: #04101c;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.login-error {
+  color: #ff8a80;
+  margin: 0;
+}
+

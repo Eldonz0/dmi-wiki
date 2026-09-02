@@ -2,6 +2,7 @@ import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import sheet from "@/lib/sheet.json";
+import { dataFile } from "@/lib/paths";
 import { NEW_DIGIMON } from "@/lib/wiki";
 import { LORE, TREES, artFor, iconFor } from "@/lib/wiki-lore";
 import type { CatalogForm, EvoTree, SheetForm } from "@/lib/digimon-types";
@@ -34,7 +35,7 @@ export type DigimonRecord = CatalogForm & {
   listed: boolean;
 };
 
-const CATALOG_PATH = path.join(process.cwd(), "data/catalog.json");
+const CATALOG_PATH = dataFile("catalog.json");
 
 const ALIASES: Record<string, string> = {
   agumon: "agumon-classic",

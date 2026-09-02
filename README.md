@@ -11,17 +11,45 @@ npm run dev -- --port 43127 --hostname 127.0.0.1
 
 Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
-Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**. **Sign in** sits in the **Account** box. Clicking it logs you in immediately with no password (testing). Then click **Editor mode**. The public layout stays. Each box gets small **Edit / Duplicate / Up / Down / Remove** buttons. **Add below** inserts an announcement, banner (image upload), text, Digimon list, or links. Click **Edit** on a box to open its tools — the New Digimon grid does not swap into a full editor until then. **Save** writes `data/catalog.json`, `data/pages.json`, `data/guides.json`, `data/dungeons.json`, or `data/accessories.json`. Visitors never see editor chrome.
+Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**. **Sign in** opens a username/password form (one account). Then click **Editor mode**. The public layout stays. Each box gets small **Edit / Duplicate / Up / Down / Remove** buttons. **Add below** inserts an announcement, banner (image upload), text, Digimon list, or links. Click **Edit** on a box to open its tools — the New Digimon grid does not swap into a full editor until then. **Save** writes `data/catalog.json`, `data/pages.json`, `data/guides.json`, `data/dungeons.json`, or `data/accessories.json`. Visitors never see editor chrome.
+
+Copy `.env.example` to `.env.local` and set `DMI_ADMIN_USER`, `DMI_ADMIN_PASS`, and `DMI_SESSION_SECRET`. Restart the dev server after changing env.
 
 ## Tamer catalog (one account)
 
-There is no register page. Click **Sign in**, then **Editor mode**. **Add Digimon** is on Digimon List and **Digimon index editor**. New Digimon on the home page uses slot dropdowns and **Save New Digimon box**.
-
-The account is still `admin` / `infinite` if a password form is used later. Override with `DMI_ADMIN_USER` and `DMI_ADMIN_PASS`.
+There is no register page. Sign in with the env credentials, then **Editor mode**. **Add Digimon** is on Digimon List and **Digimon index editor**. New Digimon on the home page uses slot dropdowns and **Save New Digimon box**.
 
 Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired evolution trees). Public Digimon pages read that file — HP / AT / DE / AS are not hardcoded.
 
 Landing page text lives in `data/pages.json`.
+
+## Going live
+
+Two different things get published:
+
+1. **Code** — Next.js app in git. New versions replace the app, not your wiki text, as long as live files are not on the same overwrite path as the git checkout.
+2. **Live wiki data** — Editor saves JSON and uploads. Those must sit on a **persistent disk** (Docker/VPS volume, not Vercel’s ephemeral filesystem).
+
+Set on the host:
+
+```
+DMI_ADMIN_USER=…
+DMI_ADMIN_PASS=…
+DMI_SESSION_SECRET=…   # long random string
+DMI_DATA_DIR=/var/dmi/data
+DMI_UPLOADS_DIR=/var/dmi/uploads
+```
+
+Mount the uploads volume so the app can still serve `/uploads/...`:
+
+- bind `/var/dmi/uploads` → `public/uploads` in the container, **or**
+- set `DMI_UPLOADS_DIR` to that bind.
+
+If you deploy by `git pull` into the same folder that holds `data/`, a pull can overwrite `data/*.json`. Point `DMI_DATA_DIR` **outside** the repo (or use a named volume) so editor work survives new code.
+
+Do not use a host that wipes the disk on every deploy unless you attach a volume. A small VPS or Fly/Railway with a volume is the fit; serverless (Vercel) is not, unless you later move saves to object storage.
+
+Seeds (Digimon sheet, dungeon list, accessory tables) only fill **missing** files/rows. They do not wipe pages you already saved.
 
 ## Guide
 

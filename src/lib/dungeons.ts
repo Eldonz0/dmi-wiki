@@ -1,12 +1,13 @@
 import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
+import { dataFile } from "@/lib/paths";
 import { slugifyName } from "@/lib/evo-layout";
 import type { DungeonEntry, DungeonHubArt } from "@/lib/dungeon-types";
 
 export type { DungeonEntry, DungeonHubArt };
 
-const FILE = path.join(process.cwd(), "data/dungeons.json");
+const FILE = dataFile("dungeons.json");
 
 function page(title: string, ticket: string, extra: string) {
   return `Instance dungeon. Entry is at D-Terminal (and the matching map warp).

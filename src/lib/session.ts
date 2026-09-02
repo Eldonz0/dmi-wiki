@@ -11,7 +11,7 @@ export function adminUser() {
 }
 
 export function adminPass() {
-  return process.env.DMI_ADMIN_PASS || "infinite";
+  return process.env.DMI_ADMIN_PASS || "";
 }
 
 function sign(payload: string) {
@@ -48,10 +48,13 @@ export function readSession(token: string | undefined) {
 }
 
 export function checkPassword(user: string, password: string) {
+  const expectedUser = adminUser();
+  const expectedPass = adminPass();
+  if (!expectedPass || !user || !password) return false;
   const u = Buffer.from(user);
-  const eu = Buffer.from(adminUser());
+  const eu = Buffer.from(expectedUser);
   const p = Buffer.from(password);
-  const ep = Buffer.from(adminPass());
+  const ep = Buffer.from(expectedPass);
   if (u.length !== eu.length || p.length !== ep.length) return false;
   return timingSafeEqual(u, eu) && timingSafeEqual(p, ep);
 }

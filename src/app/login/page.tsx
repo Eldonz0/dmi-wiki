@@ -1,6 +1,13 @@
-import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { LoginForm } from "@/components/login-form";
 
-/** Old /login used to auto-set a session. Send people home to click Sign in. */
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Sign in" };
+
 export default function LoginPage() {
-  redirect("/");
+  return (
+    <Suspense fallback={<p>Loading…</p>}>
+      <LoginForm />
+    </Suspense>
+  );
 }

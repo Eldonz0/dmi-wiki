@@ -2,6 +2,7 @@ import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import { ACCESSORY_SEEDS } from "@/lib/accessory-seeds";
+import { dataFile } from "@/lib/paths";
 import {
   ACCESSORY_SLOTS,
   isAccessorySlot,
@@ -14,7 +15,7 @@ import {
 export type { AccessoryCategory, AccessoryItem, AccessoryRoleRec, AccessorySlot };
 export { ACCESSORY_SLOTS, isAccessorySlot };
 
-const FILE = path.join(process.cwd(), "data/accessories.json");
+const FILE = dataFile("accessories.json");
 
 type Store = { categories: AccessoryCategory[] };
 
