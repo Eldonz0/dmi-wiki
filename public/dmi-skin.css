@@ -1623,6 +1623,45 @@ button.mw-text-out:hover {
   }
 }
 
+.dungeon-points li {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.dungeon-point {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.ticket-chip-wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.ticket-chip.evo-icon {
+  --evo-icon: 36px;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.ticket-chip.evo-icon img {
+  width: 36px;
+  height: 36px;
+}
+
+.dungeon-need {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.7rem 0 1.1rem;
+  font-size: 1.05rem;
+}
+
 .guide-note {
   display: flex;
   gap: 0.55rem;
