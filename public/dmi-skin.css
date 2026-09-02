@@ -17,7 +17,10 @@
     #2a2a2a 8px,
     #2a2a2a 16px
   );
-  min-height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--mw-page);
   color: var(--mw-text);
   font-family: var(--font-sans), "Rajdhani", sans-serif;
@@ -121,6 +124,8 @@
 .mw-frame {
   display: flex;
   align-items: flex-start;
+  flex: 1;
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding: 1.25rem 1rem 2.5rem;
@@ -251,9 +256,10 @@
 }
 
 .mw-footer {
-  padding: 0.9rem 0.2rem 0;
+  padding: 0.9rem 0.2rem 1.5rem;
   font-size: 12px;
   color: var(--mw-muted);
+  background: transparent;
 }
 
 .mw-pre-title {
