@@ -1,8 +1,8 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
-import path from "path";
+import { existsSync, readFileSync, statSync } from "fs";
 import sheet from "@/lib/sheet.json";
-import { dataFile } from "@/lib/paths";
+import { dataFile, tryWriteFile } from "@/lib/paths";
+import { pushLiveFile } from "@/lib/github-live";
 import { NEW_DIGIMON } from "@/lib/wiki";
 import { LORE, TREES, artFor, iconFor } from "@/lib/wiki-lore";
 import type { CatalogForm, EvoTree, SheetForm } from "@/lib/digimon-types";
@@ -95,7 +95,7 @@ function loadFile(): Catalog {
     const raw = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as Catalog;
     if (!raw.forms?.length) {
       const created = seed();
-      saveCatalog(created);
+      void saveCatalog(created);
       return created;
     }
     raw.icons ??= {};
@@ -109,7 +109,7 @@ function loadFile(): Catalog {
     return mem.catalog;
   }
   const created = seed();
-  saveCatalog(created);
+  void saveCatalog(created);
   return created;
 }
 
@@ -117,10 +117,11 @@ export function readCatalog(): Catalog {
   return loadFile();
 }
 
-export function saveCatalog(catalog: Catalog) {
-  mkdirSync(path.dirname(CATALOG_PATH), { recursive: true });
-  writeFileSync(CATALOG_PATH, JSON.stringify(catalog), "utf8");
+export async function saveCatalog(catalog: Catalog) {
+  const json = JSON.stringify(catalog);
+  tryWriteFile(CATALOG_PATH, json);
   mem = indexCatalog(catalog);
+  await pushLiveFile("data/catalog.json", json, "Save Digimon catalog");
 }
 
 export function iconMap() {
@@ -255,7 +256,7 @@ export function evoTree(slug: string): NormalizedTree {
   return { nodes: [{ id: "n0", name: rec.name, x: 0, y: 0 }], edges: [] };
 }
 
-export function createForm(input: {
+export async function createForm(input: {
   name: string;
   rank?: RankCode;
   role?: CatalogForm["role"];
@@ -291,7 +292,7 @@ export function createForm(input: {
   });
 }
 
-export function upsertForm(slug: string, next: CatalogForm, tree?: EvoTree) {
+export async function upsertForm(slug: string, next: CatalogForm, tree?: EvoTree) {
   const catalog = readCatalog();
   const i = catalog.forms.findIndex((f) => f.slug === slug);
   if (i < 0) catalog.forms.push(next);
@@ -306,11 +307,11 @@ export function upsertForm(slug: string, next: CatalogForm, tree?: EvoTree) {
       }
     }
   }
-  saveCatalog(catalog);
+  await saveCatalog(catalog);
   return hydrate(next, catalog);
 }
 
-export function setUpload(
+export async function setUpload(
   kind: "chip" | "art" | "rank",
   key: string,
   url: string,
@@ -328,7 +329,7 @@ export function setUpload(
   } else {
     catalog.rankIcons[key] = url;
   }
-  saveCatalog(catalog);
+  await saveCatalog(catalog);
 }
 
 export function allNames(): string[] {
@@ -373,7 +374,7 @@ export function getHomeFeatured() {
     .filter((d): d is DigimonRecord => Boolean(d));
 }
 
-export function setHomeFeatured(count: number, slugs: string[]) {
+export async function setHomeFeatured(count: number, slugs: string[]) {
   const catalog = readCatalog();
   const n = Math.max(1, Math.min(40, Math.floor(count) || slugs.length || 1));
   const clean = slugs
@@ -381,7 +382,7 @@ export function setHomeFeatured(count: number, slugs: string[]) {
     .map((s) => resolveSlug(s) || s)
     .filter(Boolean);
   catalog.home = { count: n, slugs: clean.slice(0, n) };
-  saveCatalog(catalog);
+  await saveCatalog(catalog);
   return catalog.home;
 }
 

@@ -1,7 +1,7 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
-import path from "path";
-import { dataFile } from "@/lib/paths";
+import { existsSync, readFileSync, statSync } from "fs";
+import { dataFile, tryWriteFile } from "@/lib/paths";
+import { pushLiveFile } from "@/lib/github-live";
 import type { WikiLandPage } from "@/lib/page-types";
 import { defaultBlocks } from "@/lib/page-types";
 
@@ -71,7 +71,7 @@ let mem: { mtime: number; store: Store } | null = null;
 function load(): Store {
   if (!existsSync(FILE)) {
     const created = { pages: { ...DEFAULTS } };
-    save(created);
+    void save(created);
     return created;
   }
   const mtime = statSync(FILE).mtimeMs;
@@ -86,10 +86,11 @@ function load(): Store {
   }
 }
 
-function save(store: Store) {
-  mkdirSync(path.dirname(FILE), { recursive: true });
-  writeFileSync(FILE, JSON.stringify(store));
+async function save(store: Store) {
+  const json = JSON.stringify(store);
+  tryWriteFile(FILE, json);
   mem = { mtime: Date.now(), store };
+  await pushLiveFile("data/pages.json", json, "Save wiki pages");
 }
 
 export function getLandPage(slug: string): WikiLandPage {
@@ -114,7 +115,7 @@ export function getLandPage(slug: string): WikiLandPage {
   };
 }
 
-export function saveLandPage(page: WikiLandPage): WikiLandPage {
+export async function saveLandPage(page: WikiLandPage): Promise<WikiLandPage> {
   const store = load();
   const next: WikiLandPage = {
     slug: page.slug,
@@ -126,6 +127,6 @@ export function saveLandPage(page: WikiLandPage): WikiLandPage {
     blocks: Array.isArray(page.blocks) ? page.blocks : defaultBlocks(page),
   };
   store.pages[page.slug] = next;
-  save(store);
+  await save(store);
   return next;
 }

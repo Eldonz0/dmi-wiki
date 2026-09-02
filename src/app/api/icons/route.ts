@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
 import { isAdmin } from "@/lib/auth";
 import { setUpload } from "@/lib/catalog";
 import { slugifyName } from "@/lib/evo-layout";
-import { uploadsDir } from "@/lib/paths";
+import { pushLiveFile } from "@/lib/github-live";
+import { tryWriteFile, uploadsDir } from "@/lib/paths";
 
 export async function POST(request: Request) {
   if (!(await isAdmin())) {
@@ -37,8 +37,6 @@ export async function POST(request: Request) {
           ? "gif"
           : "png";
   const buf = Buffer.from(await file.arrayBuffer());
-  const dir = uploadsDir();
-  mkdirSync(dir, { recursive: true });
   const stem =
     kind === "art"
       ? `${slugifyName(name)}-art`
@@ -48,10 +46,11 @@ export async function POST(request: Request) {
           ? `post-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
           : slugifyName(name);
   const filename = `${stem}.${ext}`;
-  writeFileSync(path.join(dir, filename), buf);
+  tryWriteFile(path.join(uploadsDir(), filename), buf);
+  await pushLiveFile(`public/uploads/${filename}`, buf, `Upload ${filename}`);
   const url = `/uploads/${filename}?v=${Date.now()}`;
   if (kind === "chip" || kind === "art" || kind === "rank") {
-    setUpload(kind, name, url);
+    await setUpload(kind, name, url);
   }
   return NextResponse.json({ url, name, kind });
 }

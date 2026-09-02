@@ -1,8 +1,8 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
-import path from "path";
+import { existsSync, readFileSync, statSync } from "fs";
 import { ACCESSORY_SEEDS } from "@/lib/accessory-seeds";
-import { dataFile } from "@/lib/paths";
+import { pushLiveFile } from "@/lib/github-live";
+import { dataFile, tryWriteFile } from "@/lib/paths";
 import {
   ACCESSORY_SLOTS,
   isAccessorySlot,
@@ -61,7 +61,7 @@ function normalizeCat(cat: AccessoryCategory): AccessoryCategory {
 function load(): Store {
   if (!existsSync(FILE)) {
     const created = empty();
-    save(created);
+    void save(created);
     return created;
   }
   const mtime = statSync(FILE).mtimeMs;
@@ -83,10 +83,11 @@ function load(): Store {
   }
 }
 
-function save(store: Store) {
-  mkdirSync(path.dirname(FILE), { recursive: true });
-  writeFileSync(FILE, JSON.stringify(store));
+async function save(store: Store) {
+  const json = JSON.stringify(store);
+  tryWriteFile(FILE, json);
   mem = { mtime: Date.now(), store };
+  await pushLiveFile("data/accessories.json", json, "Save accessories");
 }
 
 export function listAccessoryCategories(): AccessoryCategory[] {
@@ -98,10 +99,10 @@ export function getAccessoryCategory(slot: string): AccessoryCategory | undefine
   return load().categories.find((c) => c.slug === slot);
 }
 
-export function saveAccessoryCategory(
+export async function saveAccessoryCategory(
   slot: string,
   patch: Partial<Pick<AccessoryCategory, "title" | "blurb" | "icon" | "items" | "roles">>,
-): AccessoryCategory | undefined {
+): Promise<AccessoryCategory | undefined> {
   if (!isAccessorySlot(slot)) return undefined;
   const store = load();
   const cat = store.categories.find((c) => c.slug === slot);
@@ -117,11 +118,11 @@ export function saveAccessoryCategory(
       secondary: String(r.secondary ?? ""),
     }));
   }
-  save(store);
+  await save(store);
   return cat;
 }
 
-export function addAccessoryItem(slot: string): AccessoryItem | undefined {
+export async function addAccessoryItem(slot: string): Promise<AccessoryItem | undefined> {
   const cat = getAccessoryCategory(slot);
   if (!cat) return undefined;
   const item: AccessoryItem = {
@@ -133,6 +134,6 @@ export function addAccessoryItem(slot: string): AccessoryItem | undefined {
     obtain: "",
     recommended: true,
   };
-  saveAccessoryCategory(slot, { items: [...cat.items, item] });
+  await saveAccessoryCategory(slot, { items: [...cat.items, item] });
   return item;
 }

@@ -23,31 +23,67 @@ Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired e
 
 Landing page text lives in `data/pages.json`.
 
-## Going live
+## Going live (free): GitHub + Vercel
 
-Two different things get published:
+This is the path that stays $0 and keeps editor work. **Code** and **wiki data** both live in one GitHub repo. Vercel builds that repo. When you hit **Save** on the live site, the app commits `data/*.json` and `public/uploads/*` back to GitHub, Vercel rebuilds, and visitors see the update. Adding a new tab later is a code change — it does not wipe Digimon stats, guides, or icons as long as those JSON files stay in git.
 
-1. **Code** — Next.js app in git. New versions replace the app, not your wiki text, as long as live files are not on the same overwrite path as the git checkout.
-2. **Live wiki data** — Editor saves JSON and uploads. Those must sit on a **persistent disk** (Docker/VPS volume, not Vercel’s ephemeral filesystem).
+### 1. Put the project on GitHub
 
-Set on the host:
+1. Create an empty public repository on GitHub (any name).
+2. On your computer (or in this workspace) add it as a remote and push `main`:
+
+```bash
+git remote add github https://github.com/YOUR_USER/YOUR_REPO.git
+git push -u github main
+```
+
+A GitHub remote is required. The Cursor copy of this project is not GitHub, so Vercel cannot pull from it until you push.
+
+### 2. Connect Vercel (Hobby / free)
+
+1. Sign in at [vercel.com](https://vercel.com) with GitHub.
+2. **Add New → Project**, import `YOUR_USER/YOUR_REPO`.
+3. Framework: Next.js. Leave the build command as `next build`.
+4. Set environment variables (Production + Preview):
+
+| Name | Value |
+| --- | --- |
+| `DMI_ADMIN_USER` | your sign-in username |
+| `DMI_ADMIN_PASS` | a long password (not the example) |
+| `DMI_SESSION_SECRET` | a long random string |
+| `GITHUB_REPO` | `YOUR_USER/YOUR_REPO` |
+| `GITHUB_DATA_TOKEN` | GitHub token (next step) |
+| `GITHUB_BRANCH` | `main` |
+
+5. Deploy. Vercel gives you a `*.vercel.app` URL. You can attach a custom domain later for free on Hobby.
+
+### 3. Token so Save can write GitHub
+
+In GitHub: **Settings → Developer settings → Personal access tokens**.
+
+- Fine-grained: only this repository, **Contents: Read and write**.
+- Or classic: `repo` scope.
+
+Paste it as `GITHUB_DATA_TOKEN` in Vercel, then **Redeploy**.
+
+Without that token, Vercel’s disk is empty after each deploy, so editor Save cannot stay live.
+
+### 4. After it is up
+
+Sign in on the live URL → **Editor mode** → edit → **Save**. GitHub gets a commit (`Save Digimon catalog`, and so on). Vercel rebuilds in about a minute. New pictures appear as soon as that deploy finishes (and immediately on this instance via `/uploads/...`).
+
+Do not put `.env.local` or the password in git.
+
+### VPS instead of Vercel
+
+If you run Docker or a VPS, you can skip GitHub writes and use a disk volume:
 
 ```
-DMI_ADMIN_USER=…
-DMI_ADMIN_PASS=…
-DMI_SESSION_SECRET=…   # long random string
 DMI_DATA_DIR=/var/dmi/data
 DMI_UPLOADS_DIR=/var/dmi/uploads
 ```
 
-Mount the uploads volume so the app can still serve `/uploads/...`:
-
-- bind `/var/dmi/uploads` → `public/uploads` in the container, **or**
-- set `DMI_UPLOADS_DIR` to that bind.
-
-If you deploy by `git pull` into the same folder that holds `data/`, a pull can overwrite `data/*.json`. Point `DMI_DATA_DIR` **outside** the repo (or use a named volume) so editor work survives new code.
-
-Do not use a host that wipes the disk on every deploy unless you attach a volume. A small VPS or Fly/Railway with a volume is the fit; serverless (Vercel) is not, unless you later move saves to object storage.
+Point those **outside** the git checkout so `git pull` cannot overwrite editor JSON.
 
 Seeds (Digimon sheet, dungeon list, accessory tables) only fill **missing** files/rows. They do not wipe pages you already saved.
 

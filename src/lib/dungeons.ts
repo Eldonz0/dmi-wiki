@@ -1,7 +1,8 @@
 import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
-import { dataFile } from "@/lib/paths";
+import { pushLiveFile } from "@/lib/github-live";
+import { dataFile, tryWriteFile } from "@/lib/paths";
 import { slugifyName } from "@/lib/evo-layout";
 import type { DungeonEntry, DungeonHubArt } from "@/lib/dungeon-types";
 
@@ -173,10 +174,11 @@ function load(): Store {
   }
 }
 
-function save(store: Store) {
-  mkdirSync(path.dirname(FILE), { recursive: true });
-  writeFileSync(FILE, JSON.stringify(store));
+async function save(store: Store) {
+  const json = JSON.stringify(store);
+  tryWriteFile(FILE, json);
   mem = { mtime: Date.now(), store };
+  await pushLiveFile("data/dungeons.json", json, "Save dungeons");
 }
 
 function uniqueSlug(title: string, used: Set<string>) {
@@ -217,7 +219,7 @@ function ensureSeeds(store: Store) {
       e.order = seeded.length + i;
     });
     store.entries = [...seeded, ...extra];
-    save(store);
+    void save(store);
   }
   return store;
 }
@@ -236,7 +238,7 @@ export function getDungeonHub(): DungeonHubArt {
   return ensureSeeds(load()).hub ?? defaultHub();
 }
 
-export function saveDungeonHub(hub: Partial<DungeonHubArt>): DungeonHubArt {
+export async function saveDungeonHub(hub: Partial<DungeonHubArt>): Promise<DungeonHubArt> {
   const store = ensureSeeds(load());
   const current = store.hub ?? defaultHub();
   store.hub = {
@@ -246,15 +248,15 @@ export function saveDungeonHub(hub: Partial<DungeonHubArt>): DungeonHubArt {
     ),
     pins: Array.isArray(hub.pins) ? hub.pins : current.pins,
   };
-  save(store);
+  await save(store);
   return store.hub;
 }
 
-export function createDungeon(input: {
+export async function createDungeon(input: {
   title: string;
   body?: string;
   ticketName?: string;
-}): DungeonEntry {
+}): Promise<DungeonEntry> {
   const store = ensureSeeds(load());
   const used = new Set(store.entries.map((e) => e.slug));
   const title = input.title.trim() || "New dungeon";
@@ -270,16 +272,16 @@ export function createDungeon(input: {
     updatedAt: new Date().toISOString(),
   };
   store.entries.push(entry);
-  save(store);
+  await save(store);
   return entry;
 }
 
-export function updateDungeon(
+export async function updateDungeon(
   slug: string,
   patch: Partial<
     Pick<DungeonEntry, "title" | "body" | "ticketName" | "ticketIcon" | "order">
   >,
-): DungeonEntry | undefined {
+): Promise<DungeonEntry | undefined> {
   const store = ensureSeeds(load());
   const entry = store.entries.find((e) => e.slug === slug);
   if (!entry) return undefined;
@@ -289,11 +291,11 @@ export function updateDungeon(
   if (typeof patch.ticketIcon === "string") entry.ticketIcon = patch.ticketIcon;
   if (typeof patch.order === "number") entry.order = patch.order;
   entry.updatedAt = new Date().toISOString();
-  save(store);
+  await save(store);
   return entry;
 }
 
-export function reorderDungeons(slugs: string[]): DungeonEntry[] {
+export async function reorderDungeons(slugs: string[]): Promise<DungeonEntry[]> {
   const store = ensureSeeds(load());
   const bySlug = new Map(store.entries.map((e) => [e.slug, e]));
   const next: DungeonEntry[] = [];
@@ -309,15 +311,15 @@ export function reorderDungeons(slugs: string[]): DungeonEntry[] {
     next.push(e);
   }
   store.entries = next;
-  save(store);
+  await save(store);
   return listDungeons();
 }
 
-export function deleteDungeon(slug: string): boolean {
+export async function deleteDungeon(slug: string): Promise<boolean> {
   const store = load();
   const next = store.entries.filter((e) => e.slug !== slug);
   if (next.length === store.entries.length) return false;
   store.entries = next.map((e, i) => ({ ...e, order: i }));
-  save(store);
+  await save(store);
   return true;
 }

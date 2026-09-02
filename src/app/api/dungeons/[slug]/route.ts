@@ -20,7 +20,7 @@ export async function PUT(request: Request, ctx: Ctx) {
   const body = (await request.json()) as Partial<
     Pick<DungeonEntry, "title" | "body" | "ticketName" | "ticketIcon" | "order">
   >;
-  const entry = updateDungeon(slug, body);
+  const entry = await updateDungeon(slug, body);
   if (!entry) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ entry });
 }
@@ -30,7 +30,7 @@ export async function DELETE(_request: Request, ctx: Ctx) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   const { slug } = await ctx.params;
-  if (!deleteDungeon(slug)) {
+  if (!(await deleteDungeon(slug))) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
   return NextResponse.json({ ok: true });

@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   const body = (await request.json()) as { title?: string; body?: string; ticketName?: string };
-  const entry = createDungeon({
+  const entry = await createDungeon({
     title: String(body.title ?? ""),
     body: body.body,
     ticketName: body.ticketName,
@@ -40,10 +40,10 @@ export async function PUT(request: Request) {
     hub?: DungeonHubArt;
   };
   if (body.hub) {
-    return NextResponse.json({ hub: saveDungeonHub(body.hub) });
+    return NextResponse.json({ hub: await saveDungeonHub(body.hub) });
   }
   if (!Array.isArray(body.order)) {
     return NextResponse.json({ error: "Missing order" }, { status: 400 });
   }
-  return NextResponse.json({ entries: reorderDungeons(body.order.map(String)) });
+  return NextResponse.json({ entries: await reorderDungeons(body.order.map(String)) });
 }

@@ -19,7 +19,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Missing slug" }, { status: 400 });
   }
   const current = getLandPage(body.slug);
-  const saved = saveLandPage({
+  const saved = await saveLandPage({
     ...current,
     ...body,
     slug: body.slug,

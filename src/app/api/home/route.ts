@@ -10,7 +10,7 @@ export async function PUT(request: Request) {
     count?: number;
     slugs?: string[];
   };
-  const home = setHomeFeatured(
+  const home = await setHomeFeatured(
     Number(body.count) || 0,
     Array.isArray(body.slugs) ? body.slugs : [],
   );

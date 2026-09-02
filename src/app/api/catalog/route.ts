@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Name required" }, { status: 400 });
   }
   try {
-    const form = createForm({
+    const form = await createForm({
       name,
       rank: body.create?.rank,
       role: body.create?.role,
@@ -72,8 +72,15 @@ export async function PUT(request: Request) {
   if (!body?.form?.slug) {
     return NextResponse.json({ error: "Missing form" }, { status: 400 });
   }
-  const saved = upsertForm(body.form.slug, body.form, body.tree);
-  return NextResponse.json({ form: saved, tree: body.tree });
+  try {
+    const saved = await upsertForm(body.form.slug, body.form, body.tree);
+    return NextResponse.json({ form: saved, tree: body.tree });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Could not save" },
+      { status: 500 },
+    );
+  }
 }
 
 export async function PATCH(request: Request) {

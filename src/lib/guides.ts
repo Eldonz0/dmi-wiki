@@ -1,7 +1,8 @@
 import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
-import { dataFile } from "@/lib/paths";
+import { dataFile, tryWriteFile } from "@/lib/paths";
+import { pushLiveFile } from "@/lib/github-live";
 import { slugifyName } from "@/lib/evo-layout";
 import type { GuideHubArt, GuidePin, GuidePost } from "@/lib/guide-types";
 
@@ -109,6 +110,7 @@ function load(): Store {
     mkdirSync(path.dirname(FILE), { recursive: true });
     const created = empty();
     writeFileSync(FILE, JSON.stringify(created));
+    void pushLiveFile("data/guides.json", JSON.stringify(created), "Seed guides");
     mem = { mtime: Date.now(), store: created };
     return created;
   }
@@ -133,10 +135,11 @@ function load(): Store {
   }
 }
 
-function save(store: Store) {
-  mkdirSync(path.dirname(FILE), { recursive: true });
-  writeFileSync(FILE, JSON.stringify(store));
+async function save(store: Store) {
+  const json = JSON.stringify(store);
+  tryWriteFile(FILE, json);
   mem = { mtime: Date.now(), store };
+  await pushLiveFile("data/guides.json", json, "Save guides");
 }
 
 function uniqueSlug(title: string, used: Set<string>) {
@@ -190,7 +193,7 @@ function ensureSeeds(store: Store) {
       p.order = seeded.length + i;
     });
     store.posts = [...seeded, ...extra];
-    save(store);
+    void save(store);
   }
   return store;
 }
@@ -204,13 +207,13 @@ export function getGuide(slug: string): GuidePost | undefined {
   return ensureSeeds(load()).posts.find((p) => p.slug === slug);
 }
 
-export function createGuide(input: {
+export async function createGuide(input: {
   title: string;
   body: string;
   stageHeight?: number;
   pins?: GuidePin[];
   author?: string;
-}): GuidePost {
+}): Promise<GuidePost> {
   const store = ensureSeeds(load());
   const used = new Set(store.posts.map((p) => p.slug));
   const now = new Date().toISOString();
@@ -228,14 +231,14 @@ export function createGuide(input: {
     pins: input.pins ?? [],
   };
   store.posts.push(post);
-  save(store);
+  await save(store);
   return post;
 }
 
-export function updateGuide(
+export async function updateGuide(
   slug: string,
   patch: Partial<Pick<GuidePost, "title" | "body" | "stageHeight" | "pins" | "order">>,
-): GuidePost | undefined {
+): Promise<GuidePost | undefined> {
   const store = ensureSeeds(load());
   const post = store.posts.find((p) => p.slug === slug);
   if (!post) return undefined;
@@ -249,11 +252,11 @@ export function updateGuide(
   if (Array.isArray(patch.pins)) post.pins = patch.pins;
   if (typeof patch.order === "number") post.order = patch.order;
   post.updatedAt = new Date().toISOString();
-  save(store);
+  await save(store);
   return post;
 }
 
-export function reorderGuides(slugs: string[]): GuidePost[] {
+export async function reorderGuides(slugs: string[]): Promise<GuidePost[]> {
   const store = ensureSeeds(load());
   const bySlug = new Map(store.posts.map((p) => [p.slug, p]));
   const next: GuidePost[] = [];
@@ -269,7 +272,7 @@ export function reorderGuides(slugs: string[]): GuidePost[] {
     next.push(post);
   }
   store.posts = next;
-  save(store);
+  await save(store);
   return listGuides();
 }
 
@@ -277,7 +280,7 @@ export function getGuideHub(): GuideHubArt {
   return ensureSeeds(load()).hub ?? defaultHub();
 }
 
-export function saveGuideHub(hub: Partial<GuideHubArt>): GuideHubArt {
+export async function saveGuideHub(hub: Partial<GuideHubArt>): Promise<GuideHubArt> {
   const store = ensureSeeds(load());
   const current = store.hub ?? defaultHub();
   store.hub = {
@@ -287,15 +290,15 @@ export function saveGuideHub(hub: Partial<GuideHubArt>): GuideHubArt {
     ),
     pins: Array.isArray(hub.pins) ? hub.pins : current.pins,
   };
-  save(store);
+  await save(store);
   return store.hub;
 }
 
-export function deleteGuide(slug: string): boolean {
+export async function deleteGuide(slug: string): Promise<boolean> {
   const store = load();
   const next = store.posts.filter((p) => p.slug !== slug);
   if (next.length === store.posts.length) return false;
   store.posts = next.map((p, i) => ({ ...p, order: i }));
-  save(store);
+  await save(store);
   return true;
 }

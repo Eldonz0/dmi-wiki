@@ -18,6 +18,6 @@ export async function POST(request: Request) {
   if (!isAccessorySlot(slot)) {
     return NextResponse.json({ error: "Unknown slot" }, { status: 400 });
   }
-  const item = addAccessoryItem(slot);
+  const item = await addAccessoryItem(slot);
   return NextResponse.json({ item });
 }

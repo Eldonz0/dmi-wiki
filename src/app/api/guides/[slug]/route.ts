@@ -23,7 +23,7 @@ export async function PUT(request: Request, ctx: Ctx) {
     stageHeight?: number;
     pins?: GuidePin[];
   };
-  const post = updateGuide(slug, {
+  const post = await updateGuide(slug, {
     title: body.title,
     body: body.body,
     stageHeight: body.stageHeight,
@@ -38,7 +38,7 @@ export async function DELETE(_request: Request, ctx: Ctx) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   const { slug } = await ctx.params;
-  if (!deleteGuide(slug)) {
+  if (!(await deleteGuide(slug))) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
   return NextResponse.json({ ok: true });

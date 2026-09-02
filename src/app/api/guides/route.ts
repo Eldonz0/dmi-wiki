@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     stageHeight?: number;
     pins?: GuidePin[];
   };
-  const post = createGuide({
+  const post = await createGuide({
     title: String(body.title ?? ""),
     body: String(body.body ?? ""),
     stageHeight: body.stageHeight,
@@ -45,12 +45,12 @@ export async function PUT(request: Request) {
     hub?: GuideHubArt;
   };
   if (body.hub) {
-    return NextResponse.json({ hub: saveGuideHub(body.hub) });
+    return NextResponse.json({ hub: await saveGuideHub(body.hub) });
   }
   if (!Array.isArray(body.order)) {
     return NextResponse.json({ error: "Missing order" }, { status: 400 });
   }
   return NextResponse.json({
-    posts: reorderGuides(body.order.map(String)),
+    posts: await reorderGuides(body.order.map(String)),
   });
 }
