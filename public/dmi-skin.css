@@ -732,7 +732,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13.5px;
+  font-size: 19px;
+  font-weight: 600;
 }
 
 .digiRow {
