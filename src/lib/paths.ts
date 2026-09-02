@@ -1,10 +1,28 @@
-import { mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import path from "path";
 
-/** Live wiki JSON. Point this at a disk volume so deploys do not wipe editor saves. */
+function repoDataDir() {
+  return path.join(process.cwd(), "data");
+}
+
+/** Live wiki JSON. On Vercel this is /tmp so Save can write; hydrate copies GitHub here. */
 export function dataFile(name: string) {
-  const root = process.env.DMI_DATA_DIR || path.join(process.cwd(), "data");
-  return path.join(root, name);
+  if (process.env.DMI_DATA_DIR) return path.join(process.env.DMI_DATA_DIR, name);
+  if (process.env.VERCEL) return path.join("/tmp/dmi-data", name);
+  return path.join(repoDataDir(), name);
+}
+
+export function bundledDataFile(name: string) {
+  return path.join(repoDataDir(), name);
+}
+
+/** Prefer the writable live copy, else the files shipped in the deploy. */
+export function readableDataFile(name: string) {
+  const live = dataFile(name);
+  if (existsSync(live)) return live;
+  const bundled = bundledDataFile(name);
+  if (existsSync(bundled)) return bundled;
+  return live;
 }
 
 /** Uploaded chips, banners, tickets. Mount a volume here in production. */

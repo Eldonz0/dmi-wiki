@@ -4,6 +4,7 @@ import "./globals.css";
 import { WikiShell } from "@/components/wiki-shell";
 import { rankIconMap } from "@/lib/catalog";
 import { githubLiveEnabled } from "@/lib/github-live";
+import { hydrateLiveData } from "@/lib/live-store";
 
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
@@ -35,7 +36,8 @@ export const metadata: Metadata = {
     "Wiki for Digimon Masters Infinite — DMI. Digimon list, guide, dungeons, and accessory.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  await hydrateLiveData();
   return (
     <html
       lang="en"

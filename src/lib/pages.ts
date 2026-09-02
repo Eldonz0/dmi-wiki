@@ -1,6 +1,6 @@
 import "server-only";
 import { existsSync, readFileSync, statSync } from "fs";
-import { dataFile, tryWriteFile } from "@/lib/paths";
+import { dataFile, readableDataFile, tryWriteFile } from "@/lib/paths";
 import { pushLiveFile } from "@/lib/github-live";
 import type { WikiLandPage } from "@/lib/page-types";
 import { defaultBlocks } from "@/lib/page-types";
@@ -69,15 +69,14 @@ type Store = { pages: Record<string, WikiLandPage> };
 let mem: { mtime: number; store: Store } | null = null;
 
 function load(): Store {
-  if (!existsSync(FILE)) {
-    const created = { pages: { ...DEFAULTS } };
-    void save(created);
-    return created;
+  const fromDisk = readableDataFile("pages.json");
+  if (!existsSync(fromDisk)) {
+    return { pages: { ...DEFAULTS } };
   }
-  const mtime = statSync(FILE).mtimeMs;
+  const mtime = statSync(fromDisk).mtimeMs;
   if (mem && mem.mtime === mtime) return mem.store;
   try {
-    const raw = JSON.parse(readFileSync(FILE, "utf8")) as Store;
+    const raw = JSON.parse(readFileSync(fromDisk, "utf8")) as Store;
     const store = { pages: { ...DEFAULTS, ...(raw.pages ?? {}) } };
     mem = { mtime, store };
     return store;

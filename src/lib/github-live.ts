@@ -21,6 +21,16 @@ export function githubLiveEnabled() {
   return Boolean(repo().includes("/") && token());
 }
 
+let lastWriteMs = 0;
+
+export function markLiveWrite() {
+  lastWriteMs = Date.now();
+}
+
+export function justWroteLive(ms = 20_000) {
+  return lastWriteMs > 0 && Date.now() - lastWriteMs < ms;
+}
+
 function ghMessage(text: string) {
   try {
     const data = JSON.parse(text) as { message?: string };
@@ -44,12 +54,42 @@ async function github(pathname: string, init?: RequestInit) {
   });
 }
 
+function encodedPath(relPath: string) {
+  return relPath
+    .split("/")
+    .filter(Boolean)
+    .map(encodeURIComponent)
+    .join("/");
+}
+
 async function fileSha(encoded: string) {
   const existing = await github(`/contents/${encoded}?ref=${encodeURIComponent(branch())}`);
   if (!existing.ok) return undefined;
   const data = (await existing.json()) as { sha?: string; type?: string };
   if (data.type === "file" && data.sha) return data.sha;
   return undefined;
+}
+
+export async function pullLiveFile(relPath: string): Promise<Buffer | null> {
+  if (!githubLiveEnabled()) return null;
+  const res = await github(
+    `/contents/${encodedPath(relPath)}?ref=${encodeURIComponent(branch())}`,
+  );
+  if (!res.ok) return null;
+  const data = (await res.json()) as {
+    content?: string;
+    encoding?: string;
+    download_url?: string;
+  };
+  if (data.encoding === "base64" && data.content) {
+    return Buffer.from(data.content.replace(/\n/g, ""), "base64");
+  }
+  if (data.download_url) {
+    const raw = await fetch(data.download_url);
+    if (!raw.ok) return null;
+    return Buffer.from(await raw.arrayBuffer());
+  }
+  return null;
 }
 
 /** Save a wiki file into GitHub so Vercel/git publishes keep editor changes. */
@@ -67,11 +107,7 @@ export async function pushLiveFile(
     return;
   }
   const buf = Buffer.isBuffer(content) ? content : Buffer.from(content, "utf8");
-  const encoded = relPath
-    .split("/")
-    .filter(Boolean)
-    .map(encodeURIComponent)
-    .join("/");
+  const encoded = encodedPath(relPath);
 
   const put = async (sha?: string) =>
     github(`/contents/${encoded}`, {
@@ -98,4 +134,5 @@ export async function pushLiveFile(
         : "";
     throw new Error(`GitHub could not save ${relPath} (${res.status}): ${ghMessage(text)}.${hint}`);
   }
+  markLiveWrite();
 }

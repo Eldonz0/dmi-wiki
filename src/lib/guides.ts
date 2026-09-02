@@ -1,6 +1,6 @@
 import "server-only";
 import { existsSync, readFileSync, statSync } from "fs";
-import { dataFile, tryWriteFile } from "@/lib/paths";
+import { dataFile, readableDataFile, tryWriteFile } from "@/lib/paths";
 import { pushLiveFile } from "@/lib/github-live";
 import { slugifyName } from "@/lib/evo-layout";
 import type { GuideHubArt, GuidePin, GuidePost } from "@/lib/guide-types";
@@ -105,17 +105,14 @@ function normalize(post: GuidePost, index: number): GuidePost {
 }
 
 function load(): Store {
-  if (!existsSync(FILE)) {
-    const created = empty();
-    tryWriteFile(FILE, JSON.stringify(created));
-    void pushLiveFile("data/guides.json", JSON.stringify(created), "Seed guides");
-    mem = { mtime: Date.now(), store: created };
-    return created;
+  const fromDisk = readableDataFile("guides.json");
+  if (!existsSync(fromDisk)) {
+    return empty();
   }
-  const mtime = statSync(FILE).mtimeMs;
+  const mtime = statSync(fromDisk).mtimeMs;
   if (mem && mem.mtime === mtime) return mem.store;
   try {
-    const raw = JSON.parse(readFileSync(FILE, "utf8")) as {
+    const raw = JSON.parse(readFileSync(fromDisk, "utf8")) as {
       posts?: GuidePost[];
       hub?: GuideHubArt;
     };

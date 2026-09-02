@@ -41,10 +41,11 @@ export function NewDigimonPack({
   const [status, setStatus] = useState("");
   const [options, setOptions] = useState<FeaturedPick[]>(items);
 
+  const itemKey = items.map((i) => i.slug).join("|");
   useEffect(() => {
     setSlugs(items.map((i) => i.slug));
     setCount(Math.max(items.length, 1));
-  }, [items]);
+  }, [itemKey]);
 
   useEffect(() => {
     if (!editing) setOpen(false);

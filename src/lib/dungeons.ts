@@ -1,7 +1,7 @@
 import "server-only";
 import { existsSync, readFileSync, statSync } from "fs";
 import { pushLiveFile } from "@/lib/github-live";
-import { dataFile, tryWriteFile } from "@/lib/paths";
+import { dataFile, readableDataFile, tryWriteFile } from "@/lib/paths";
 import { slugifyName } from "@/lib/evo-layout";
 import type { DungeonEntry, DungeonHubArt } from "@/lib/dungeon-types";
 
@@ -148,16 +148,14 @@ function normalize(d: DungeonEntry, index: number): DungeonEntry {
 }
 
 function load(): Store {
-  if (!existsSync(FILE)) {
-    const created = empty();
-    tryWriteFile(FILE, JSON.stringify(created));
-    mem = { mtime: Date.now(), store: created };
-    return created;
+  const fromDisk = readableDataFile("dungeons.json");
+  if (!existsSync(fromDisk)) {
+    return empty();
   }
-  const mtime = statSync(FILE).mtimeMs;
+  const mtime = statSync(fromDisk).mtimeMs;
   if (mem && mem.mtime === mtime) return mem.store;
   try {
-    const raw = JSON.parse(readFileSync(FILE, "utf8")) as Partial<Store>;
+    const raw = JSON.parse(readFileSync(fromDisk, "utf8")) as Partial<Store>;
     const store: Store = {
       entries: (raw.entries ?? []).map(normalize),
       hub: {

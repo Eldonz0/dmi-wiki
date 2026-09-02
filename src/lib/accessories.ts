@@ -2,7 +2,7 @@ import "server-only";
 import { existsSync, readFileSync, statSync } from "fs";
 import { ACCESSORY_SEEDS } from "@/lib/accessory-seeds";
 import { pushLiveFile } from "@/lib/github-live";
-import { dataFile, tryWriteFile } from "@/lib/paths";
+import { dataFile, readableDataFile, tryWriteFile } from "@/lib/paths";
 import {
   ACCESSORY_SLOTS,
   isAccessorySlot,
@@ -59,15 +59,14 @@ function normalizeCat(cat: AccessoryCategory): AccessoryCategory {
 }
 
 function load(): Store {
-  if (!existsSync(FILE)) {
-    const created = empty();
-    void save(created);
-    return created;
+  const fromDisk = readableDataFile("accessories.json");
+  if (!existsSync(fromDisk)) {
+    return empty();
   }
-  const mtime = statSync(FILE).mtimeMs;
+  const mtime = statSync(fromDisk).mtimeMs;
   if (mem && mem.mtime === mtime) return mem.store;
   try {
-    const raw = JSON.parse(readFileSync(FILE, "utf8")) as Partial<Store>;
+    const raw = JSON.parse(readFileSync(fromDisk, "utf8")) as Partial<Store>;
     const bySlug = new Map(
       (raw.categories ?? []).filter((c) => isAccessorySlot(c.slug)).map((c) => [c.slug, c]),
     );

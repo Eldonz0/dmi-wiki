@@ -1,8 +1,8 @@
 import "server-only";
 import { existsSync, readFileSync, statSync } from "fs";
 import sheet from "@/lib/sheet.json";
-import { dataFile, tryWriteFile } from "@/lib/paths";
-import { pushLiveFile } from "@/lib/github-live";
+import { dataFile, readableDataFile, tryWriteFile } from "@/lib/paths";
+import { githubLiveEnabled, pushLiveFile } from "@/lib/github-live";
 import { NEW_DIGIMON } from "@/lib/wiki";
 import { LORE, TREES, artFor, iconFor } from "@/lib/wiki-lore";
 import type { CatalogForm, EvoTree, SheetForm } from "@/lib/digimon-types";
@@ -89,13 +89,14 @@ function indexCatalog(catalog: Catalog): CatalogCache {
 }
 
 function loadFile(): Catalog {
-  if (existsSync(CATALOG_PATH)) {
-    const mtime = statSync(CATALOG_PATH).mtimeMs;
+  const fromDisk = readableDataFile("catalog.json");
+  if (existsSync(fromDisk)) {
+    const mtime = statSync(fromDisk).mtimeMs;
     if (mem && mem.mtime === mtime) return mem.catalog;
-    const raw = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as Catalog;
+    const raw = JSON.parse(readFileSync(fromDisk, "utf8")) as Catalog;
     if (!raw.forms?.length) {
       const created = seed();
-      void saveCatalog(created);
+      if (!githubLiveEnabled()) void saveCatalog(created);
       return created;
     }
     raw.icons ??= {};
@@ -106,10 +107,11 @@ function loadFile(): Catalog {
     raw.home.slugs ??= [];
     raw.home.count ??= raw.home.slugs.length;
     mem = indexCatalog(raw);
+    mem.mtime = mtime;
     return mem.catalog;
   }
   const created = seed();
-  void saveCatalog(created);
+  if (!githubLiveEnabled()) void saveCatalog(created);
   return created;
 }
 
