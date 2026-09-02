@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { WikiSearchForm } from "@/components/wiki-search";
 import { SiteSearch } from "@/components/site-search";
-import { SIDEBAR_NAV, SIDEBAR_TOOLS } from "@/lib/wiki";
+import { SIDEBAR_NAV, SIDEBAR_TOOLS, DISCORD_INVITE } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
 import { AuthProvider, useAdmin } from "@/hooks/use-admin";
 import { SignInButton, SignOutButton } from "@/components/sign-in-button";
@@ -23,6 +23,26 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+
+function DiscordInvite({ className }: { className?: string }) {
+  return (
+    <a
+      className={cn("dmi-discord", className)}
+      href={DISCORD_INVITE}
+      target="_blank"
+      rel="noreferrer"
+      title="Join the DMI Discord"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22">
+        <path
+          fill="currentColor"
+          d="M20.32 4.37A19.8 19.8 0 0 0 15.89 3l-.2.37a18.3 18.3 0 0 1 4.54 1.72 16.2 16.2 0 0 0-14.46 0A18.3 18.3 0 0 1 8.3 3.37L8.1 3A19.8 19.8 0 0 0 3.67 4.38C.5 9.15-.3 13.8.1 18.38A19.9 19.9 0 0 0 6 21l.7-1.16a13 13 0 0 1-2.1-1.02l.42-.33a14.3 14.3 0 0 0 12 0l.4.33a13 13 0 0 1-2.08 1.03L18 21a19.9 19.9 0 0 0 5.92-2.62c.5-5.3-.7-9.9-3.6-14.01ZM8.02 15.33c-1.18 0-2.15-1.08-2.15-2.4 0-1.33.95-2.41 2.15-2.41s2.18 1.1 2.16 2.4c0 1.33-.95 2.41-2.16 2.41Zm7.96 0c-1.18 0-2.15-1.08-2.15-2.4 0-1.33.95-2.41 2.15-2.41s2.18 1.1 2.16 2.4c0 1.33-.95 2.41-2.16 2.41Z"
+        />
+      </svg>
+      <span>Discord</span>
+    </a>
+  );
+}
 
 function EditorToggle() {
   const { editing, toggle } = useEditorMode();
@@ -97,6 +117,14 @@ function Portlets({
   return (
     <div className="mw-portlets">
       <AccountPortlet admin={isAdmin} onNavigate={onNavigate} />
+      <nav className="mw-portlet">
+        <h3>Community</h3>
+        <ul>
+          <li>
+            <DiscordInvite />
+          </li>
+        </ul>
+      </nav>
       {groups.map((group) => (
         <nav key={group.title} className="mw-portlet">
           <h3>{group.title}</h3>
@@ -169,35 +197,38 @@ function WikiChrome({
             height={102}
           />
         </Link>
-        <nav className="dmi-top-nav">
-          <Link href="/" className={cn(pathname === "/" && "is-on")}>
-            Main page
-          </Link>
-          <Link
-            href="/digimon"
-            className={cn(pathname.startsWith("/digimon") && "is-on")}
-          >
-            Digimon List
-          </Link>
-          <Link
-            href="/guide"
-            className={cn(pathname.startsWith("/guide") && "is-on")}
-          >
-            Guide
-          </Link>
-          {admin ? <EditorToggle /> : null}
-          {admin ? <IndexEditorLink /> : (
-            <SignInButton next={pathname || "/"} />
-          )}
-          {admin ? <SignOutButton className="mw-text-out" /> : null}
-          <a
-            href="https://www.digimonmastersinfinite.com/index.html"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Official site
-          </a>
-        </nav>
+        <div className="dmi-top-tools">
+          <nav className="dmi-top-nav">
+            <Link href="/" className={cn(pathname === "/" && "is-on")}>
+              Main page
+            </Link>
+            <Link
+              href="/digimon"
+              className={cn(pathname.startsWith("/digimon") && "is-on")}
+            >
+              Digimon List
+            </Link>
+            <Link
+              href="/guide"
+              className={cn(pathname.startsWith("/guide") && "is-on")}
+            >
+              Guide
+            </Link>
+            {admin ? <EditorToggle /> : null}
+            {admin ? <IndexEditorLink /> : (
+              <SignInButton next={pathname || "/"} />
+            )}
+            {admin ? <SignOutButton className="mw-text-out" /> : null}
+            <a
+              href="https://www.digimonmastersinfinite.com/index.html"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Official site
+            </a>
+          </nav>
+          <DiscordInvite />
+        </div>
       </header>
 
       <div className="mw-frame">

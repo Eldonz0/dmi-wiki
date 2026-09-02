@@ -77,6 +77,8 @@ export const SIDEBAR_TOOLS: SidebarGroup[] = [
 
 export const SIDEBAR: SidebarGroup[] = [...SIDEBAR_NAV, ...SIDEBAR_TOOLS];
 
+export const DISCORD_INVITE = "https://discord.gg/vGMQJmKBn";
+
 export const SEARCH_INDEX = [
   { href: "/rules", title: "Server rules", text: "f2p macros two accounts auto play" },
   { href: "/party", title: "Party system", text: "party exp killer 40 60 80" },

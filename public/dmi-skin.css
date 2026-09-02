@@ -85,10 +85,47 @@
   object-position: left center;
 }
 
-.dmi-top-nav {
+.dmi-top-tools {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  align-items: center;
+  gap: 0.55rem;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.dmi-discord {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  position: relative;
+  color: #fff !important;
+  background: #5865f2;
+  border: 1px solid #7289da;
+  border-radius: 999px;
+  padding: 0.38rem 0.85rem 0.38rem 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none !important;
+  box-shadow: 0 0 12px rgba(88, 101, 242, 0.35);
+}
+
+.dmi-discord svg {
+  display: block;
+}
+
+.dmi-discord:hover {
+  background: #4752c4;
+  color: #fff !important;
+}
+
+.mw-mobile-bar .dmi-discord.is-compact span {
+  display: none;
+}
+
+.mw-mobile-bar .dmi-discord.is-compact {
+  padding: 0.4rem;
 }
 
 .dmi-top-nav a {
@@ -739,6 +776,18 @@
 
   .dmi-top-nav {
     display: none;
+  }
+
+  .dmi-discord span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .dmi-discord {
+    padding: 0.42rem;
   }
 
   .mw-sidebar-desktop,
