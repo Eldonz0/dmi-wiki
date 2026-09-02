@@ -27,6 +27,8 @@ Landing page text lives in `data/pages.json`.
 
 `/guide` is a **left-hand list of points** (`*` bullets). Each point opens a landing page. The right side holds banners you upload and drag in Editor mode. **New guide landing page** adds a point. On a landing page, **Edit** for notes, tables, and pictures. Saved in `data/guides.json`.
 
+A search bar sits at the top of every page. Typing suggests Digimon, guide, dungeon, and accessory landing pages.
+
 ## Dungeons
 
 `/dungeons` uses the same point list. Each row is **entry ticket chip + dungeon name**. The name opens a landing page. In Editor mode, click the 36×36 chip to upload the ticket icon (no file-picker chrome). Saved in `data/dungeons.json`.

@@ -13,7 +13,7 @@ export function SearchResults({
   const params = useSearchParams();
   const q = (params.get("q") ?? "").trim();
   const needle = q.toLowerCase();
-  const catalog = [...SEARCH_INDEX, ...extras];
+  const catalog = extras.length ? extras : SEARCH_INDEX;
   const hits = needle
     ? catalog.filter(
         (page) =>

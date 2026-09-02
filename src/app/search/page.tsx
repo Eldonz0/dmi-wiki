@@ -1,18 +1,12 @@
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { listDigimon } from "@/lib/catalog";
 import { SearchResults } from "@/components/search-results";
-import { isAdmin } from "@/lib/auth";
+import { buildSearchIndex } from "@/lib/search-index";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Search" };
 
-export default async function SearchPage() {
-  if (!(await isAdmin())) redirect("/");
-  const extras = listDigimon().map((d) => ({
-    href: `/digimon/${d.slug}`,
-    title: d.name,
-    text: `${d.role} ${d.rank} ${d.lines.join(" ")} ${d.hp}`,
-  }));
+export default function SearchPage() {
+  const extras = buildSearchIndex();
   return (
     <Suspense fallback={<p>Loading search…</p>}>
       <SearchResults extras={extras} />

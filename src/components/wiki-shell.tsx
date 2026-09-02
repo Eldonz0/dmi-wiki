@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { WikiSearchForm } from "@/components/wiki-search";
+import { SiteSearch } from "@/components/site-search";
 import { SIDEBAR_NAV, SIDEBAR_TOOLS } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
 import { AuthProvider, useAdmin } from "@/hooks/use-admin";
@@ -242,6 +243,7 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="mw-content">
+            <SiteSearch />
             {editing ? (
               <p className="editor-banner">
                 Editor mode is on. The page stays as visitors see it — use the

@@ -162,6 +162,91 @@
   border-radius: 8px;
 }
 
+.site-search {
+  position: relative;
+  margin: 0 0 1rem;
+}
+
+.site-search input {
+  width: 100%;
+  background: #0a0e27;
+  border: 1px solid var(--mw-line);
+  color: var(--mw-text);
+  padding: 0.55rem 0.75rem;
+  font-size: 15px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 400;
+  border-radius: 8px;
+}
+
+.site-search input:focus {
+  outline: none;
+  border-color: var(--cyan);
+}
+
+.site-search-list {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  background: #0c1028;
+  border: 1px solid var(--mw-line);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.site-search-list button {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  width: 100%;
+  background: none;
+  border: 0;
+  color: #8fd4ff;
+  text-align: left;
+  padding: 0.45rem 0.75rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-search-list button strong {
+  font-weight: 500;
+}
+
+.site-search-list button span {
+  color: var(--mw-muted);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.site-search-list button.is-on,
+.site-search-list button:hover {
+  background: rgba(0, 255, 242, 0.08);
+  color: var(--cyan);
+}
+
+.site-search-empty {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  background: #0c1028;
+  border: 1px solid var(--mw-line);
+  border-radius: 8px;
+  color: var(--mw-muted);
+  font-size: 13px;
+}
+
 .mw-portlet {
   background: var(--mw-panel);
   border: 1px solid var(--mw-line);
@@ -1657,6 +1742,15 @@ button.mw-text-out:hover {
   white-space: nowrap;
 }
 
+.dungeon-point a {
+  white-space: nowrap;
+  text-decoration: none !important;
+}
+
+.dungeon-point a:hover {
+  color: var(--cyan) !important;
+}
+
 .dungeon-point .box-wrap {
   flex: 1 1 12rem;
   min-width: 0;
@@ -1665,10 +1759,6 @@ button.mw-text-out:hover {
 
 .dungeon-point .box-wrap a {
   white-space: normal;
-}
-
-.dungeon-point a:hover {
-  color: var(--cyan) !important;
 }
 
 .ticket-chip-wrap {
