@@ -1559,8 +1559,8 @@ button.mw-text-out:hover {
 
 .guide-layout {
   display: grid;
-  grid-template-columns: minmax(16rem, 38%) 1fr;
-  gap: 1.4rem 2rem;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 26%);
+  gap: 1.4rem 1.1rem;
   align-items: start;
   margin: 0.6rem 0 1.4rem;
 }
@@ -1621,19 +1621,28 @@ button.mw-text-out:hover {
   .guide-layout {
     grid-template-columns: 1fr;
   }
+
+  .dungeon-point,
+  .dungeon-point a {
+    white-space: normal;
+  }
 }
 
 .dungeon-points li {
   display: flex;
   align-items: center;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .dungeon-point {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  min-width: 0;
+  white-space: nowrap;
+}
+
+.dungeon-point a {
+  white-space: nowrap;
 }
 
 .ticket-chip-wrap {
@@ -2146,7 +2155,7 @@ button.mw-editor-on {
   padding: 0;
   margin: 0;
   font: inherit;
-  font-weight: 600;
+  font-weight: 400;
   color: #8fd4ff;
   text-decoration: underline;
   cursor: pointer;
