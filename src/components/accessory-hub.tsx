@@ -14,12 +14,7 @@ export function AccessoryHub({ categories }: { categories: AccessoryCategory[] }
   }, []);
 
   function toggle(slug: string) {
-    setOpen((prev) => {
-      const next = { ...prev, [slug]: !prev[slug] };
-      const url = next[slug] ? `#${slug}` : "/accessory";
-      window.history.replaceState(null, "", url);
-      return next;
-    });
+    setOpen((prev) => ({ ...prev, [slug]: !prev[slug] }));
   }
 
   return (
