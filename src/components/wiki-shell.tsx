@@ -8,6 +8,7 @@ import { WikiSearchForm } from "@/components/wiki-search";
 import { SIDEBAR_NAV, SIDEBAR_TOOLS } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/hooks/use-admin";
+import { SignInButton, SignOutButton } from "@/components/sign-in-button";
 import {
   Sheet,
   SheetContent,
@@ -36,20 +37,12 @@ function AccountPortlet({
               </Link>
             </li>
             <li>
-              <a href="/api/auth/logout" onClick={onNavigate}>
-                Sign out
-              </a>
+              <SignOutButton className="mw-text-out" />
             </li>
           </>
         ) : (
           <li>
-            <a
-              className="mw-signin"
-              href="/api/auth/login?next=/"
-              onClick={onNavigate}
-            >
-              Sign in
-            </a>
+            <SignInButton next="/" />
           </li>
         )}
       </ul>
@@ -134,11 +127,9 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
               Catalog
             </Link>
           ) : (
-            <a className="mw-signin" href="/api/auth/login?next=/">
-              Sign in
-            </a>
+            <SignInButton next={pathname || "/"} />
           )}
-          {admin ? <a href="/api/auth/logout">Sign out</a> : null}
+          {admin ? <SignOutButton className="mw-text-out" /> : null}
           <a
             href="https://www.digimonmastersinfinite.com/index.html"
             target="_blank"
@@ -187,13 +178,9 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
               DMI WIKI
             </Link>
             {admin ? (
-              <a className="mw-signin" href="/api/auth/logout">
-                Sign out
-              </a>
+              <SignOutButton />
             ) : (
-              <a className="mw-signin" href="/api/auth/login?next=/">
-                Sign in
-              </a>
+              <SignInButton next={pathname || "/"} />
             )}
           </div>
 

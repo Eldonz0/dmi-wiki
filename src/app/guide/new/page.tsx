@@ -6,6 +6,6 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "New topic" };
 
 export default async function NewGuidePage() {
-  if (!(await isAdmin())) redirect("/api/auth/login?next=/guide/new");
+  if (!(await isAdmin())) redirect("/guide");
   return <GuideComposer />;
 }

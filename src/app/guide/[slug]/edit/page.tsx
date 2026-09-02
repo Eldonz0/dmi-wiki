@@ -14,8 +14,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function EditGuidePage({ params }: Props) {
   if (!(await isAdmin())) {
-    const { slug } = await params;
-    redirect(`/api/auth/login?next=/guide/${slug}/edit`);
+    redirect("/guide");
   }
   const post = getGuide((await params).slug);
   if (!post) notFound();

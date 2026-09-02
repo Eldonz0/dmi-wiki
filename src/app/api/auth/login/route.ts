@@ -8,7 +8,7 @@ import {
 
 function safeNext(raw: string) {
   if (!raw.startsWith("/") || raw.startsWith("//") || raw.includes("\\")) {
-    return "/admin";
+    return "/";
   }
   return raw;
 }
@@ -24,24 +24,20 @@ function signedIn(next: string, request: Request) {
   return res;
 }
 
-/** Testing shortcut: Sign in sets the tamer cookie with no form. */
+/** GET must not set a session — browsers prefetch Sign in links. */
 export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const next = safeNext(url.searchParams.get("next") || "/admin");
-  return signedIn(next, request);
+  return NextResponse.redirect(new URL("/", request.url), 303);
 }
 
+/** Testing: a Sign in click (empty POST) logs in as admin with no password. */
 export async function POST(request: Request) {
   const form = await request.formData();
   const user = String(form.get("user") ?? "");
   const password = String(form.get("password") ?? "");
-  const next = safeNext(String(form.get("next") ?? "/admin"));
+  const next = safeNext(String(form.get("next") ?? "/"));
   if (user || password) {
     if (!checkPassword(user, password)) {
-      const login = new URL("/login", request.url);
-      login.searchParams.set("error", "1");
-      login.searchParams.set("next", next);
-      return NextResponse.redirect(login, 303);
+      return NextResponse.redirect(new URL("/", request.url), 303);
     }
   }
   return signedIn(next, request);

@@ -1440,7 +1440,8 @@ a.evo-card:hover {
   border-color: transparent;
 }
 
-a.mw-signin {
+a.mw-signin,
+button.mw-signin {
   display: inline-block;
   color: #04101c !important;
   background: var(--cyan) !important;
@@ -1449,15 +1450,35 @@ a.mw-signin {
   padding: 0.35rem 0.75rem !important;
   border-radius: 8px;
   letter-spacing: 0.04em;
+  cursor: pointer;
+  font: inherit;
 }
 
-a.mw-signin:hover {
+a.mw-signin:hover,
+button.mw-signin:hover {
   filter: brightness(1.08);
+}
+
+.mw-account form {
+  margin: 0;
 }
 
 .mw-account .mw-signin {
   width: 100%;
   text-align: center;
+}
+
+button.mw-text-out {
+  background: transparent;
+  border: 0;
+  color: var(--mw-muted);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+button.mw-text-out:hover {
+  color: var(--cyan);
 }
 
 .guide-head {

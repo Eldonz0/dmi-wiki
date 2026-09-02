@@ -11,11 +11,11 @@ npm run dev -- --port 43127 --hostname 127.0.0.1
 
 Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
-Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**, **Clothing**. **Sign in** sits in the **Account** box on the left (and in the top bar / mobile bar). Tools, search, catalog, and the home **Edit box** only appear after you sign in as admin. Use **Sign out** to go back to a visitor view.
+Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**, **Clothing**. **Sign in** sits in the **Account** box on the left (and in the top bar / mobile bar). Clicking it logs you in immediately with no password (testing). Opening the site, prefetching links, or visiting `/login` does **not** sign you in. Tools, search, catalog, and the home **Edit box** only appear after that click. Use **Sign out** to go back to a visitor view.
 
 ## Tamer catalog (one account)
 
-There is no register page. Click **Sign in** — while we are testing it logs you in immediately. Then use **Catalog** or **Tools** to edit the site from the wiki itself.
+There is no register page. Click **Sign in** — while we are testing it logs you in immediately (no username/password). Then use **Catalog** or **Tools** to edit the site from the wiki itself.
 
 The account is still `admin` / `infinite` if a password form is used later. Override with `DMI_ADMIN_USER` and `DMI_ADMIN_PASS`.
 
