@@ -1,6 +1,5 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
-import path from "path";
+import { existsSync, readFileSync, statSync } from "fs";
 import { dataFile, tryWriteFile } from "@/lib/paths";
 import { pushLiveFile } from "@/lib/github-live";
 import { slugifyName } from "@/lib/evo-layout";
@@ -107,9 +106,8 @@ function normalize(post: GuidePost, index: number): GuidePost {
 
 function load(): Store {
   if (!existsSync(FILE)) {
-    mkdirSync(path.dirname(FILE), { recursive: true });
     const created = empty();
-    writeFileSync(FILE, JSON.stringify(created));
+    tryWriteFile(FILE, JSON.stringify(created));
     void pushLiveFile("data/guides.json", JSON.stringify(created), "Seed guides");
     mem = { mtime: Date.now(), store: created };
     return created;

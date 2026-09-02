@@ -1,6 +1,5 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
-import path from "path";
+import { existsSync, readFileSync, statSync } from "fs";
 import { pushLiveFile } from "@/lib/github-live";
 import { dataFile, tryWriteFile } from "@/lib/paths";
 import { slugifyName } from "@/lib/evo-layout";
@@ -150,9 +149,8 @@ function normalize(d: DungeonEntry, index: number): DungeonEntry {
 
 function load(): Store {
   if (!existsSync(FILE)) {
-    mkdirSync(path.dirname(FILE), { recursive: true });
     const created = empty();
-    writeFileSync(FILE, JSON.stringify(created));
+    tryWriteFile(FILE, JSON.stringify(created));
     mem = { mtime: Date.now(), store: created };
     return created;
   }
