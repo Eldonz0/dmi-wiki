@@ -23,9 +23,9 @@ Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired e
 
 Landing page text lives in `data/pages.json`.
 
-## Guide board
+## Guide
 
-`/guide` is a topic list. Signed-in admin can **New topic**, write the post, upload pictures, and drag / resize them on the layout board. Topics are stored in `data/guides.json`.
+`/guide` is a two-column list of **points**. Each point is a link to its own landing page (notes, tables, pictures). In Editor mode, **New guide landing page** adds a point. Open a point, then **Edit** to change the title, write `NOTE:` callouts, tables, and upload pictures. Saved in `data/guides.json`.
 
 On each form you can:
 

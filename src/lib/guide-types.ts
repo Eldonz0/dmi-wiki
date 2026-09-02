@@ -15,6 +15,7 @@ export type GuidePost = {
   author: string;
   createdAt: string;
   updatedAt: string;
+  order: number;
   stageHeight: number;
   pins: GuidePin[];
 };

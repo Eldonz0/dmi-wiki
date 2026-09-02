@@ -1547,6 +1547,74 @@ button.mw-text-out:hover {
   color: var(--cyan);
 }
 
+.guide-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 3.5rem;
+  margin: 1rem 0 1.5rem;
+  max-width: 44rem;
+}
+
+.guide-points ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.guide-points li {
+  margin: 0.35rem 0;
+}
+
+.guide-points a {
+  color: #7ec8ff !important;
+  text-decoration: underline;
+}
+
+.guide-points .box-wrap {
+  margin: 0.2rem 0 0.55rem;
+}
+
+.guide-note {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  margin: 0.75rem 0;
+  padding: 0.7rem 0.85rem;
+  background: rgba(225, 6, 0, 0.12);
+  border: 1px solid #e10600;
+  border-radius: 8px;
+  color: var(--mw-text);
+}
+
+.guide-note strong {
+  color: #ff6b6b;
+  flex: 0 0 auto;
+}
+
+.guide-pic {
+  display: block;
+  max-width: min(100%, 520px);
+  height: auto;
+  margin: 0.7rem 0;
+  border: 1px solid var(--mw-line);
+  border-radius: 8px;
+}
+
+.guide-table {
+  margin: 0.7rem 0 1rem;
+}
+
+.guide-table th {
+  background: #163a7a !important;
+  color: #fff !important;
+}
+
+@media (max-width: 720px) {
+  .guide-points {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+}
+
 .guide-head {
   display: flex;
   flex-wrap: wrap;

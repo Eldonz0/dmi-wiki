@@ -1,11 +1,10 @@
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
-import { GuideComposer } from "@/components/guide-composer";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "New topic" };
+export const metadata = { title: "New guide" };
 
 export default async function NewGuidePage() {
   if (!(await isAdmin())) redirect("/guide");
-  return <GuideComposer />;
+  redirect("/guide");
 }

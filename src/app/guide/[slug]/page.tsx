@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getGuide } from "@/lib/guides";
-import { GuideThread } from "@/components/guide-pages";
+import { GuideLanding } from "@/components/guide-landing";
 
 export const dynamic = "force-dynamic";
 
@@ -11,8 +11,8 @@ export async function generateMetadata({ params }: Props) {
   return { title: post?.title ?? "Guide" };
 }
 
-export default async function GuideThreadPage({ params }: Props) {
+export default async function GuideLandingPage({ params }: Props) {
   const post = getGuide((await params).slug);
   if (!post) notFound();
-  return <GuideThread post={post} />;
+  return <GuideLanding post={post} />;
 }
