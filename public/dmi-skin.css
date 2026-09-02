@@ -1618,8 +1618,9 @@ button.mw-text-out:hover {
 }
 
 .guide-stage.is-live {
-  background: #0a1230;
-  border: 1px solid var(--mw-line);
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .guide-stage.is-live .guide-pin {
@@ -2156,11 +2157,21 @@ button.mw-editor-on {
 }
 
 .acc-points li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   font-weight: 400;
+  padding-left: 0;
+}
+
+.acc-points li::before {
+  content: none;
 }
 
 .acc-line {
-  display: inline;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .acc-toggle {
@@ -2180,6 +2191,7 @@ button.mw-editor-on {
 }
 
 .acc-panel {
+  flex: 1 1 100%;
   margin: 0.55rem 0 1.15rem;
   padding-left: 0.15rem;
   font-size: 0.95rem;

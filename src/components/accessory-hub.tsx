@@ -1,20 +1,50 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { AccessoryCategory } from "@/lib/accessory-types";
 import { AccessoryPanel } from "@/components/accessory-slot";
+import { TicketChip } from "@/components/ticket-chip";
+import { useEditorMode } from "@/components/editor-mode";
+
+const GLYPH: Record<string, string> = {
+  rings: "Rg",
+  necklaces: "Nk",
+  earrings: "Er",
+  bracelets: "Br",
+};
 
 export function AccessoryHub({ categories }: { categories: AccessoryCategory[] }) {
+  const { editing } = useEditorMode();
+  const router = useRouter();
   const [open, setOpen] = useState<Record<string, boolean>>({});
+  const [icons, setIcons] = useState<Record<string, string>>(() =>
+    Object.fromEntries(categories.map((c) => [c.slug, c.icon])),
+  );
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
     if (hash) setOpen((prev) => ({ ...prev, [hash]: true }));
   }, []);
 
+  useEffect(() => {
+    setIcons(Object.fromEntries(categories.map((c) => [c.slug, c.icon])));
+  }, [categories]);
+
   function toggle(slug: string) {
     setOpen((prev) => ({ ...prev, [slug]: !prev[slug] }));
+  }
+
+  async function saveIcon(slug: string, url: string) {
+    setIcons((prev) => ({ ...prev, [slug]: url }));
+    await fetch(`/api/accessories/${slug}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ icon: url }),
+    });
+    router.refresh();
   }
 
   return (
@@ -38,6 +68,14 @@ export function AccessoryHub({ categories }: { categories: AccessoryCategory[] }
           return (
             <li key={cat.slug} id={cat.slug}>
               <span className="acc-line">
+                <TicketChip
+                  src={icons[cat.slug] || cat.icon}
+                  label={cat.title}
+                  uploadName={`acc-slot-${cat.slug}`}
+                  uploadable={editing}
+                  emptyLabel={GLYPH[cat.slug] ?? "·"}
+                  onUploaded={(url) => void saveIcon(cat.slug, url)}
+                />
                 {cat.title}{" "}
                 <button
                   type="button"

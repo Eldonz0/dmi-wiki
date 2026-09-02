@@ -15,6 +15,7 @@ export const ACCESSORY_SEEDS: AccessoryCategory[] = [
   {
     slug: "rings",
     title: "Rings",
+    icon: "",
     blurb:
       "Ring options roll Attack, Skill, Attribute, Critical, HP, DS, and Defense. Number Change Stone is required on sealed pieces that do not already roll max numbers.",
     roles: [
@@ -49,6 +50,7 @@ export const ACCESSORY_SEEDS: AccessoryCategory[] = [
   {
     slug: "necklaces",
     title: "Necklaces",
+    icon: "",
     blurb:
       "Necklaces are the Attack Speed and Critical Damage slot. They also roll Attack, Attribute, HP, DS, Defense, and Skill.",
     roles: [
@@ -81,6 +83,7 @@ export const ACCESSORY_SEEDS: AccessoryCategory[] = [
   {
     slug: "earrings",
     title: "Earrings",
+    icon: "",
     blurb:
       "Earrings carry Hit Rate, Critical Damage, Block, and Evasion. Skill Attackers still want Skill and Attribute here.",
     roles: [
@@ -109,6 +112,7 @@ export const ACCESSORY_SEEDS: AccessoryCategory[] = [
   {
     slug: "bracelets",
     title: "Bracelets",
+    icon: "",
     blurb:
       "Bracelets stack Hit Rate and Critical Damage. Attack only appears on Miracle, Royal X-Knight, and Zero Unit lines.",
     roles: [

@@ -47,6 +47,7 @@ function normalizeCat(cat: AccessoryCategory): AccessoryCategory {
     slug: cat.slug,
     title: cat.title || seed?.title || cat.slug,
     blurb: cat.blurb || seed?.blurb || "",
+    icon: cat.icon ?? seed?.icon ?? "",
     items: (cat.items ?? []).map(normalizeItem),
     roles: (cat.roles?.length ? cat.roles : seed?.roles ?? []).map((r) => ({
       role: r.role,
@@ -98,7 +99,7 @@ export function getAccessoryCategory(slot: string): AccessoryCategory | undefine
 
 export function saveAccessoryCategory(
   slot: string,
-  patch: Partial<Pick<AccessoryCategory, "title" | "blurb" | "items" | "roles">>,
+  patch: Partial<Pick<AccessoryCategory, "title" | "blurb" | "icon" | "items" | "roles">>,
 ): AccessoryCategory | undefined {
   if (!isAccessorySlot(slot)) return undefined;
   const store = load();
@@ -106,6 +107,7 @@ export function saveAccessoryCategory(
   if (!cat) return undefined;
   if (typeof patch.title === "string" && patch.title.trim()) cat.title = patch.title.trim();
   if (typeof patch.blurb === "string") cat.blurb = patch.blurb;
+  if (typeof patch.icon === "string") cat.icon = patch.icon;
   if (Array.isArray(patch.items)) cat.items = patch.items.map(normalizeItem);
   if (Array.isArray(patch.roles)) {
     cat.roles = patch.roles.map((r) => ({

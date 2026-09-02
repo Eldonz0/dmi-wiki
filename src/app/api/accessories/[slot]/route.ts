@@ -20,7 +20,7 @@ export async function PUT(request: Request, ctx: Ctx) {
   }
   const { slot } = await ctx.params;
   const body = (await request.json()) as Partial<
-    Pick<AccessoryCategory, "title" | "blurb" | "items" | "roles">
+    Pick<AccessoryCategory, "title" | "blurb" | "icon" | "items" | "roles">
   >;
   const category = saveAccessoryCategory(slot, body);
   if (!category) return NextResponse.json({ error: "Not found" }, { status: 404 });

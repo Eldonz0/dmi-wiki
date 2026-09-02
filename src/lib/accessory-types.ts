@@ -27,6 +27,7 @@ export type AccessoryCategory = {
   slug: AccessorySlot;
   title: string;
   blurb: string;
+  icon: string;
   items: AccessoryItem[];
   roles: AccessoryRoleRec[];
 };
