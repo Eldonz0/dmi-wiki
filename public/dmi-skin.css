@@ -1735,6 +1735,7 @@ button.mw-editor-on {
   font: inherit;
 }
 
+.dmi-top-nav a.mw-signin,
 .dmi-top-nav button.mw-editor-on,
 .dmi-top-nav button.mw-signin {
   width: auto;

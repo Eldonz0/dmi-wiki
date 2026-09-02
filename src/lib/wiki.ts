@@ -69,7 +69,7 @@ export const SIDEBAR_TOOLS: SidebarGroup[] = [
   {
     title: "Tools",
     items: [
-      { href: "/admin", label: "Catalog editor" },
+      { href: "/admin", label: "Digimon index editor" },
       { href: "/search", label: "Search" },
       { href: "/random", label: "Random page" },
     ],

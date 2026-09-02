@@ -52,8 +52,8 @@ function AccountPortlet({
               <EditorToggle />
             </li>
             <li>
-              <Link href="/admin" onClick={onNavigate}>
-                Catalog
+              <Link href="/admin" className="mw-signin" onClick={onNavigate}>
+                Digimon index editor
               </Link>
             </li>
             <li>
@@ -152,11 +152,8 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
           </Link>
           {admin ? <EditorToggle /> : null}
           {admin ? (
-            <Link
-              href="/admin"
-              className={cn(pathname.startsWith("/admin") && "is-on")}
-            >
-              Catalog
+            <Link href="/admin" className="mw-signin">
+              Digimon index editor
             </Link>
           ) : (
             <SignInButton next={pathname || "/"} />
