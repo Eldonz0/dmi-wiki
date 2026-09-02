@@ -7,7 +7,7 @@ import { rankIconMap } from "@/lib/catalog";
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
   subsets: ["latin"],
-  weight: ["500", "700"],
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
