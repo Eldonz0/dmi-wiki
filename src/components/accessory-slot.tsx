@@ -21,10 +21,10 @@ function numberLabel(value: AccessoryItem["numberChange"]) {
   return "—";
 }
 
-export function AccessorySlotPage({ category }: { category: AccessoryCategory }) {
+export function AccessoryPanel({ category }: { category: AccessoryCategory }) {
   const { editing } = useEditorMode();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [title, setTitle] = useState(category.title);
   const [blurb, setBlurb] = useState(category.blurb);
   const [items, setItems] = useState(category.items);
@@ -41,7 +41,7 @@ export function AccessorySlotPage({ category }: { category: AccessoryCategory })
 
   useEffect(() => {
     if (!editing) {
-      setOpen(false);
+      setToolsOpen(false);
       setDraft(null);
     }
   }, [editing]);
@@ -104,23 +104,18 @@ export function AccessorySlotPage({ category }: { category: AccessoryCategory })
   const others = items.filter((i) => !i.recommended);
 
   return (
-    <article className="mw-article">
-      <div className="mw-pre-title">
-        <Link href="/accessory">Accessory</Link>
-        {" · slot"}
-      </div>
+    <div className="acc-panel">
       {editing ? (
-        <div className={open ? "box-wrap is-open" : "box-wrap"}>
-          <BoxTools onEdit={() => setOpen((v) => !v)} editing={open} />
+        <div className={toolsOpen ? "box-wrap is-open" : "box-wrap"}>
+          <BoxTools onEdit={() => setToolsOpen((v) => !v)} editing={toolsOpen} />
           <p className="guide-hint" style={{ margin: 0 }}>
-            Public tables stay below. Click a chip to upload the item icon.
+            Tables stay public. Click a chip to upload the item icon.
           </p>
         </div>
       ) : null}
-      <h1 className="mw-firstHeading">{open ? title : category.title}</h1>
-      <p>{open ? blurb : category.blurb}</p>
+      <p>{toolsOpen ? blurb : category.blurb}</p>
 
-      {open ? (
+      {toolsOpen ? (
         <div className="box-panel">
           <label className="guide-field">
             Title
@@ -176,7 +171,7 @@ export function AccessorySlotPage({ category }: { category: AccessoryCategory })
         </div>
       ) : null}
 
-      <h2>Recommended stats by role</h2>
+      <h3>Recommended stats by role</h3>
       <div className="table-wrap">
         <table className="wikitable">
           <thead>
@@ -187,7 +182,7 @@ export function AccessorySlotPage({ category }: { category: AccessoryCategory })
             </tr>
           </thead>
           <tbody>
-            {(open ? roles : category.roles).map((row) => (
+            {(toolsOpen ? roles : category.roles).map((row) => (
               <tr key={row.role}>
                 <td>
                   <Link href="/roles">
@@ -202,7 +197,7 @@ export function AccessorySlotPage({ category }: { category: AccessoryCategory })
         </table>
       </div>
 
-      <h2>Recommended {category.title.toLowerCase()}</h2>
+      <h3>Recommended {category.title.toLowerCase()}</h3>
       {recs.length === 0 ? (
         <p>No recommended pieces listed yet.</p>
       ) : (
@@ -221,7 +216,7 @@ export function AccessorySlotPage({ category }: { category: AccessoryCategory })
 
       {others.length ? (
         <>
-          <h2>Starter / low-max {category.title.toLowerCase()}</h2>
+          <h3>Starter / low-max {category.title.toLowerCase()}</h3>
           <p>
             These exist, but the max numbers are too low for endgame. Keep them
             only until a recommended piece drops.
@@ -239,7 +234,7 @@ export function AccessorySlotPage({ category }: { category: AccessoryCategory })
           />
         </>
       ) : null}
-    </article>
+    </div>
   );
 }
 

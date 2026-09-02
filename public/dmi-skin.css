@@ -2131,48 +2131,41 @@ button.mw-editor-on {
   border: 2px solid #c084fc;
 }
 
-.acc-cat-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.85rem;
-  margin: 1rem 0 1.4rem;
+.acc-points li {
+  font-weight: 500;
 }
 
-.acc-cat {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--mw-line);
-  border-radius: 10px;
-  background: #121838;
-  text-decoration: none !important;
-  color: var(--mw-text) !important;
+.acc-line {
+  display: inline;
 }
 
-.acc-cat:hover {
-  border-color: var(--cyan);
-  background: rgba(0, 255, 242, 0.06);
-}
-
-.acc-cat strong {
-  display: block;
-  font-size: 1.2rem;
+.acc-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
   color: #8fd4ff;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.acc-cat em {
-  display: block;
-  font-style: normal;
-  font-size: 12.5px;
-  color: var(--mw-muted);
-  margin-top: 0.15rem;
+.acc-toggle:hover {
+  color: var(--cyan);
 }
 
-.acc-cat-glyph {
-  --evo-icon: 44px;
-  width: 44px;
-  height: 44px;
+.acc-panel {
+  margin: 0.55rem 0 1.15rem;
+  padding-left: 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.acc-panel h3 {
+  font-size: 1.05rem;
+  margin: 0.85rem 0 0.35rem;
+  color: var(--cyan);
 }
 
 .table-wrap {
@@ -2208,8 +2201,3 @@ button.mw-editor-on {
   border-radius: 8px;
 }
 
-@media (max-width: 720px) {
-  .acc-cat-grid {
-    grid-template-columns: 1fr;
-  }
-}

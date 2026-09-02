@@ -33,7 +33,7 @@ Landing page text lives in `data/pages.json`.
 
 ## Accessory
 
-`/accessory` lists four slots, same idea as [dmowiki Clothing](https://dmowiki.com/Clothing) accessories: **Rings**, **Necklaces**, **Earrings**, **Bracelets**. Each category opens a table of pieces plus **recommended stats for SK / AA / TA / SUP**. Click a chip in Editor mode to upload the item icon. Saved in `data/accessories.json`.
+`/accessory` lists four slots on one page: **Rings (Show)**, **Necklaces (Show)**, **Earrings (Show)**, **Bracelets (Show)**. Show expands the item table and role rolls in place; Hide collapses it. Click a chip in Editor mode to upload the item icon. Saved in `data/accessories.json`.
 
 On each form you can:
 
