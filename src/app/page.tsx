@@ -1,29 +1,28 @@
-import Link from "next/link";
 import { PortalBox } from "@/components/wiki-article";
-import { NEW_DIGIMON } from "@/lib/wiki";
+import { NewDigimonPack } from "@/components/new-digimon-pack";
+import { getHomeFeatured, listDigimon } from "@/lib/catalog";
+import { isAdmin } from "@/lib/auth";
+import Link from "next/link";
 
-export default function HomePage() {
-  const left = NEW_DIGIMON.filter((_, i) => i % 2 === 0);
-  const right = NEW_DIGIMON.filter((_, i) => i % 2 === 1);
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const featured = getHomeFeatured();
+  const canEdit = await isAdmin();
+  const options = listDigimon().map((d) => ({
+    slug: d.slug,
+    name: d.name,
+    thumb: d.icon || d.art || undefined,
+  }));
+  const items = featured.map((d) => ({
+    slug: d.slug,
+    name: d.name,
+    thumb: d.icon || d.art || undefined,
+  }));
 
   return (
     <article className="mw-article">
-      <section className="newPack">
-        <div className="newBar">New Digimon</div>
-        <div className="newGrid">
-          <div>
-            {left.map((item) => (
-              <NewRow key={item.name} item={item} />
-            ))}
-          </div>
-          <div>
-            {right.map((item) => (
-              <NewRow key={item.name} item={item} />
-            ))}
-          </div>
-        </div>
-        <div className="newBar" />
-      </section>
+      <NewDigimonPack items={items} options={options} canEdit={canEdit} />
 
       <h1 className="mw-firstHeading">Main Page</h1>
 
@@ -99,23 +98,5 @@ export default function HomePage() {
         </PortalBox>
       </div>
     </article>
-  );
-}
-
-function NewRow({
-  item,
-}: {
-  item: { name: string; href: string; thumb?: string };
-}) {
-  return (
-    <Link href={item.href} className="newItem">
-      {item.thumb ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.thumb} alt="" width={36} height={36} />
-      ) : (
-        <span className="newMark">{item.name.slice(0, 2)}</span>
-      )}
-      <span>{item.name}</span>
-    </Link>
   );
 }

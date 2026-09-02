@@ -1,6 +1,8 @@
+import "server-only";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import sheet from "@/lib/sheet.json";
+import { NEW_DIGIMON } from "@/lib/wiki";
 import { LORE, TREES, artFor, iconFor } from "@/lib/wiki-lore";
 import type { CatalogForm, EvoTree, SheetForm } from "@/lib/digimon-types";
 import type { RankCode } from "@/lib/ranks";
@@ -12,12 +14,18 @@ import {
 } from "@/lib/evo-layout";
 
 export type { CatalogForm, EvoTree };
+export type HomeFeatured = {
+  count: number;
+  slugs: string[];
+};
+
 export type Catalog = {
   forms: CatalogForm[];
   trees: Record<string, EvoTree>;
   icons: Record<string, string>;
   art: Record<string, string>;
   rankIcons: Record<string, string>;
+  home: HomeFeatured;
 };
 
 export type DigimonRecord = CatalogForm & {
@@ -32,6 +40,11 @@ const ALIASES: Record<string, string> = {
   agumon: "agumon-classic",
   "omegamon-x-extreme": "omegamon-extreme",
 };
+
+function defaultHome(): HomeFeatured {
+  const slugs = NEW_DIGIMON.map((d) => d.href.replace("/digimon/", ""));
+  return { count: slugs.length, slugs };
+}
 
 function seed(): Catalog {
   const forms: CatalogForm[] = (sheet as SheetForm[]).map((row) => {
@@ -51,7 +64,7 @@ function seed(): Catalog {
   for (const [slug, tree] of Object.entries(TREES)) {
     trees[slug] = normalizeTree(tree);
   }
-  return { forms, trees, icons: {}, art: {}, rankIcons: {} };
+  return { forms, trees, icons: {}, art: {}, rankIcons: {}, home: defaultHome() };
 }
 
 function loadFile(): Catalog {
@@ -66,6 +79,8 @@ function loadFile(): Catalog {
   raw.art ??= {};
   raw.rankIcons ??= {};
   raw.trees ??= {};
+  raw.home ??= defaultHome();
+  if (!raw.home.slugs?.length) raw.home = defaultHome();
   return raw;
 }
 
@@ -255,6 +270,27 @@ export function allNames(): string[] {
     for (const n of normalizeTree(tree).nodes) set.add(n.name);
   }
   return [...set].sort((a, b) => a.localeCompare(b));
+}
+
+export function getHomeFeatured() {
+  const catalog = readCatalog();
+  const home = catalog.home ?? defaultHome();
+  const n = Math.max(0, Math.min(40, Math.floor(home.count || 0)));
+  const picked = home.slugs.slice(0, n);
+  return picked
+    .map((slug) => getDigimon(slug))
+    .filter((d): d is NonNullable<ReturnType<typeof getDigimon>> => Boolean(d));
+}
+
+export function setHomeFeatured(count: number, slugs: string[]) {
+  const catalog = readCatalog();
+  const n = Math.max(0, Math.min(40, Math.floor(count)));
+  const clean = slugs
+    .map((s) => resolveSlug(s))
+    .filter((s) => catalog.forms.some((f) => f.slug === s));
+  catalog.home = { count: n, slugs: clean.slice(0, n) };
+  saveCatalog(catalog);
+  return catalog.home;
 }
 
 export { ALIASES };
