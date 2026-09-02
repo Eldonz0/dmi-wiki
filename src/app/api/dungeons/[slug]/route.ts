@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth";
 import { deleteDungeon, getDungeon, updateDungeon } from "@/lib/dungeons";
 import type { DungeonEntry } from "@/lib/dungeon-types";
+import { withSave } from "@/lib/route-save";
 
 type Ctx = { params: Promise<{ slug: string }> };
+
+export const maxDuration = 60;
 
 export async function GET(_request: Request, ctx: Ctx) {
   const { slug } = await ctx.params;
@@ -13,25 +16,29 @@ export async function GET(_request: Request, ctx: Ctx) {
 }
 
 export async function PUT(request: Request, ctx: Ctx) {
-  if (!(await isAdmin())) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-  }
-  const { slug } = await ctx.params;
-  const body = (await request.json()) as Partial<
-    Pick<DungeonEntry, "title" | "body" | "ticketName" | "ticketIcon" | "order">
-  >;
-  const entry = await updateDungeon(slug, body);
-  if (!entry) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json({ entry });
+  return withSave(async () => {
+    if (!(await isAdmin())) {
+      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    }
+    const { slug } = await ctx.params;
+    const body = (await request.json()) as Partial<
+      Pick<DungeonEntry, "title" | "body" | "ticketName" | "ticketIcon" | "order">
+    >;
+    const entry = await updateDungeon(slug, body);
+    if (!entry) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ entry });
+  });
 }
 
 export async function DELETE(_request: Request, ctx: Ctx) {
-  if (!(await isAdmin())) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-  }
-  const { slug } = await ctx.params;
-  if (!(await deleteDungeon(slug))) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  }
-  return NextResponse.json({ ok: true });
+  return withSave(async () => {
+    if (!(await isAdmin())) {
+      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    }
+    const { slug } = await ctx.params;
+    if (!(await deleteDungeon(slug))) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    return NextResponse.json({ ok: true });
+  });
 }

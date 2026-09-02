@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth";
 import { getAccessoryCategory, saveAccessoryCategory } from "@/lib/accessories";
 import type { AccessoryCategory } from "@/lib/accessory-types";
+import { withSave } from "@/lib/route-save";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 type Ctx = { params: Promise<{ slot: string }> };
 
@@ -15,14 +17,16 @@ export async function GET(_request: Request, ctx: Ctx) {
 }
 
 export async function PUT(request: Request, ctx: Ctx) {
-  if (!(await isAdmin())) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-  }
-  const { slot } = await ctx.params;
-  const body = (await request.json()) as Partial<
-    Pick<AccessoryCategory, "title" | "blurb" | "icon" | "items" | "roles">
-  >;
-  const category = await saveAccessoryCategory(slot, body);
-  if (!category) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json({ category });
+  return withSave(async () => {
+    if (!(await isAdmin())) {
+      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    }
+    const { slot } = await ctx.params;
+    const body = (await request.json()) as Partial<
+      Pick<AccessoryCategory, "title" | "blurb" | "icon" | "items" | "roles">
+    >;
+    const category = await saveAccessoryCategory(slot, body);
+    if (!category) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ category });
+  });
 }

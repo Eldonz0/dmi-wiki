@@ -1,7 +1,12 @@
 import "server-only";
 
 function repo() {
-  return (process.env.GITHUB_REPO ?? "").trim();
+  return (process.env.GITHUB_REPO ?? "")
+    .trim()
+    .replace(/^https?:\/\/github\.com\//i, "")
+    .replace(/^git@github\.com:/i, "")
+    .replace(/\.git$/i, "")
+    .replace(/^\/+|\/+$/g, "");
 }
 
 function token() {
@@ -14,6 +19,15 @@ function branch() {
 
 export function githubLiveEnabled() {
   return Boolean(repo().includes("/") && token());
+}
+
+function ghMessage(text: string) {
+  try {
+    const data = JSON.parse(text) as { message?: string };
+    return data.message || text.slice(0, 400);
+  } catch {
+    return text.slice(0, 400);
+  }
 }
 
 async function github(pathname: string, init?: RequestInit) {
@@ -30,6 +44,14 @@ async function github(pathname: string, init?: RequestInit) {
   });
 }
 
+async function fileSha(encoded: string) {
+  const existing = await github(`/contents/${encoded}?ref=${encodeURIComponent(branch())}`);
+  if (!existing.ok) return undefined;
+  const data = (await existing.json()) as { sha?: string; type?: string };
+  if (data.type === "file" && data.sha) return data.sha;
+  return undefined;
+}
+
 /** Save a wiki file into GitHub so Vercel/git publishes keep editor changes. */
 export async function pushLiveFile(
   relPath: string,
@@ -39,7 +61,7 @@ export async function pushLiveFile(
   if (!githubLiveEnabled()) {
     if (process.env.VERCEL) {
       throw new Error(
-        "Set GITHUB_REPO and GITHUB_DATA_TOKEN on Vercel so editor saves are committed and stay live.",
+        "Set GITHUB_REPO=Eldonz0/dmi-wiki and GITHUB_DATA_TOKEN (a GitHub token with repo access) on Vercel, then Redeploy. The deploy key is not enough for Save.",
       );
     }
     return;
@@ -50,23 +72,30 @@ export async function pushLiveFile(
     .filter(Boolean)
     .map(encodeURIComponent)
     .join("/");
-  const existing = await github(`/contents/${encoded}?ref=${encodeURIComponent(branch())}`);
-  let sha: string | undefined;
-  if (existing.ok) {
-    const data = (await existing.json()) as { sha?: string; type?: string };
-    if (data.type === "file" && data.sha) sha = data.sha;
+
+  const put = async (sha?: string) =>
+    github(`/contents/${encoded}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        message,
+        content: buf.toString("base64"),
+        branch: branch(),
+        ...(sha ? { sha } : {}),
+      }),
+    });
+
+  let sha = await fileSha(encoded);
+  let res = await put(sha);
+  if (res.status === 409) {
+    sha = await fileSha(encoded);
+    res = await put(sha);
   }
-  const res = await github(`/contents/${encoded}`, {
-    method: "PUT",
-    body: JSON.stringify({
-      message,
-      content: buf.toString("base64"),
-      branch: branch(),
-      ...(sha ? { sha } : {}),
-    }),
-  });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`GitHub live save failed (${relPath}): ${res.status} ${text}`);
+    const hint =
+      res.status === 401 || res.status === 403
+        ? " Create a classic token with repo scope, paste it as GITHUB_DATA_TOKEN on Vercel, Redeploy."
+        : "";
+    throw new Error(`GitHub could not save ${relPath} (${res.status}): ${ghMessage(text)}.${hint}`);
   }
 }

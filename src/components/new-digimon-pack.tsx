@@ -130,8 +130,8 @@ export function NewDigimonPack({
         await onPersist(n, payload.slugs);
         setStatus("Saved.");
         router.refresh();
-      } catch {
-        setStatus("Save failed.");
+      } catch (err) {
+        setStatus(err instanceof Error ? err.message : "Save failed.");
       }
       return;
     }

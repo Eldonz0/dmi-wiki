@@ -29,9 +29,12 @@ export function IndexChip({
       credentials: "include",
       body,
     });
-    const data = (await res.json()) as { url?: string; error?: string };
+    const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
     setBusy(false);
-    if (!res.ok || !data.url) return;
+    if (!res.ok || !data.url) {
+      window.alert(data.error || "Icon upload failed. Set GITHUB_DATA_TOKEN on Vercel.");
+      return;
+    }
     onUploaded?.(name, data.url);
     router.refresh();
   }

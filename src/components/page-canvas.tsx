@@ -106,10 +106,13 @@ export function PageCanvas({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const data = (await res.json()) as { error?: string };
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
     if (!res.ok) {
-      setStatus(data.error || "Save failed.");
-      return false;
+      const msg =
+        data.error ||
+        `Save failed (${res.status}). Set GITHUB_DATA_TOKEN on Vercel and Redeploy.`;
+      setStatus(msg);
+      throw new Error(msg);
     }
     setStatus("Saved.");
     router.refresh();
@@ -231,12 +234,16 @@ export function PageCanvas({
                 await persist(nextPage);
                 const first = nextPage.blocks.find((b) => b.type === "featured");
                 if (first?.id === block.id) {
-                  await fetch("/api/home", {
+                  const homeRes = await fetch("/api/home", {
                     method: "PUT",
                     credentials: "include",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ count, slugs }),
                   });
+                  if (!homeRes.ok) {
+                    const data = (await homeRes.json().catch(() => ({}))) as { error?: string };
+                    throw new Error(data.error || "Save failed.");
+                  }
                 }
               }}
             />

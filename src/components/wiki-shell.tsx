@@ -128,22 +128,30 @@ function Portlets({
 export function WikiShell({
   children,
   rankIcons = {},
+  githubSaves = true,
 }: {
   children: React.ReactNode;
   rankIcons?: Record<string, string>;
+  githubSaves?: boolean;
 }) {
   return (
     <AuthProvider>
       <EditorModeProvider>
         <RankIconsProvider initial={rankIcons}>
-          <WikiChrome>{children}</WikiChrome>
+          <WikiChrome githubSaves={githubSaves}>{children}</WikiChrome>
         </RankIconsProvider>
       </EditorModeProvider>
     </AuthProvider>
   );
 }
 
-function WikiChrome({ children }: { children: React.ReactNode }) {
+function WikiChrome({
+  children,
+  githubSaves,
+}: {
+  children: React.ReactNode;
+  githubSaves: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { admin } = useAdmin();
@@ -248,6 +256,14 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
               <p className="editor-banner">
                 Editor mode is on. The page stays as visitors see it — use the
                 small Edit / Duplicate buttons on a box.
+                {!githubSaves ? (
+                  <>
+                    {" "}
+                    Saves will fail until Vercel has <code>GITHUB_REPO=Eldonz0/dmi-wiki</code> and{" "}
+                    <code>GITHUB_DATA_TOKEN</code> (GitHub token with repo access), then Redeploy.
+                    The deploy key is not enough.
+                  </>
+                ) : null}
               </p>
             ) : null}
             {children}

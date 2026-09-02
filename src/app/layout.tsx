@@ -3,6 +3,7 @@ import { Inter, Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { WikiShell } from "@/components/wiki-shell";
 import { rankIconMap } from "@/lib/catalog";
+import { githubLiveEnabled } from "@/lib/github-live";
 
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
@@ -44,7 +45,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href="/dmi-skin.css" />
       </head>
       <body className="min-h-full flex flex-col">
-        <WikiShell rankIcons={rankIconMap()}>{children}</WikiShell>
+        <WikiShell githubSaves={githubLiveEnabled()} rankIcons={rankIconMap()}>
+          {children}
+        </WikiShell>
       </body>
     </html>
   );
