@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { WikiSearchForm } from "@/components/wiki-search";
-import { SIDEBAR } from "@/lib/wiki";
+import { SIDEBAR_NAV, SIDEBAR_TOOLS } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -16,12 +16,19 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-function Portlets({ onNavigate }: { onNavigate?: () => void }) {
+function Portlets({
+  onNavigate,
+  isAdmin,
+}: {
+  onNavigate?: () => void;
+  isAdmin: boolean;
+}) {
   const pathname = usePathname();
+  const groups = isAdmin ? [...SIDEBAR_NAV, ...SIDEBAR_TOOLS] : SIDEBAR_NAV;
 
   return (
     <div className="mw-portlets">
-      {SIDEBAR.map((group) => (
+      {groups.map((group) => (
         <nav key={group.title} className="mw-portlet">
           <h3>{group.title}</h3>
           <ul>
@@ -29,7 +36,7 @@ function Portlets({ onNavigate }: { onNavigate?: () => void }) {
               const active =
                 item.href === "/"
                   ? pathname === "/"
-                  : pathname === item.href || pathname.startsWith(`${item.href}?`);
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <li key={item.href + item.label}>
                   <Link
@@ -49,7 +56,13 @@ function Portlets({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function WikiShell({ children }: { children: React.ReactNode }) {
+export function WikiShell({
+  children,
+  isAdmin = false,
+}: {
+  children: React.ReactNode;
+  isAdmin?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -68,37 +81,24 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
             href="/digimon"
             className={cn(pathname.startsWith("/digimon") && "is-on")}
           >
-            Digimon
+            Digimon List
           </Link>
           <Link
-            href="/rank-system"
-            className={cn(
-              (pathname.startsWith("/rank") || pathname === "/rank-system") &&
-                "is-on",
-            )}
+            href="/guide"
+            className={cn(pathname.startsWith("/guide") && "is-on")}
           >
-            Rank
+            Guide
           </Link>
-          <Link
-            href="/combat"
-            className={cn(pathname === "/combat" && "is-on")}
-          >
-            Combat
-          </Link>
-          <a
-            href={
-              pathname.startsWith("/digimon/") && pathname.split("/").length > 2
-                ? `/api/auth/login?next=/admin/${pathname.split("/")[2]}`
-                : "/api/auth/login?next=/admin"
-            }
-            className={cn(
-              (pathname.startsWith("/login") ||
-                pathname.startsWith("/admin")) &&
-                "is-on",
-            )}
-          >
-            Sign in
-          </a>
+          {isAdmin ? (
+            <Link
+              href="/admin"
+              className={cn(pathname.startsWith("/admin") && "is-on")}
+            >
+              Catalog
+            </Link>
+          ) : (
+            <Link href="/api/auth/login?next=/">Sign in</Link>
+          )}
           <a
             href="https://www.digimonmastersinfinite.com/index.html"
             target="_blank"
@@ -111,9 +111,9 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
 
       <div className="mw-frame">
         <aside className="mw-sidebar">
-          <WikiSearchForm compact />
+          {isAdmin ? <WikiSearchForm compact /> : null}
           <div className="mw-sidebar-desktop">
-            <Portlets />
+            <Portlets isAdmin={isAdmin} />
           </div>
         </aside>
 
@@ -136,7 +136,10 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
                   <SheetTitle>DMI Wiki</SheetTitle>
                 </SheetHeader>
                 <div className="px-3 pb-6">
-                  <Portlets onNavigate={() => setOpen(false)} />
+                  <Portlets
+                    isAdmin={isAdmin}
+                    onNavigate={() => setOpen(false)}
+                  />
                 </div>
               </SheetContent>
             </Sheet>

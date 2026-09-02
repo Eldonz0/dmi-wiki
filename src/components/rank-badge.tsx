@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { RankCode } from "@/lib/ranks";
-import type { RoleCode } from "@/lib/digimon";
+import type { RoleCode } from "@/lib/digimon-types";
 
 export function RankBadge({
   rank,

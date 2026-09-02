@@ -31,10 +31,12 @@ export function NewDigimonPack({
     return map;
   }, [options]);
 
-  const visible = slugs
-    .slice(0, count)
-    .map((slug) => bySlug.get(slug))
-    .filter((d): d is FeaturedPick => Boolean(d));
+  const visible = editing
+    ? slugs
+        .slice(0, count)
+        .map((slug) => bySlug.get(slug))
+        .filter((d): d is FeaturedPick => Boolean(d))
+    : items;
 
   const left = visible.filter((_, i) => i % 2 === 0);
   const right = visible.filter((_, i) => i % 2 === 1);

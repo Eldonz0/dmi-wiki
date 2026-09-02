@@ -11,15 +11,17 @@ npm run dev -- --port 43127 --hostname 127.0.0.1
 
 Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
+Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**, **Clothing**. Tools (search, random, catalog) and the home **Edit box** only show after you sign in.
+
 ## Tamer catalog (one account)
 
-There is no register page. Click **Sign in** — while we are testing it logs you in immediately and opens the catalog (or the editor for the Digimon page you were on).
+There is no register page. Click **Sign in** — while we are testing it logs you in immediately. Then use **Catalog** (top bar) or **Tools** in the sidebar to edit the site from the wiki itself.
 
 The account is still `admin` / `infinite` if a password form is used later. Override with `DMI_ADMIN_USER` and `DMI_ADMIN_PASS`.
 
 Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired evolution trees). Public Digimon pages read that file — HP / AT / DE / AS are not hardcoded.
 
-Signed in, the home **New Digimon** box has **Edit box**: set how many names to show and pick them from the catalog.
+Signed in, the home **New Digimon** box has **Edit box**: set how many names to show and pick them from the catalog. Visitors never see that control.
 
 On each form you can:
 

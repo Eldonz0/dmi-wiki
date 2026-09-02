@@ -51,55 +51,32 @@ export const PAGES: NavItem[] = [
   { href: "/digimon/agumon", label: "Agumon", description: "Classic Rookie SK" },
 ];
 
-export const SIDEBAR: SidebarGroup[] = [
+export const SIDEBAR_NAV: SidebarGroup[] = [
   {
     title: "Navigation",
     items: [
       { href: "/", label: "Main page" },
-      { href: "/digimon", label: "Digimon" },
-      { href: "/rank-system", label: "Rank System" },
-      { href: "/rank/u-plus", label: "Rank U+" },
-      { href: "/rank/u", label: "Rank U" },
-      { href: "/random", label: "Random page" },
-    ],
-  },
-  {
-    title: "Server",
-    items: [
-      { href: "/rules", label: "Server rules" },
-      { href: "/party", label: "Party system" },
-      { href: "/guild", label: "Guild system" },
-      { href: "/hatching", label: "Hatching" },
-      { href: "/events", label: "Events" },
-    ],
-  },
-  {
-    title: "Mechanics",
-    items: [
-      { href: "/combat", label: "Combat" },
-      { href: "/roles", label: "Roles" },
-      { href: "/exp", label: "EXP boosters" },
-      { href: "/fruits", label: "Size fruits" },
-      { href: "/sets", label: "Carries sets" },
-    ],
-  },
-  {
-    title: "World",
-    items: [
-      { href: "/verdandi", label: "Verdandi" },
-      { href: "/drops", label: "Boss fruit boxes" },
-    ],
-  },
-  {
-    title: "Tools",
-    items: [
-      { href: "/search", label: "Search" },
-      { href: "/random", label: "Random page" },
-      { href: "/api/auth/login?next=/admin", label: "Sign in" },
-      { href: "/admin", label: "Catalog editor" },
+      { href: "/digimon", label: "Digimon List" },
+      { href: "/guide", label: "Guide" },
+      { href: "/dungeons", label: "Dungeons" },
+      { href: "/accessory", label: "Accessory" },
+      { href: "/clothing", label: "Clothing" },
     ],
   },
 ];
+
+export const SIDEBAR_TOOLS: SidebarGroup[] = [
+  {
+    title: "Tools",
+    items: [
+      { href: "/admin", label: "Catalog editor" },
+      { href: "/search", label: "Search" },
+      { href: "/random", label: "Random page" },
+    ],
+  },
+];
+
+export const SIDEBAR: SidebarGroup[] = [...SIDEBAR_NAV, ...SIDEBAR_TOOLS];
 
 export const SEARCH_INDEX = [
   { href: "/rules", title: "Server rules", text: "f2p macros two accounts auto play" },
@@ -112,7 +89,10 @@ export const SEARCH_INDEX = [
   { href: "/exp", title: "EXP boosters", text: "masters membership amplification expbooster 200 500 1000" },
   { href: "/fruits", title: "Size fruits", text: "champion overload genesis hades yggdrasil miracle growth" },
   { href: "/sets", title: "Carries sets", text: "carries AA TA SK mismatched set half stats" },
-  { href: "/drops", title: "Boss fruit boxes", text: "fanglongmon yin yang verdandi kaisergreymon giga box" },
+  { href: "/guide", title: "Guide", text: "boss fruit boxes fanglongmon yin yang verdandi kaisergreymon giga box drops" },
+  { href: "/dungeons", title: "Dungeons", text: "dungeon farm scan giga box infinite mountain" },
+  { href: "/accessory", title: "Accessory", text: "tamer accessory rings earrings" },
+  { href: "/clothing", title: "Clothing", text: "tamer clothing costume" },
   { href: "/verdandi", title: "Verdandi", text: "rookie x-digimon 500 hp susanoomon" },
   { href: "/rank-system", title: "Rank System", text: "rank n a s ss sss u unique infobox" },
   { href: "/rank/u", title: "Digimon Rank U", text: "unique omegamon x extreme" },

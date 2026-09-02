@@ -17,7 +17,9 @@
       "attribute": "Vaccine",
       "element": "Fire",
       "type": "God Beast",
-      "family": "Nightmare Soldiers / Virus Busters / Unknown"
+      "family": "Nightmare Soldiers / Virus Busters / Unknown",
+      "icon": "/uploads/apollomon.png?v=1788326774931",
+      "blurb": "Apollomon (アポロモン) is stamped U+ TA on the DMI assignment sheet (HP / AT / DE / AS). Those four numbers are copied from digimon_role_assignment_all_forms_new.pdf — not guessed."
     },
     {
       "name": "Omegamon Extreme",
@@ -4463,7 +4465,8 @@
       "at": 322,
       "de": 92,
       "as": 1700,
-      "slug": "grapleomon"
+      "slug": "grapleomon",
+      "icon": "/uploads/grapleomon.png?v=1788326815230"
     },
     {
       "name": "Grizzmon",
@@ -8645,20 +8648,74 @@
   ],
   "trees": {
     "apollomon": {
-      "rows": [
-        [
-          "Sunmon",
-          "Coronamon",
-          "Firamon",
-          "Flaremon",
-          "Apollomon",
-          "Apollomon Burst Mode"
-        ]
-      ],
-      "branches": [
+      "nodes": [
         {
-          "from": "Apollomon",
-          "name": "Apollomon Whispered"
+          "id": "n0",
+          "name": "Sunmon",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "n1",
+          "name": "Coronamon",
+          "x": 1,
+          "y": 0
+        },
+        {
+          "id": "n2",
+          "name": "Firamon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "id": "n3",
+          "name": "Flaremon",
+          "x": 3,
+          "y": 0
+        },
+        {
+          "id": "n4",
+          "name": "Grapleomon",
+          "x": 4,
+          "y": 0
+        },
+        {
+          "id": "n5",
+          "name": "Apollomon Burst Mode",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "id": "n6",
+          "name": "Apollomon",
+          "x": 5,
+          "y": 1
+        }
+      ],
+      "edges": [
+        {
+          "from": "n0",
+          "to": "n1"
+        },
+        {
+          "from": "n1",
+          "to": "n2"
+        },
+        {
+          "from": "n2",
+          "to": "n3"
+        },
+        {
+          "from": "n3",
+          "to": "n4"
+        },
+        {
+          "from": "n4",
+          "to": "n5"
+        },
+        {
+          "from": "n4",
+          "to": "n6"
         }
       ]
     },
@@ -9039,6 +9096,84 @@
         ]
       ],
       "branches": []
+    },
+    "grapleomon": {
+      "nodes": [
+        {
+          "id": "n0",
+          "name": "Sunmon",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "n1",
+          "name": "Coronamon",
+          "x": 1,
+          "y": 0
+        },
+        {
+          "id": "n2",
+          "name": "Firamon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "id": "n3",
+          "name": "Flaremon",
+          "x": 3,
+          "y": 0
+        },
+        {
+          "id": "n4",
+          "name": "Grapleomon",
+          "x": 4,
+          "y": 0
+        },
+        {
+          "id": "n5",
+          "name": "Apollomon Burst Mode",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "id": "n6",
+          "name": "Apollomon",
+          "x": 5,
+          "y": 1
+        }
+      ],
+      "edges": [
+        {
+          "from": "n0",
+          "to": "n1"
+        },
+        {
+          "from": "n1",
+          "to": "n2"
+        },
+        {
+          "from": "n2",
+          "to": "n3"
+        },
+        {
+          "from": "n3",
+          "to": "n4"
+        },
+        {
+          "from": "n4",
+          "to": "n5"
+        },
+        {
+          "from": "n4",
+          "to": "n6"
+        }
+      ]
     }
-  }
+  },
+  "icons": {
+    "Apollomon": "/uploads/apollomon.png?v=1788326774931",
+    "Grapleomon": "/uploads/grapleomon.png?v=1788326815230"
+  },
+  "art": {},
+  "rankIcons": {}
 }

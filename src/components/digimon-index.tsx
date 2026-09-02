@@ -25,12 +25,12 @@ export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
 
   return (
     <article className="mw-article">
-      <div className="mw-pre-title">From DMI Wiki · Digimon</div>
-      <h1 className="mw-firstHeading">Digimon</h1>
+      <div className="mw-pre-title">From DMI Wiki · Digimon List</div>
+      <h1 className="mw-firstHeading">Digimon List</h1>
       <p>
         Every form from the assignment sheet has a public page and a starting
         evolution board (sheet-mates on the same egg line, ranked by rank then
-        HP). Sign in to drag chips, draw arrows, and upload icons.
+        HP).
       </p>
       <p className="digi-filter">
         <input

@@ -13,7 +13,13 @@ import {
   type DigimonRecord,
 } from "@/lib/digimon";
 
-export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
+export function DigimonArticle({
+  digimon,
+  canEdit = false,
+}: {
+  digimon: DigimonRecord;
+  canEdit?: boolean;
+}) {
   const tree = evoTree(digimon.slug);
   const lineNames = digimon.lines.filter((n) => n && n !== "?");
   const icons = iconMap();
@@ -197,8 +203,12 @@ export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
         </Link>
         {" | "}
         <Link href="/roles">{digimon.role}</Link>
-        {" | "}
-        <Link href={`/admin/${digimon.slug}`}>Edit in catalog</Link>
+        {canEdit ? (
+          <>
+            {" | "}
+            <Link href={`/admin/${digimon.slug}`}>Edit in catalog</Link>
+          </>
+        ) : null}
       </div>
       <p className="mw-source">{SOURCE}</p>
     </article>
