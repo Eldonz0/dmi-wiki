@@ -342,6 +342,22 @@ export function allNames(): string[] {
   return [...set].sort((a, b) => a.localeCompare(b));
 }
 
+export function featuredPicks(slugs: string[]) {
+  const catalog = readCatalog();
+  return slugs.flatMap((slug) => {
+    const form = getForm(slug);
+    if (!form) return [];
+    const rec = hydrate(form, catalog);
+    return [
+      {
+        slug: rec.slug,
+        name: rec.name,
+        thumb: rec.icon || rec.art || undefined,
+      },
+    ];
+  });
+}
+
 export function getHomeFeatured() {
   const catalog = readCatalog();
   const home = catalog.home ?? defaultHome();

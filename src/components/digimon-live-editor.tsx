@@ -3,11 +3,12 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useEditorMode } from "@/components/editor-mode";
+import { BoxTools } from "@/components/box-tools";
 import type { CatalogForm, EvoTree } from "@/lib/digimon-types";
 
 const FormEditor = dynamic(
   () => import("@/components/form-editor").then((m) => m.FormEditor),
-  { ssr: false, loading: () => <p className="editor-banner">Loading editor…</p> },
+  { ssr: false, loading: () => <p className="box-panel">Loading editor…</p> },
 );
 
 type Payload = {
@@ -28,13 +29,11 @@ export function DigimonLiveEditor({
   children: React.ReactNode;
 }) {
   const { editing } = useEditorMode();
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState<Payload | null>(null);
 
   useEffect(() => {
-    if (!editing) {
-      setData(null);
-      return;
-    }
+    if (!editing || !open) return;
     let cancelled = false;
     fetch(`/api/catalog/edit/${slug}`, { credentials: "include" })
       .then((res) => res.json())
@@ -47,19 +46,43 @@ export function DigimonLiveEditor({
     return () => {
       cancelled = true;
     };
-  }, [editing, slug]);
+  }, [editing, open, slug]);
 
-  if (!editing) return children;
-  if (!data) return <p className="editor-banner">Loading editor…</p>;
+  useEffect(() => {
+    if (!editing) setOpen(false);
+  }, [editing]);
+
   return (
-    <FormEditor
-      form={data.form}
-      tree={data.tree}
-      names={data.names}
-      slugs={data.slugs}
-      icons={data.icons}
-      art={data.art}
-      rankIcons={data.rankIcons}
-    />
+    <>
+      {editing ? (
+        <div className="box-wrap is-open" style={{ marginBottom: "0.8rem" }}>
+          <BoxTools
+            onEdit={() => setOpen((v) => !v)}
+            editing={open}
+          />
+          <p className="guide-hint" style={{ margin: 0 }}>
+            Public article stays below. Edit opens tools under it.
+          </p>
+        </div>
+      ) : null}
+      {children}
+      {editing && open ? (
+        <div className="box-panel">
+          {data ? (
+            <FormEditor
+              form={data.form}
+              tree={data.tree}
+              names={data.names}
+              slugs={data.slugs}
+              icons={data.icons}
+              art={data.art}
+              rankIcons={data.rankIcons}
+            />
+          ) : (
+            <p>Loading editor…</p>
+          )}
+        </div>
+      ) : null}
+    </>
   );
 }

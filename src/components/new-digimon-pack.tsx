@@ -11,12 +11,32 @@ export type FeaturedPick = {
   thumb?: string;
 };
 
-export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
+export function NewDigimonPack({
+  items,
+  title = "New Digimon",
+  panelOpen = false,
+  onToggle,
+  onPersist,
+  chromeEdit = true,
+}: {
+  items: FeaturedPick[];
+  title?: string;
+  panelOpen?: boolean;
+  onToggle?: () => void;
+  onPersist?: (count: number, slugs: string[]) => Promise<void>;
+  chromeEdit?: boolean;
+}) {
   const router = useRouter();
   const { editing } = useEditorMode();
   const [count, setCount] = useState(Math.max(items.length, 1));
   const [slugs, setSlugs] = useState(items.map((i) => i.slug));
   const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const panel = onToggle ? panelOpen : open;
+  function toggle() {
+    if (onToggle) onToggle();
+    else setOpen((v) => !v);
+  }
   const [status, setStatus] = useState("");
   const [options, setOptions] = useState<FeaturedPick[]>(items);
 
@@ -26,7 +46,7 @@ export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
   }, [items]);
 
   useEffect(() => {
-    if (!editing) return;
+    if (!panel) return;
     let cancelled = false;
     fetch("/api/catalog", { credentials: "include" })
       .then((res) => res.json())
@@ -45,7 +65,7 @@ export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
     return () => {
       cancelled = true;
     };
-  }, [editing, items]);
+  }, [panel, items]);
 
   const bySlug = useMemo(() => {
     const map = new Map(options.map((o) => [o.slug, o]));
@@ -100,6 +120,16 @@ export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
     setStatus("Saving…");
     const n = Math.max(1, Math.min(40, count));
     const payload = { count: n, slugs: slugs.slice(0, n).filter(Boolean) };
+    if (onPersist) {
+      try {
+        await onPersist(n, payload.slugs);
+        setStatus("Saved.");
+        router.refresh();
+      } catch {
+        setStatus("Save failed.");
+      }
+      return;
+    }
     const res = await fetch("/api/home", {
       method: "PUT",
       credentials: "include",
@@ -120,9 +150,16 @@ export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
 
   return (
     <section className="newPack">
-      <div className="newBar">New Digimon</div>
+      <div className="newBar">
+        {title}
+        {editing && chromeEdit ? (
+          <button type="button" className="newBar-edit" onClick={toggle}>
+            {panel ? "Close" : "Edit"}
+          </button>
+        ) : null}
+      </div>
 
-      {editing ? (
+      {panel ? (
         <div className="newEdit">
           <label>
             How many to show

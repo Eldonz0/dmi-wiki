@@ -2,6 +2,7 @@ import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import type { WikiLandPage } from "@/lib/page-types";
+import { defaultBlocks } from "@/lib/page-types";
 
 export type { WikiLandPage };
 
@@ -26,6 +27,7 @@ const DEFAULTS: Record<string, WikiLandPage> = {
 ## Tamer
 - [Accessory](/accessory)
 - [Clothing](/clothing)`,
+    blocks: [],
   },
   accessory: {
     slug: "accessory",
@@ -34,6 +36,7 @@ const DEFAULTS: Record<string, WikiLandPage> = {
     infoboxTitle: "Accessory",
     infobox: [{ label: "Status", value: "Tables incoming" }],
     body: `Tamer accessory stats, slots, and where they drop. Edit this page in Editor mode to add tables and drop sources.`,
+    blocks: [],
   },
   clothing: {
     slug: "clothing",
@@ -42,6 +45,7 @@ const DEFAULTS: Record<string, WikiLandPage> = {
     infoboxTitle: "Clothing",
     infobox: [{ label: "Status", value: "Tables incoming" }],
     body: `Tamer clothing and costumes. Edit this page in Editor mode to add set bonuses and sources.`,
+    blocks: [],
   },
   dungeons: {
     slug: "dungeons",
@@ -56,6 +60,7 @@ const DEFAULTS: Record<string, WikiLandPage> = {
 
 - Forge / Maze / Infinite Mountain — scan boxes
 - Infinite Mountain Champion Devimon — Giga Box farm at 19% box rate`,
+    blocks: [],
   },
 };
 
@@ -89,13 +94,23 @@ function save(store: Store) {
 
 export function getLandPage(slug: string): WikiLandPage {
   const pages = load().pages;
-  return pages[slug] ?? DEFAULTS[slug] ?? {
+  const raw =
+    pages[slug] ??
+    DEFAULTS[slug] ?? {
+      slug,
+      title: slug,
+      category: "",
+      infoboxTitle: "",
+      infobox: [],
+      body: "",
+      blocks: [],
+    };
+  return {
+    ...raw,
     slug,
-    title: slug,
-    category: "",
-    infoboxTitle: "",
-    infobox: [],
-    body: "",
+    infobox: raw.infobox ?? [],
+    body: raw.body ?? "",
+    blocks: defaultBlocks(raw),
   };
 }
 
@@ -108,6 +123,7 @@ export function saveLandPage(page: WikiLandPage): WikiLandPage {
     infoboxTitle: page.infoboxTitle ?? "",
     infobox: Array.isArray(page.infobox) ? page.infobox : [],
     body: page.body ?? "",
+    blocks: Array.isArray(page.blocks) ? page.blocks : defaultBlocks(page),
   };
   store.pages[page.slug] = next;
   save(store);

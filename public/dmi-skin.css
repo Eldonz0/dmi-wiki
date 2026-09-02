@@ -1788,3 +1788,124 @@ button.mw-editor-on {
   padding: 0.3rem 0.4rem;
   border-radius: 6px;
 }
+
+.box-wrap {
+  position: relative;
+  margin: 0 0 1rem;
+  padding: 1.7rem 0.55rem 0.35rem;
+  border: 1px dashed rgba(0, 255, 242, 0.28);
+  border-radius: 10px;
+}
+
+.box-wrap.is-open {
+  border-color: var(--cyan);
+  background: rgba(0, 255, 242, 0.04);
+}
+
+.box-tools {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  z-index: 3;
+}
+
+.box-tools button {
+  background: #0c1028;
+  color: #7ec8ff;
+  border: 1px solid #7ec8ff;
+  border-radius: 4px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.45rem;
+  cursor: pointer;
+}
+
+.box-tools button.is-warn {
+  color: #ffb48a;
+  border-color: #ff6d00;
+}
+
+.add-box-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin: 0.15rem 0 0.7rem;
+  padding: 0.28rem 0.5rem;
+  border-radius: 8px;
+  background: #0f1430;
+  border: 1px dashed rgba(0, 255, 242, 0.22);
+  font-size: 12px;
+  color: var(--mw-muted);
+}
+
+.add-box-bar button {
+  background: var(--cyan);
+  color: #04101c;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 700;
+  padding: 0.28rem 0.55rem;
+  cursor: pointer;
+}
+
+.box-panel {
+  margin: 0.55rem 0 0.2rem;
+  padding: 0.7rem 0.75rem;
+  background: #0c1028;
+  border: 1px solid var(--mw-line);
+  border-radius: 8px;
+}
+
+.page-banner {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--mw-line);
+  margin: 0 0 1rem;
+}
+
+.banner-empty {
+  padding: 1.4rem;
+  text-align: center;
+  color: var(--mw-muted);
+  border: 1px dashed var(--mw-line);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.announce {
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.announce strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.announce p {
+  margin: 0;
+}
+
+.announce-orange {
+  background: linear-gradient(135deg, rgba(255, 109, 0, 0.22), rgba(255, 109, 0, 0.05));
+  border: 2px solid #ff6d00;
+}
+
+.announce-cyan {
+  background: linear-gradient(135deg, rgba(0, 255, 242, 0.18), rgba(0, 255, 242, 0.04));
+  border: 2px solid var(--cyan);
+}
+
+.announce-violet {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(168, 85, 247, 0.05));
+  border: 2px solid #c084fc;
+}

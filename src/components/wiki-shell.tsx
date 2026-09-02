@@ -219,8 +219,8 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
           <div className="mw-content">
             {editing ? (
               <p className="editor-banner">
-                Editor mode is on. Change this page and hit Save — it writes to
-                the wiki.
+                Editor mode is on. The page stays as visitors see it — use the
+                small Edit / Duplicate buttons on a box.
               </p>
             ) : null}
             {children}
