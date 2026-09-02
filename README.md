@@ -27,22 +27,21 @@ Landing page text lives in `data/pages.json`.
 
 This is the path that stays $0 and keeps editor work. **Code** and **wiki data** both live in one GitHub repo. Vercel builds that repo. When you hit **Save** on the live site, the app commits `data/*.json` and `public/uploads/*` back to GitHub, Vercel rebuilds, and visitors see the update. Adding a new tab later is a code change — it does not wipe Digimon stats, guides, or icons as long as those JSON files stay in git.
 
-### 1. Put the project on GitHub
+Live GitHub repo: [Eldonz0/dmi-wiki](https://github.com/Eldonz0/dmi-wiki).
 
-1. Create an empty public repository on GitHub (any name).
-2. On your computer (or in this workspace) add it as a remote and push `main`:
+### 1. Push this project to GitHub
+
+From a machine that is logged into GitHub:
 
 ```bash
-git remote add github https://github.com/YOUR_USER/YOUR_REPO.git
+git remote add github https://github.com/Eldonz0/dmi-wiki.git
 git push -u github main
 ```
-
-A GitHub remote is required. The Cursor copy of this project is not GitHub, so Vercel cannot pull from it until you push.
 
 ### 2. Connect Vercel (Hobby / free)
 
 1. Sign in at [vercel.com](https://vercel.com) with GitHub.
-2. **Add New → Project**, import `YOUR_USER/YOUR_REPO`.
+2. **Add New → Project**, import `Eldonz0/dmi-wiki`.
 3. Framework: Next.js. Leave the build command as `next build`.
 4. Set environment variables (Production + Preview):
 
@@ -51,7 +50,7 @@ A GitHub remote is required. The Cursor copy of this project is not GitHub, so V
 | `DMI_ADMIN_USER` | your sign-in username |
 | `DMI_ADMIN_PASS` | a long password (not the example) |
 | `DMI_SESSION_SECRET` | a long random string |
-| `GITHUB_REPO` | `YOUR_USER/YOUR_REPO` |
+| `GITHUB_REPO` | `Eldonz0/dmi-wiki` |
 | `GITHUB_DATA_TOKEN` | GitHub token (next step) |
 | `GITHUB_BRANCH` | `main` |
 
