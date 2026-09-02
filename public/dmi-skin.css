@@ -873,6 +873,20 @@ a.evo-card:hover {
   text-decoration: none !important;
 }
 
+.rank-upload {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.rank-upload-hit {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+}
+
 .rank-badge-wrap {
   display: inline-flex;
   align-items: center;
@@ -880,11 +894,22 @@ a.evo-card:hover {
   vertical-align: middle;
 }
 
-.rank-badge-img {
-  width: 1.55rem;
+.rank-badge-wrap.is-edit:hover .rank-badge,
+.rank-badge-wrap.is-edit:hover .rank-badge-face {
+  outline: 1px solid var(--cyan);
+  outline-offset: 1px;
+}
+
+.rank-badge-wrap.is-busy {
+  opacity: 0.65;
+}
+
+.rank-badge-img,
+.rank-badge-face {
+  width: 2.1rem;
   height: 1.55rem;
   object-fit: contain;
-  border-radius: 3px;
+  border-radius: 4px;
   background: #0a0e27;
   border: 1px solid var(--mw-line);
 }

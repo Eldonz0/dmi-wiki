@@ -13,6 +13,7 @@ import {
   EditorModeProvider,
   useEditorMode,
 } from "@/components/editor-mode";
+import { RankIconsProvider } from "@/components/rank-icons";
 import {
   Sheet,
   SheetContent,
@@ -123,11 +124,19 @@ function Portlets({
   );
 }
 
-export function WikiShell({ children }: { children: React.ReactNode }) {
+export function WikiShell({
+  children,
+  rankIcons = {},
+}: {
+  children: React.ReactNode;
+  rankIcons?: Record<string, string>;
+}) {
   return (
     <AuthProvider>
       <EditorModeProvider>
-        <WikiChrome>{children}</WikiChrome>
+        <RankIconsProvider initial={rankIcons}>
+          <WikiChrome>{children}</WikiChrome>
+        </RankIconsProvider>
       </EditorModeProvider>
     </AuthProvider>
   );

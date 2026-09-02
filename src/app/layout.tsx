@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { WikiShell } from "@/components/wiki-shell";
+import { rankIconMap } from "@/lib/catalog";
 
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href="/dmi-skin.css" />
       </head>
       <body className="min-h-full flex flex-col">
-        <WikiShell>{children}</WikiShell>
+        <WikiShell rankIcons={rankIconMap()}>{children}</WikiShell>
       </body>
     </html>
   );

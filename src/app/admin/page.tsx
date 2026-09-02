@@ -15,8 +15,8 @@ export default function AdminPage() {
       <h1 className="mw-firstHeading">Digimon catalog</h1>
       <p>
         {forms.length} forms loaded from <code>data/catalog.json</code>. Edit a
-        row for stats and evolutions. Click a chip to change that name’s icon
-        everywhere it appears.
+        row for stats and evolutions. Click a Digimon chip or a Rank chip to
+        change that icon everywhere it appears.
       </p>
       <p>
         <Link href="/digimon">Public index</Link>
