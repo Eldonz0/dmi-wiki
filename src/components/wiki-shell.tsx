@@ -253,9 +253,7 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
 
           <footer className="mw-footer">
             <p>
-              Fan wiki for <strong>Digimon Masters Infinite</strong>. Same
-              article structure as a DMO wiki, skinned like the official DMI
-              site. Not affiliated with Bandai Namco.
+              Fan wiki for <strong>Digimon Masters Infinite</strong>.
             </p>
           </footer>
         </div>
