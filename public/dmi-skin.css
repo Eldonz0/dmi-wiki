@@ -120,12 +120,10 @@
   color: #fff !important;
 }
 
-.mw-mobile-bar .dmi-discord.is-compact span {
-  display: none;
-}
-
-.mw-mobile-bar .dmi-discord.is-compact {
-  padding: 0.4rem;
+.mw-portlet .dmi-discord {
+  width: 100%;
+  justify-content: center;
+  margin: 0.15rem 0 0.35rem;
 }
 
 .dmi-top-nav a {
