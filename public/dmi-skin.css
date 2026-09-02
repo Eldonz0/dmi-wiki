@@ -69,29 +69,16 @@
 
 .dmi-brand {
   text-decoration: none !important;
-  line-height: 1.05;
+  line-height: 0;
+  flex-shrink: 0;
 }
 
-.dmi-brand strong,
-.dmi-brand em {
+.dmi-brand img {
   display: block;
-  font-family: var(--font-heading), Orbitron, sans-serif;
-  font-style: normal;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  background: linear-gradient(90deg, #00fff2, #b300ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-.dmi-brand strong {
-  font-size: 13px;
-}
-
-.dmi-brand em {
-  font-size: 22px;
+  height: 56px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
 }
 
 .dmi-top-nav {
@@ -236,10 +223,13 @@
 }
 
 .mw-mobile-brand {
-  font-family: var(--font-heading), Orbitron, sans-serif;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--cyan) !important;
+  line-height: 0;
+}
+
+.mw-mobile-brand img {
+  display: block;
+  height: 36px;
+  width: auto;
 }
 
 .mw-tabs {

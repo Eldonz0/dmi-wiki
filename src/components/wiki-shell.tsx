@@ -152,8 +152,13 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
     <div className="mw-skin">
       <header className="dmi-top">
         <Link href="/" className="dmi-brand">
-          <strong>DIGIMON MASTERS</strong>
-          <em>INFINITE</em>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/dmi-logo.png"
+            alt="Digimon Masters Infinite"
+            width={192}
+            height={102}
+          />
         </Link>
         <nav className="dmi-top-nav">
           <Link href="/" className={cn(pathname === "/" && "is-on")}>
@@ -221,7 +226,8 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
               </SheetContent>
             </Sheet>
             <Link href="/" className="mw-mobile-brand">
-              DMI WIKI
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/dmi-logo.png" alt="Digimon Masters Infinite" />
             </Link>
             {admin ? (
               <SignOutButton />
