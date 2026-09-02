@@ -1652,6 +1652,11 @@ button.mw-text-out:hover {
 
 .dungeon-point a {
   white-space: nowrap;
+  text-decoration: none !important;
+}
+
+.dungeon-point a:hover {
+  color: var(--cyan) !important;
 }
 
 .ticket-chip-wrap {
