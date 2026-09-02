@@ -1,15 +1,9 @@
-import { PageCanvas } from "@/components/page-canvas";
-import { getLandPage } from "@/lib/pages";
+import { listAccessoryCategories } from "@/lib/accessories";
+import { AccessoryHub } from "@/components/accessory-hub";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Accessory" };
 
 export default function AccessoryPage() {
-  const page = getLandPage("accessory");
-  return (
-    <article className="mw-article">
-      <div className="mw-pre-title">From DMI Wiki · {page.category}</div>
-      <PageCanvas page={page} />
-    </article>
-  );
+  return <AccessoryHub categories={listAccessoryCategories()} />;
 }

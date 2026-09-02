@@ -7,12 +7,14 @@ export function TicketChip({
   label,
   uploadName,
   uploadable,
+  emptyLabel = "Tk",
   onUploaded,
 }: {
   src?: string;
   label: string;
   uploadName?: string;
   uploadable?: boolean;
+  emptyLabel?: string;
   onUploaded?: (url: string) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,7 +41,7 @@ export function TicketChip({
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt="" width={36} height={36} />
   ) : (
-    <span className="evo-fallback">Tk</span>
+    <span className="evo-fallback">{emptyLabel}</span>
   );
 
   if (!uploadable) {
@@ -55,8 +57,8 @@ export function TicketChip({
       <button
         type="button"
         className={busy ? "ticket-chip evo-icon is-busy" : "ticket-chip evo-icon is-edit"}
-        title={`Upload entry ticket for ${label}`}
-        aria-label={`Upload entry ticket for ${label}`}
+        title={`Upload icon for ${label}`}
+        aria-label={`Upload icon for ${label}`}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();

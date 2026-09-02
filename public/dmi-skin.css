@@ -384,7 +384,6 @@
 .wikitable tbody tr {
   content-visibility: auto;
   contain-intrinsic-size: auto 48px;
-}
   background: #0f1430;
 }
 
@@ -2130,4 +2129,87 @@ button.mw-editor-on {
 .announce-violet {
   background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(168, 85, 247, 0.05));
   border: 2px solid #c084fc;
+}
+
+.acc-cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin: 1rem 0 1.4rem;
+}
+
+.acc-cat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--mw-line);
+  border-radius: 10px;
+  background: #121838;
+  text-decoration: none !important;
+  color: var(--mw-text) !important;
+}
+
+.acc-cat:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 255, 242, 0.06);
+}
+
+.acc-cat strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #8fd4ff;
+}
+
+.acc-cat em {
+  display: block;
+  font-style: normal;
+  font-size: 12.5px;
+  color: var(--mw-muted);
+  margin-top: 0.15rem;
+}
+
+.acc-cat-glyph {
+  --evo-icon: 44px;
+  width: 44px;
+  height: 44px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 0.4rem 0 1.1rem;
+}
+
+.acc-table td input,
+.acc-table td select {
+  width: 100%;
+  min-width: 6rem;
+  background: #0a0e27;
+  border: 1px solid var(--mw-line);
+  color: var(--mw-text);
+  padding: 0.25rem 0.35rem;
+  border-radius: 4px;
+}
+
+.acc-row-tools {
+  position: relative;
+  min-width: 7rem;
+  min-height: 2.4rem;
+}
+
+.acc-row-tools .box-tools {
+  position: static;
+}
+
+.acc-role-edit {
+  margin: 0.65rem 0;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--mw-line);
+  border-radius: 8px;
+}
+
+@media (max-width: 720px) {
+  .acc-cat-grid {
+    grid-template-columns: 1fr;
+  }
 }

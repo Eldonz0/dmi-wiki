@@ -91,7 +91,7 @@ export const SEARCH_INDEX = [
   { href: "/sets", title: "Carries sets", text: "carries AA TA SK mismatched set half stats" },
   { href: "/guide", title: "Guide", text: "boss fruit boxes fanglongmon yin yang verdandi kaisergreymon giga box drops" },
   { href: "/dungeons", title: "Dungeons", text: "dungeon farm scan giga box infinite mountain" },
-  { href: "/accessory", title: "Accessory", text: "tamer accessory rings earrings" },
+  { href: "/accessory", title: "Accessory", text: "tamer accessory rings necklaces earrings bracelets option change stone" },
   { href: "/clothing", title: "Clothing", text: "tamer clothing costume" },
   { href: "/verdandi", title: "Verdandi", text: "rookie x-digimon 500 hp susanoomon" },
   { href: "/rank-system", title: "Rank System", text: "rank n a s ss sss u unique infobox" },

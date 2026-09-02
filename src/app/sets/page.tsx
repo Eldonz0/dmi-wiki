@@ -24,8 +24,8 @@ export default function SetsPage() {
     >
       <p>
         Wear the Carries set that matches your <Link href="/roles">role</Link>{" "}
-        or every accessory on it pays half. You can still mix looks — the icon
-        just tells you the tax is on.
+        or every accessory on it pays half. Slot-by-slot option rolls live on{" "}
+        <Link href="/accessory">Accessory</Link>.
       </p>
       <table className="wikitable">
         <thead>
