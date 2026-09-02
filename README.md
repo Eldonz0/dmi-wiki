@@ -29,6 +29,7 @@ Landing page text lives in `data/pages.json`.
 
 On each form you can:
 
+- click the chip beside **Name** in **Digimon index editor** (or Digimon List with Editor mode on) to upload a 52×52 icon — every evolution chip with that same name updates
 - edit rank, role, and the four sheet stats
 - drag evolution chips on a grid and draw arrows between them
 - upload a chip icon (png / jpg / webp)

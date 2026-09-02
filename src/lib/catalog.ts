@@ -317,8 +317,9 @@ export function setUpload(
   const catalog = readCatalog();
   if (kind === "chip") {
     catalog.icons[key] = url;
-    const form = catalog.forms.find((f) => f.name === key);
-    if (form) form.icon = url;
+    for (const form of catalog.forms) {
+      if (form.name === key) form.icon = url;
+    }
   } else if (kind === "art") {
     catalog.art[key] = url;
     const form = catalog.forms.find((f) => f.name === key);

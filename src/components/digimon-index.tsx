@@ -5,12 +5,22 @@ import { useMemo, useState } from "react";
 import type { CatalogForm } from "@/lib/digimon-types";
 import { RANKS, rankSlug } from "@/lib/ranks";
 import { RankBadge, RoleBadge } from "@/components/rank-badge";
-import { iconFor } from "@/lib/wiki-lore";
 import { AddDigimonButton } from "@/components/add-digimon";
+import { IndexChip } from "@/components/index-chip";
+import { useAdmin } from "@/hooks/use-admin";
+import { useEditorMode } from "@/components/editor-mode";
 
-export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
+export function DigimonIndex({ forms }: { forms: (CatalogForm & { icon?: string })[] }) {
+  const { admin } = useAdmin();
+  const { editing } = useEditorMode();
+  const uploadable = admin && editing;
   const [q, setQ] = useState("");
   const [rank, setRank] = useState("all");
+  const [icons, setIcons] = useState<Record<string, string>>(() => {
+    const map: Record<string, string> = {};
+    for (const d of forms) if (d.icon) map[d.name] = d.icon;
+    return map;
+  });
   const needle = q.trim().toLowerCase();
   const rows = useMemo(() => {
     return forms.filter((d) => {
@@ -79,18 +89,18 @@ export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((d) => {
-            const icon = iconFor(d.name);
-            return (
-              <tr key={d.slug}>
-                <td className="thumb-cell">
-                  {icon ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={icon} alt="" width={40} height={40} />
-                  ) : (
-                    <span className="evo-fallback">{d.name.slice(0, 2)}</span>
-                  )}
-                </td>
+        {rows.map((d) => (
+            <tr key={d.slug}>
+              <td className="thumb-cell">
+                <IndexChip
+                  name={d.name}
+                  src={icons[d.name]}
+                  uploadable={uploadable}
+                  onUploaded={(name, url) =>
+                    setIcons((prev) => ({ ...prev, [name]: url }))
+                  }
+                />
+              </td>
                 <td>
                   <Link href={`/digimon/${d.slug}`}>{d.name}</Link>
                 </td>
@@ -105,9 +115,8 @@ export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
                 <td>{d.de}</td>
                 <td>{d.as}</td>
                 <td>{d.lines.filter((n) => n !== "?").join(", ")}</td>
-              </tr>
-            );
-          })}
+            </tr>
+          ))}
         </tbody>
       </table>
     </article>
