@@ -1,3 +1,15 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "id": "g1788364544532",
+      "slug": "giga-box-farm",
+      "title": "Giga Box farm",
+      "body": "The Infinite Mountain is the best place to farm Giga Boxes. You can get multiple drops per run if you clear all floors efficiently.",
+      "author": "admin",
+      "createdAt": "2026-09-02T15:55:44.532Z",
+      "updatedAt": "2026-09-02T15:55:44.532Z",
+      "stageHeight": 420,
+      "pins": []
+    }
+  ]
 }
