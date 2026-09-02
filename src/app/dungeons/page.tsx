@@ -13,15 +13,15 @@ export default function DungeonsPage() {
         <Infobox
           title="Dungeons"
           rows={[
-            { label: "Fruit boxes", value: <Link href="/guide">Guide</Link> },
+            { label: "Guides", value: <Link href="/guide">Topic board</Link> },
             { label: "Scan farms", value: "Forge, Maze, Infinite Mountain" },
           ]}
         />
       }
     >
       <p>
-        Dungeon pages will list maps, bosses, and recommended farms. Box rates
-        and scan fruit already sit on the <Link href="/guide">Guide</Link>.
+        Dungeon pages will list maps, bosses, and recommended farms. Written
+        routes can go on the <Link href="/guide">Guide</Link> board.
       </p>
       <ul>
         <li>Forge / Maze / Infinite Mountain — scan boxes (see Guide).</li>

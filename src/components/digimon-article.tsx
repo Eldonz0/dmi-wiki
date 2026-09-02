@@ -4,6 +4,7 @@ import { EvoBoard } from "@/components/evo-board";
 import { RankBadge, RoleBadge } from "@/components/rank-badge";
 import { rankSlug } from "@/lib/ranks";
 import { SOURCE } from "@/lib/wiki";
+import { AdminOnly } from "@/components/admin-only";
 import {
   STAT_LABELS,
   evoTree,
@@ -13,13 +14,7 @@ import {
   type DigimonRecord,
 } from "@/lib/digimon";
 
-export function DigimonArticle({
-  digimon,
-  canEdit = false,
-}: {
-  digimon: DigimonRecord;
-  canEdit?: boolean;
-}) {
+export function DigimonArticle({ digimon }: { digimon: DigimonRecord }) {
   const tree = evoTree(digimon.slug);
   const lineNames = digimon.lines.filter((n) => n && n !== "?");
   const icons = iconMap();
@@ -203,12 +198,10 @@ export function DigimonArticle({
         </Link>
         {" | "}
         <Link href="/roles">{digimon.role}</Link>
-        {canEdit ? (
-          <>
-            {" | "}
-            <Link href={`/admin/${digimon.slug}`}>Edit in catalog</Link>
-          </>
-        ) : null}
+        <AdminOnly>
+          {" | "}
+          <Link href={`/admin/${digimon.slug}`}>Edit in catalog</Link>
+        </AdminOnly>
       </div>
       <p className="mw-source">{SOURCE}</p>
     </article>

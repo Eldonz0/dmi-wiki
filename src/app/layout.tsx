@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { WikiShell } from "@/components/wiki-shell";
-import { isAdmin } from "@/lib/auth";
 
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
@@ -25,8 +24,7 @@ export const metadata: Metadata = {
     "Wiki for Digimon Masters Infinite — DMI. Digimon list, guide, dungeons, accessory, and clothing.",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const admin = await isAdmin();
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
@@ -36,7 +34,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href="/dmi-skin.css" />
       </head>
       <body className="min-h-full flex flex-col">
-        <WikiShell isAdmin={admin}>{children}</WikiShell>
+        <WikiShell>{children}</WikiShell>
       </body>
     </html>
   );

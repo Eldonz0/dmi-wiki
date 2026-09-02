@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAdmin } from "@/hooks/use-admin";
 
 export type FeaturedPick = {
   slug: string;
@@ -10,21 +11,41 @@ export type FeaturedPick = {
   thumb?: string;
 };
 
-export function NewDigimonPack({
-  items,
-  options,
-  canEdit,
-}: {
-  items: FeaturedPick[];
-  options: FeaturedPick[];
-  canEdit: boolean;
-}) {
+export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
   const router = useRouter();
+  const { admin } = useAdmin();
   const [editing, setEditing] = useState(false);
   const [count, setCount] = useState(Math.max(items.length, 1));
   const [slugs, setSlugs] = useState(items.map((i) => i.slug));
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
+  const [options, setOptions] = useState<FeaturedPick[]>([]);
+
+  useEffect(() => {
+    if (!admin) {
+      setOptions([]);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/catalog", { credentials: "same-origin" })
+      .then((res) => res.json())
+      .then((data: { forms?: { slug: string; name: string; icon?: string; art?: string }[] }) => {
+        if (cancelled) return;
+        setOptions(
+          (data.forms ?? []).map((d) => ({
+            slug: d.slug,
+            name: d.name,
+            thumb: d.icon || d.art || undefined,
+          })),
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setOptions([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [admin]);
 
   const bySlug = useMemo(() => {
     const map = new Map(options.map((o) => [o.slug, o]));
@@ -95,7 +116,7 @@ export function NewDigimonPack({
     <section className="newPack">
       <div className="newBar">
         New Digimon
-        {canEdit ? (
+        {admin ? (
           <button
             type="button"
             className="newBar-edit"

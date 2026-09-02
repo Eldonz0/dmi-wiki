@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DigimonArticle } from "@/components/digimon-article";
 import { getDigimon, listDigimon } from "@/lib/digimon";
-import { isAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -26,5 +25,5 @@ export default async function DigimonPage({ params }: Props) {
   const { slug } = await params;
   const digimon = getDigimon(slug);
   if (!digimon) notFound();
-  return <DigimonArticle digimon={digimon} canEdit={await isAdmin()} />;
+  return <DigimonArticle digimon={digimon} />;
 }

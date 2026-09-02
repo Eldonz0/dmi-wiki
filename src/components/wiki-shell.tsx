@@ -7,6 +7,7 @@ import { useState } from "react";
 import { WikiSearchForm } from "@/components/wiki-search";
 import { SIDEBAR_NAV, SIDEBAR_TOOLS } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
+import { useAdmin } from "@/hooks/use-admin";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +16,46 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+
+function AccountPortlet({
+  admin,
+  onNavigate,
+}: {
+  admin: boolean;
+  onNavigate?: () => void;
+}) {
+  return (
+    <nav className="mw-portlet mw-account">
+      <h3>Account</h3>
+      <ul>
+        {admin ? (
+          <>
+            <li>
+              <Link href="/admin" onClick={onNavigate}>
+                Catalog
+              </Link>
+            </li>
+            <li>
+              <a href="/api/auth/logout" onClick={onNavigate}>
+                Sign out
+              </a>
+            </li>
+          </>
+        ) : (
+          <li>
+            <a
+              className="mw-signin"
+              href="/api/auth/login?next=/"
+              onClick={onNavigate}
+            >
+              Sign in
+            </a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  );
+}
 
 function Portlets({
   onNavigate,
@@ -28,6 +69,7 @@ function Portlets({
 
   return (
     <div className="mw-portlets">
+      <AccountPortlet admin={isAdmin} onNavigate={onNavigate} />
       {groups.map((group) => (
         <nav key={group.title} className="mw-portlet">
           <h3>{group.title}</h3>
@@ -56,15 +98,10 @@ function Portlets({
   );
 }
 
-export function WikiShell({
-  children,
-  isAdmin = false,
-}: {
-  children: React.ReactNode;
-  isAdmin?: boolean;
-}) {
+export function WikiShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { admin } = useAdmin();
 
   return (
     <div className="mw-skin">
@@ -89,7 +126,7 @@ export function WikiShell({
           >
             Guide
           </Link>
-          {isAdmin ? (
+          {admin ? (
             <Link
               href="/admin"
               className={cn(pathname.startsWith("/admin") && "is-on")}
@@ -97,8 +134,11 @@ export function WikiShell({
               Catalog
             </Link>
           ) : (
-            <Link href="/api/auth/login?next=/">Sign in</Link>
+            <a className="mw-signin" href="/api/auth/login?next=/">
+              Sign in
+            </a>
           )}
+          {admin ? <a href="/api/auth/logout">Sign out</a> : null}
           <a
             href="https://www.digimonmastersinfinite.com/index.html"
             target="_blank"
@@ -111,9 +151,9 @@ export function WikiShell({
 
       <div className="mw-frame">
         <aside className="mw-sidebar">
-          {isAdmin ? <WikiSearchForm compact /> : null}
+          {admin ? <WikiSearchForm compact /> : null}
           <div className="mw-sidebar-desktop">
-            <Portlets isAdmin={isAdmin} />
+            <Portlets isAdmin={admin} />
           </div>
         </aside>
 
@@ -137,7 +177,7 @@ export function WikiShell({
                 </SheetHeader>
                 <div className="px-3 pb-6">
                   <Portlets
-                    isAdmin={isAdmin}
+                    isAdmin={admin}
                     onNavigate={() => setOpen(false)}
                   />
                 </div>
@@ -146,6 +186,15 @@ export function WikiShell({
             <Link href="/" className="mw-mobile-brand">
               DMI WIKI
             </Link>
+            {admin ? (
+              <a className="mw-signin" href="/api/auth/logout">
+                Sign out
+              </a>
+            ) : (
+              <a className="mw-signin" href="/api/auth/login?next=/">
+                Sign in
+              </a>
+            )}
           </div>
 
           <div className="mw-content">{children}</div>

@@ -1,21 +1,12 @@
 import { PortalBox } from "@/components/wiki-article";
 import { NewDigimonPack } from "@/components/new-digimon-pack";
-import { getHomeFeatured, listDigimon } from "@/lib/catalog";
-import { isAdmin } from "@/lib/auth";
+import { getHomeFeatured } from "@/lib/catalog";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const featured = getHomeFeatured();
-  const canEdit = await isAdmin();
-  const options = canEdit
-    ? listDigimon().map((d) => ({
-        slug: d.slug,
-        name: d.name,
-        thumb: d.icon || d.art || undefined,
-      }))
-    : [];
   const items = featured.map((d) => ({
     slug: d.slug,
     name: d.name,
@@ -24,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <article className="mw-article">
-      <NewDigimonPack items={items} options={options} canEdit={canEdit} />
+      <NewDigimonPack items={items} />
 
       <h1 className="mw-firstHeading">Main Page</h1>
 
@@ -48,7 +39,7 @@ export default async function HomePage() {
         <PortalBox title="Guide">
           <ul>
             <li>
-              <Link href="/guide">Boss fruit boxes</Link> and Verdandi chests
+              <Link href="/guide">Guide board</Link> — topics posted on the wiki
             </li>
             <li>
               <Link href="/dungeons">Dungeons</Link> — farms and scan routes
