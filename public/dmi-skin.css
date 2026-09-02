@@ -697,8 +697,8 @@
 .newItem {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.32rem 0;
+  gap: 0.5rem;
+  padding: 0.22rem 0;
   color: #c5b4ff !important;
   text-decoration: none !important;
   min-width: 0;
@@ -710,9 +710,9 @@
 
 .newItem img,
 .newMark {
-  width: 60px !important;
-  height: 60px !important;
-  max-width: 60px;
+  width: 44px !important;
+  height: 44px !important;
+  max-width: 44px;
   flex-shrink: 0;
   border: 1px solid #7ec8ff;
   object-fit: cover;
@@ -732,7 +732,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 

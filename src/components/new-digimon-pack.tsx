@@ -259,7 +259,7 @@ function NewRow({ item }: { item: FeaturedPick }) {
     <Link href={`/digimon/${item.slug}`} className="newItem">
       {item.thumb ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.thumb} alt="" width={60} height={60} />
+        <img src={item.thumb} alt="" width={44} height={44} />
       ) : (
         <span className="newMark">{item.name.slice(0, 2)}</span>
       )}
