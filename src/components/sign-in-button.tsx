@@ -57,6 +57,11 @@ export function SignOutButton({ className = "mw-signin" }: { className?: string 
             headers: { Accept: "application/json" },
           });
           setAdmin(false);
+          try {
+            window.localStorage.setItem("dmi-editor", "0");
+          } catch {
+            /* ignore */
+          }
           router.refresh();
         })();
       }}

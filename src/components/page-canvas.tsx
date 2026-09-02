@@ -71,6 +71,13 @@ export function PageCanvas({
     setDraft({ ...page, blocks: defaultBlocks(page) });
   }, [page]);
 
+  useEffect(() => {
+    if (!editing) {
+      setOpenId(null);
+      setStatus("");
+    }
+  }, [editing]);
+
   const picks = useMemo(() => {
     const map = new Map(featured.map((i) => [i.slug, i]));
     return map;
@@ -153,7 +160,7 @@ export function PageCanvas({
             }))}
           />
         ) : null}
-        {openId === "header" ? (
+        {editing && openId === "header" ? (
           <HeaderEditor
             draft={draft}
             setDraft={setDraft}
@@ -193,7 +200,7 @@ export function PageCanvas({
             <BlockView
               block={block}
               featuredItems={block.type === "featured" ? itemsFor(block) : []}
-              panelOpen={openId === block.id}
+              panelOpen={editing && openId === block.id}
               onToggle={() =>
                 setOpenId((id) => (id === block.id ? null : block.id))
               }

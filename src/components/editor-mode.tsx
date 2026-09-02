@@ -29,7 +29,11 @@ export function EditorModeProvider({ children }: { children: ReactNode }) {
   const [on, setOn] = useState(false);
 
   useEffect(() => {
-    setOn(admin && window.localStorage.getItem(KEY) === "1");
+    if (!admin) {
+      setOn(false);
+      return;
+    }
+    setOn(window.localStorage.getItem(KEY) === "1");
   }, [admin]);
 
   const toggle = useCallback(() => {

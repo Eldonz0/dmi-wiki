@@ -32,8 +32,9 @@ export function NewDigimonPack({
   const [slugs, setSlugs] = useState(items.map((i) => i.slug));
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const panel = onToggle ? panelOpen : open;
+  const panel = Boolean(editing && (onToggle ? panelOpen : open));
   function toggle() {
+    if (!editing) return;
     if (onToggle) onToggle();
     else setOpen((v) => !v);
   }
@@ -44,6 +45,10 @@ export function NewDigimonPack({
     setSlugs(items.map((i) => i.slug));
     setCount(Math.max(items.length, 1));
   }, [items]);
+
+  useEffect(() => {
+    if (!editing) setOpen(false);
+  }, [editing]);
 
   useEffect(() => {
     if (!panel) return;
