@@ -15,7 +15,7 @@ Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Acce
 
 ## Tamer catalog (one account)
 
-There is no register page. Click **Sign in**, then **Editor mode**. **Add Digimon** is on Digimon List and Catalog. New Digimon on the home page uses slot dropdowns and **Save New Digimon box**.
+There is no register page. Click **Sign in**, then **Editor mode**. **Add Digimon** is on Digimon List and **Digimon index editor**. New Digimon on the home page uses slot dropdowns and **Save New Digimon box**.
 
 The account is still `admin` / `infinite` if a password form is used later. Override with `DMI_ADMIN_USER` and `DMI_ADMIN_PASS`.
 
