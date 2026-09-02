@@ -281,10 +281,6 @@
   border-bottom: 1px solid var(--mw-line);
 }
 
-.mw-article h2#default-stats {
-  clear: both;
-}
-
 .mw-article h3 {
   margin: 1rem 0 0.3rem;
   font-size: 1.05rem;
