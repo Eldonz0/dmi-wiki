@@ -37,7 +37,7 @@ export function GuideStage({
 
   return (
     <div
-      className="guide-stage"
+      className={editable ? "guide-stage" : "guide-stage is-live"}
       style={{ height }}
       onPointerDown={() => onSelect?.("")}
     >

@@ -7,6 +7,11 @@ export type GuidePin = {
   h: number;
 };
 
+export type GuideHubArt = {
+  stageHeight: number;
+  pins: GuidePin[];
+};
+
 export type GuidePost = {
   id: string;
   slug: string;

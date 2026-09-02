@@ -25,7 +25,7 @@ Landing page text lives in `data/pages.json`.
 
 ## Guide
 
-`/guide` is a two-column list of **points**. Each point is a link to its own landing page (notes, tables, pictures). In Editor mode, **New guide landing page** adds a point. Open a point, then **Edit** to change the title, write `NOTE:` callouts, tables, and upload pictures. Saved in `data/guides.json`.
+`/guide` is a **left-hand list of points** (`*` bullets). Each point opens a landing page. The right side holds banners you upload and drag in Editor mode. **New guide landing page** adds a point. On a landing page, **Edit** for notes, tables, and pictures. Saved in `data/guides.json`.
 
 On each form you can:
 

@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
-import type { GuidePin } from "@/lib/guide-types";
+import type { GuideHubArt, GuidePin } from "@/lib/guide-types";
 import { isAdmin } from "@/lib/auth";
-import { createGuide, listGuides, reorderGuides } from "@/lib/guides";
+import {
+  createGuide,
+  getGuideHub,
+  listGuides,
+  reorderGuides,
+  saveGuideHub,
+} from "@/lib/guides";
 import { adminUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return NextResponse.json({ posts: listGuides() });
+  return NextResponse.json({ posts: listGuides(), hub: getGuideHub() });
 }
 
 export async function POST(request: Request) {
@@ -34,7 +40,13 @@ export async function PUT(request: Request) {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
-  const body = (await request.json()) as { order?: string[] };
+  const body = (await request.json()) as {
+    order?: string[];
+    hub?: GuideHubArt;
+  };
+  if (body.hub) {
+    return NextResponse.json({ hub: saveGuideHub(body.hub) });
+  }
   if (!Array.isArray(body.order)) {
     return NextResponse.json({ error: "Missing order" }, { status: 400 });
   }

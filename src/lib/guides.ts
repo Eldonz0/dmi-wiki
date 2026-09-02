@@ -2,9 +2,9 @@ import "server-only";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import { slugifyName } from "@/lib/evo-layout";
-import type { GuidePin, GuidePost } from "@/lib/guide-types";
+import type { GuideHubArt, GuidePin, GuidePost } from "@/lib/guide-types";
 
-export type { GuidePin, GuidePost };
+export type { GuideHubArt, GuidePin, GuidePost };
 
 const FILE = path.join(process.cwd(), "data/guides.json");
 
@@ -81,10 +81,14 @@ Add pictures of the NPC and the item window in Editor mode.`,
   },
 ];
 
-type Store = { posts: GuidePost[] };
+type Store = { posts: GuidePost[]; hub: GuideHubArt };
+
+function defaultHub(): GuideHubArt {
+  return { stageHeight: 420, pins: [] };
+}
 
 function empty(): Store {
-  return { posts: [] };
+  return { posts: [], hub: defaultHub() };
 }
 
 let mem: { mtime: number; store: Store } | null = null;
@@ -110,9 +114,16 @@ function load(): Store {
   const mtime = statSync(FILE).mtimeMs;
   if (mem && mem.mtime === mtime) return mem.store;
   try {
-    const raw = JSON.parse(readFileSync(FILE, "utf8")) as Store;
+    const raw = JSON.parse(readFileSync(FILE, "utf8")) as {
+      posts?: GuidePost[];
+      hub?: GuideHubArt;
+    };
     const store = {
       posts: (Array.isArray(raw.posts) ? raw.posts : []).map(normalize),
+      hub: {
+        stageHeight: Math.max(240, Math.min(1600, Number(raw.hub?.stageHeight) || 420)),
+        pins: Array.isArray(raw.hub?.pins) ? raw.hub.pins : [],
+      },
     };
     mem = { mtime, store };
     return store;
@@ -259,6 +270,24 @@ export function reorderGuides(slugs: string[]): GuidePost[] {
   store.posts = next;
   save(store);
   return listGuides();
+}
+
+export function getGuideHub(): GuideHubArt {
+  return ensureSeeds(load()).hub ?? defaultHub();
+}
+
+export function saveGuideHub(hub: Partial<GuideHubArt>): GuideHubArt {
+  const store = ensureSeeds(load());
+  const current = store.hub ?? defaultHub();
+  store.hub = {
+    stageHeight: Math.max(
+      240,
+      Math.min(1600, Number(hub.stageHeight ?? current.stageHeight) || 420),
+    ),
+    pins: Array.isArray(hub.pins) ? hub.pins : current.pins,
+  };
+  save(store);
+  return store.hub;
 }
 
 export function deleteGuide(slug: string): boolean {

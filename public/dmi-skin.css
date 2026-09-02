@@ -1553,30 +1553,69 @@ button.mw-text-out:hover {
   color: var(--cyan);
 }
 
-.guide-points {
+.guide-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.35rem 3.5rem;
-  margin: 1rem 0 1.5rem;
-  max-width: 44rem;
+  grid-template-columns: minmax(16rem, 38%) 1fr;
+  gap: 1.4rem 2rem;
+  align-items: start;
+  margin: 0.6rem 0 1.4rem;
 }
 
-.guide-points ul {
+.guide-points {
   margin: 0;
-  padding-left: 1.2rem;
+  padding-left: 0;
+  list-style: none;
+  max-width: none;
 }
 
 .guide-points li {
-  margin: 0.35rem 0;
+  position: relative;
+  margin: 0.45rem 0;
+  padding-left: 1.15rem;
+  font-size: 1.28rem;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.guide-points li::before {
+  content: "*";
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  color: var(--cyan);
+  font-weight: 800;
 }
 
 .guide-points a {
-  color: #7ec8ff !important;
+  color: #8fd4ff !important;
   text-decoration: underline;
 }
 
 .guide-points .box-wrap {
   margin: 0.2rem 0 0.55rem;
+}
+
+.guide-points .box-wrap::before {
+  content: none;
+}
+
+.guide-hub-art {
+  min-height: 12rem;
+}
+
+.guide-stage.is-live {
+  background: #0a1230;
+  border: 1px solid var(--mw-line);
+}
+
+.guide-stage.is-live .guide-pin {
+  cursor: default;
+}
+
+@media (max-width: 720px) {
+  .guide-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .guide-note {
@@ -1612,13 +1651,6 @@ button.mw-text-out:hover {
 .guide-table th {
   background: #163a7a !important;
   color: #fff !important;
-}
-
-@media (max-width: 720px) {
-  .guide-points {
-    grid-template-columns: 1fr;
-    gap: 0.2rem;
-  }
 }
 
 .guide-head {
