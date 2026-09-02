@@ -1603,10 +1603,16 @@ button.mw-text-out:hover {
 
 .guide-points .box-wrap {
   margin: 0.2rem 0 0.55rem;
+  padding: 0.4rem 0.5rem 0.5rem;
 }
 
 .guide-points .box-wrap::before {
   content: none;
+}
+
+.guide-points .box-tools {
+  position: static;
+  margin: 0 0 0.4rem;
 }
 
 .guide-hub-art {
@@ -1651,9 +1657,14 @@ button.mw-text-out:hover {
   white-space: nowrap;
 }
 
-.dungeon-point a {
-  white-space: nowrap;
-  text-decoration: none !important;
+.dungeon-point .box-wrap {
+  flex: 1 1 12rem;
+  min-width: 0;
+  white-space: normal;
+}
+
+.dungeon-point .box-wrap a {
+  white-space: normal;
 }
 
 .dungeon-point a:hover {
