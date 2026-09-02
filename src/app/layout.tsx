@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: "%s — DMI Wiki",
   },
   description:
-    "Wiki for Digimon Masters Infinite — DMI. Digimon list, guide, dungeons, accessory, and clothing.",
+    "Wiki for Digimon Masters Infinite — DMI. Digimon list, guide, dungeons, and accessory.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

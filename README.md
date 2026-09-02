@@ -11,7 +11,7 @@ npm run dev -- --port 43127 --hostname 127.0.0.1
 
 Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
-Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**, **Clothing**. **Sign in** sits in the **Account** box. Clicking it logs you in immediately with no password (testing). Then click **Editor mode**. The public layout stays. Each box gets small **Edit / Duplicate / Up / Down / Remove** buttons. **Add below** inserts an announcement, banner (image upload), text, Digimon list, or links. Click **Edit** on a box to open its tools — the New Digimon grid does not swap into a full editor until then. **Save** writes `data/catalog.json`, `data/pages.json`, `data/guides.json`, `data/dungeons.json`, or `data/accessories.json`. Visitors never see editor chrome.
+Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**. **Sign in** sits in the **Account** box. Clicking it logs you in immediately with no password (testing). Then click **Editor mode**. The public layout stays. Each box gets small **Edit / Duplicate / Up / Down / Remove** buttons. **Add below** inserts an announcement, banner (image upload), text, Digimon list, or links. Click **Edit** on a box to open its tools — the New Digimon grid does not swap into a full editor until then. **Save** writes `data/catalog.json`, `data/pages.json`, `data/guides.json`, `data/dungeons.json`, or `data/accessories.json`. Visitors never see editor chrome.
 
 ## Tamer catalog (one account)
 

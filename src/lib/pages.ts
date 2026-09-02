@@ -25,8 +25,7 @@ const DEFAULTS: Record<string, WikiLandPage> = {
 - [Dungeons](/dungeons) — farms and scan routes
 
 ## Tamer
-- [Accessory](/accessory)
-- [Clothing](/clothing)`,
+- [Accessory](/accessory)`,
     blocks: [],
   },
   accessory: {
