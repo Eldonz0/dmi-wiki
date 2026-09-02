@@ -1,5 +1,5 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import sheet from "@/lib/sheet.json";
 import { NEW_DIGIMON } from "@/lib/wiki";
@@ -67,22 +67,49 @@ function seed(): Catalog {
   return { forms, trees, icons: {}, art: {}, rankIcons: {}, home: defaultHome() };
 }
 
-function loadFile(): Catalog {
-  if (!existsSync(CATALOG_PATH)) {
-    const created = seed();
-    saveCatalog(created);
-    return created;
+type CatalogCache = {
+  mtime: number;
+  catalog: Catalog;
+  bySlug: Map<string, CatalogForm>;
+};
+
+let mem: CatalogCache | null = null;
+
+function indexCatalog(catalog: Catalog): CatalogCache {
+  const bySlug = new Map<string, CatalogForm>();
+  for (const form of catalog.forms) bySlug.set(form.slug, form);
+  let mtime = 0;
+  try {
+    mtime = statSync(CATALOG_PATH).mtimeMs;
+  } catch {
+    mtime = Date.now();
   }
-  const raw = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as Catalog;
-  if (!raw.forms?.length) return seed();
-  raw.icons ??= {};
-  raw.art ??= {};
-  raw.rankIcons ??= {};
-  raw.trees ??= {};
-  raw.home ??= defaultHome();
-  raw.home.slugs ??= [];
-  raw.home.count ??= raw.home.slugs.length;
-  return raw;
+  return { mtime, catalog, bySlug };
+}
+
+function loadFile(): Catalog {
+  if (existsSync(CATALOG_PATH)) {
+    const mtime = statSync(CATALOG_PATH).mtimeMs;
+    if (mem && mem.mtime === mtime) return mem.catalog;
+    const raw = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as Catalog;
+    if (!raw.forms?.length) {
+      const created = seed();
+      saveCatalog(created);
+      return created;
+    }
+    raw.icons ??= {};
+    raw.art ??= {};
+    raw.rankIcons ??= {};
+    raw.trees ??= {};
+    raw.home ??= defaultHome();
+    raw.home.slugs ??= [];
+    raw.home.count ??= raw.home.slugs.length;
+    mem = indexCatalog(raw);
+    return mem.catalog;
+  }
+  const created = seed();
+  saveCatalog(created);
+  return created;
 }
 
 export function readCatalog(): Catalog {
@@ -91,7 +118,8 @@ export function readCatalog(): Catalog {
 
 export function saveCatalog(catalog: Catalog) {
   mkdirSync(path.dirname(CATALOG_PATH), { recursive: true });
-  writeFileSync(CATALOG_PATH, JSON.stringify(catalog, null, 2), "utf8");
+  writeFileSync(CATALOG_PATH, JSON.stringify(catalog), "utf8");
+  mem = indexCatalog(catalog);
 }
 
 export function iconMap() {
@@ -131,6 +159,10 @@ export function hydrate(
   };
 }
 
+export function listForms(): CatalogForm[] {
+  return readCatalog().forms;
+}
+
 export function listDigimon(): DigimonRecord[] {
   const catalog = readCatalog();
   return catalog.forms.map((f) => hydrate(f, catalog));
@@ -141,8 +173,9 @@ export function resolveSlug(slug: string) {
 }
 
 export function getForm(slug: string): CatalogForm | undefined {
-  const catalog = readCatalog();
-  return catalog.forms.find((f) => f.slug === resolveSlug(slug));
+  const s = resolveSlug(slug);
+  readCatalog();
+  return mem?.bySlug.get(s);
 }
 
 function nameForSlug(slug: string, catalog: Catalog) {
@@ -313,10 +346,13 @@ export function getHomeFeatured() {
   const catalog = readCatalog();
   const home = catalog.home ?? defaultHome();
   const n = Math.max(0, Math.min(40, Math.floor(home.count || 0)));
-  const picked = home.slugs.slice(0, n);
-  return picked
-    .map((slug) => getDigimon(slug))
-    .filter((d): d is NonNullable<ReturnType<typeof getDigimon>> => Boolean(d));
+  return home.slugs
+    .slice(0, n)
+    .map((slug) => {
+      const form = getForm(slug);
+      return form ? hydrate(form, catalog) : undefined;
+    })
+    .filter((d): d is DigimonRecord => Boolean(d));
 }
 
 export function setHomeFeatured(count: number, slugs: string[]) {

@@ -12,8 +12,14 @@ import type { RankCode } from "@/lib/ranks";
 export async function GET() {
   const catalog = readCatalog();
   return NextResponse.json({
-    forms: catalog.forms,
-    trees: catalog.trees,
+    forms: catalog.forms.map((f) => ({
+      slug: f.slug,
+      name: f.name,
+      icon: f.icon,
+      art: f.art,
+      rank: f.rank,
+      role: f.role,
+    })),
   });
 }
 

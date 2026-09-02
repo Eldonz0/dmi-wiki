@@ -6,7 +6,10 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const res = NextResponse.redirect(new URL("/", request.url), 303);
+  const json = request.headers.get("accept")?.includes("application/json");
+  const res = json
+    ? NextResponse.json({ ok: true, admin: false })
+    : NextResponse.redirect(new URL("/", request.url), 303);
   res.cookies.set(SESSION_COOKIE, "", { path: "/", maxAge: 0 });
   return res;
 }

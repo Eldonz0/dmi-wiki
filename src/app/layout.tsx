@@ -6,13 +6,15 @@ import { WikiShell } from "@/components/wiki-shell";
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "700"],
+  display: "swap",
 });
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
   subsets: ["latin"],
-  weight: ["400", "700", "800", "900"],
+  weight: ["700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

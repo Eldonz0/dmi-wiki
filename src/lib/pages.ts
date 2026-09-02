@@ -1,5 +1,5 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import type { WikiLandPage } from "@/lib/page-types";
 
@@ -61,15 +61,21 @@ const DEFAULTS: Record<string, WikiLandPage> = {
 
 type Store = { pages: Record<string, WikiLandPage> };
 
+let mem: { mtime: number; store: Store } | null = null;
+
 function load(): Store {
   if (!existsSync(FILE)) {
     const created = { pages: { ...DEFAULTS } };
     save(created);
     return created;
   }
+  const mtime = statSync(FILE).mtimeMs;
+  if (mem && mem.mtime === mtime) return mem.store;
   try {
     const raw = JSON.parse(readFileSync(FILE, "utf8")) as Store;
-    return { pages: { ...DEFAULTS, ...(raw.pages ?? {}) } };
+    const store = { pages: { ...DEFAULTS, ...(raw.pages ?? {}) } };
+    mem = { mtime, store };
+    return store;
   } catch {
     return { pages: { ...DEFAULTS } };
   }
@@ -77,7 +83,8 @@ function load(): Store {
 
 function save(store: Store) {
   mkdirSync(path.dirname(FILE), { recursive: true });
-  writeFileSync(FILE, JSON.stringify(store, null, 2));
+  writeFileSync(FILE, JSON.stringify(store));
+  mem = { mtime: Date.now(), store };
 }
 
 export function getLandPage(slug: string): WikiLandPage {

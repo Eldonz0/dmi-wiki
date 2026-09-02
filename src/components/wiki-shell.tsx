@@ -7,7 +7,7 @@ import { useState } from "react";
 import { WikiSearchForm } from "@/components/wiki-search";
 import { SIDEBAR_NAV, SIDEBAR_TOOLS } from "@/lib/wiki";
 import { Button } from "@/components/ui/button";
-import { useAdmin } from "@/hooks/use-admin";
+import { AuthProvider, useAdmin } from "@/hooks/use-admin";
 import { SignInButton, SignOutButton } from "@/components/sign-in-button";
 import {
   EditorModeProvider,
@@ -113,9 +113,11 @@ function Portlets({
 
 export function WikiShell({ children }: { children: React.ReactNode }) {
   return (
-    <EditorModeProvider>
-      <WikiChrome>{children}</WikiChrome>
-    </EditorModeProvider>
+    <AuthProvider>
+      <EditorModeProvider>
+        <WikiChrome>{children}</WikiChrome>
+      </EditorModeProvider>
+    </AuthProvider>
   );
 }
 

@@ -379,7 +379,10 @@
   font-weight: 700;
 }
 
-.wikitable tr:nth-child(even) td {
+.wikitable tbody tr {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 48px;
+}
   background: #0f1430;
 }
 

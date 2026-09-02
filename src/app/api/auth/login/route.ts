@@ -13,8 +13,7 @@ function safeNext(raw: string) {
   return raw;
 }
 
-function signedIn(next: string, request: Request) {
-  const res = NextResponse.redirect(new URL(next, request.url), 303);
+function attachSession(res: NextResponse) {
   res.cookies.set(SESSION_COOKIE, makeSessionCookie(adminUser()), {
     httpOnly: true,
     sameSite: "lax",
@@ -22,6 +21,12 @@ function signedIn(next: string, request: Request) {
     maxAge: 60 * 60 * 24 * 14,
   });
   return res;
+}
+
+function signedIn(next: string, request: Request) {
+  return attachSession(
+    NextResponse.redirect(new URL(next, request.url), 303),
+  );
 }
 
 /** GET must not set a session — browsers prefetch Sign in links. */
@@ -37,8 +42,14 @@ export async function POST(request: Request) {
   const next = safeNext(String(form.get("next") ?? "/"));
   if (user || password) {
     if (!checkPassword(user, password)) {
+      if (request.headers.get("accept")?.includes("application/json")) {
+        return NextResponse.json({ ok: false }, { status: 401 });
+      }
       return NextResponse.redirect(new URL("/", request.url), 303);
     }
+  }
+  if (request.headers.get("accept")?.includes("application/json")) {
+    return attachSession(NextResponse.json({ ok: true, admin: true }));
   }
   return signedIn(next, request);
 }

@@ -1,5 +1,5 @@
 import "server-only";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import { slugifyName } from "@/lib/evo-layout";
 import type { GuidePin, GuidePost } from "@/lib/guide-types";
@@ -14,15 +14,23 @@ function empty(): Store {
   return { posts: [] };
 }
 
+let mem: { mtime: number; store: Store } | null = null;
+
 function load(): Store {
   if (!existsSync(FILE)) {
     mkdirSync(path.dirname(FILE), { recursive: true });
-    writeFileSync(FILE, JSON.stringify(empty(), null, 2));
-    return empty();
+    const created = empty();
+    writeFileSync(FILE, JSON.stringify(created));
+    mem = { mtime: Date.now(), store: created };
+    return created;
   }
+  const mtime = statSync(FILE).mtimeMs;
+  if (mem && mem.mtime === mtime) return mem.store;
   try {
     const raw = JSON.parse(readFileSync(FILE, "utf8")) as Store;
-    return { posts: Array.isArray(raw.posts) ? raw.posts : [] };
+    const store = { posts: Array.isArray(raw.posts) ? raw.posts : [] };
+    mem = { mtime, store };
+    return store;
   } catch {
     return empty();
   }
@@ -30,7 +38,8 @@ function load(): Store {
 
 function save(store: Store) {
   mkdirSync(path.dirname(FILE), { recursive: true });
-  writeFileSync(FILE, JSON.stringify(store, null, 2));
+  writeFileSync(FILE, JSON.stringify(store));
+  mem = { mtime: Date.now(), store };
 }
 
 function uniqueSlug(title: string, used: Set<string>) {
