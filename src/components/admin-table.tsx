@@ -53,7 +53,7 @@ export function AdminTable({ forms }: { forms: (CatalogForm & { icon?: string })
       <table className="wikitable">
         <thead>
           <tr>
-            <th></th>
+            <th>Icon</th>
             <th>Name</th>
             <th>Rank</th>
             <th>Role</th>

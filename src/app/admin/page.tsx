@@ -15,9 +15,10 @@ export default function AdminPage() {
       <h1 className="mw-firstHeading">Digimon catalog</h1>
       <p>
         {forms.length} forms loaded from <code>data/catalog.json</code> (seeded
-        from the assignment PDF). Edit a row to change HP / AT / DE / AS, rank,
-        role, and to wire evolution lines. Public wiki pages read this file, not
-        hardcoded stats.
+        from the assignment PDF). Click a chip beside a name to upload its
+        icon — every evolution chip with that same name, including Digivolution
+        Line on the public page, uses the picture. Edit a row to change HP / AT
+        / DE / AS, rank, role, and to wire evolution lines.
       </p>
       <p>
         <Link href="/digimon">Public index</Link>

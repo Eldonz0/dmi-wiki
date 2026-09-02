@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export function IndexChip({
@@ -15,6 +15,7 @@ export function IndexChip({
   onUploaded?: (name: string, url: string) => void;
 }) {
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
 
   async function upload(file: File) {
@@ -51,12 +52,19 @@ export function IndexChip({
   }
 
   return (
-    <label
-      className={busy ? "index-chip evo-icon is-busy" : "index-chip evo-icon is-edit"}
-      title={`Upload chip for ${name} (all evolution lines)`}
-    >
-      {face}
+    <span className="index-chip-wrap">
+      <button
+        type="button"
+        className={busy ? "index-chip evo-icon is-busy" : "index-chip evo-icon is-edit"}
+        title={`Upload chip for ${name} (all evolution lines)`}
+        aria-label={`Upload icon for ${name}`}
+        onClick={() => inputRef.current?.click()}
+      >
+        {face}
+      </button>
       <input
+        ref={inputRef}
+        className="index-chip-file"
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif"
         onChange={(e) => {
@@ -65,6 +73,6 @@ export function IndexChip({
           e.target.value = "";
         }}
       />
-    </label>
+    </span>
   );
 }
