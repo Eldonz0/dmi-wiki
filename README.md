@@ -19,6 +19,8 @@ The account is still `admin` / `infinite` if a password form is used later. Over
 
 Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired evolution trees). Public Digimon pages read that file — HP / AT / DE / AS are not hardcoded.
 
+Signed in, the home **New Digimon** box has **Edit box**: set how many names to show and pick them from the catalog.
+
 On each form you can:
 
 - edit rank, role, and the four sheet stats
