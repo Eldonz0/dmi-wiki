@@ -1559,8 +1559,8 @@ button.mw-text-out:hover {
 
 .guide-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(8rem, 26%);
-  gap: 1.4rem 1.1rem;
+  grid-template-columns: minmax(13rem, 34%) minmax(18rem, 1fr);
+  gap: 1.2rem 1.5rem;
   align-items: start;
   margin: 0.6rem 0 1.4rem;
 }
