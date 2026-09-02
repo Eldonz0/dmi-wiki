@@ -1610,7 +1610,11 @@ button.mw-text-out:hover {
 }
 
 .guide-hub-art {
-  min-height: 12rem;
+  min-height: 28rem;
+}
+
+.guide-hub-art .guide-stage {
+  min-height: 28rem;
 }
 
 .guide-stage.is-live {
