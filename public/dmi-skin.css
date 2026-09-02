@@ -902,8 +902,8 @@ a.evo-card:hover {
 
 .rank-badge-img,
 .rank-badge-face {
-  width: 2.1rem;
-  height: 1.55rem;
+  width: 3.5rem;
+  height: 2.5rem;
   object-fit: contain;
   border-radius: 4px;
   background: #0a0e27;
