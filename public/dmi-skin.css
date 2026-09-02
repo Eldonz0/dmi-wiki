@@ -1764,6 +1764,7 @@ button.mw-text-out:hover {
   font-weight: 600;
 }
 
+a.mw-editor-on,
 button.mw-editor-on {
   display: inline-block;
   width: 100%;
@@ -1775,9 +1776,16 @@ button.mw-editor-on {
   border-radius: 8px;
   cursor: pointer;
   font: inherit;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.mw-account .mw-editor-on {
+  width: 100%;
 }
 
 .dmi-top-nav a.mw-signin,
+.dmi-top-nav a.mw-editor-on,
 .dmi-top-nav button.mw-editor-on,
 .dmi-top-nav button.mw-signin {
   width: auto;

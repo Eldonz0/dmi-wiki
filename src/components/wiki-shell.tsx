@@ -35,6 +35,20 @@ function EditorToggle() {
   );
 }
 
+function IndexEditorLink({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = usePathname();
+  const here = pathname === "/admin" || pathname.startsWith("/admin/");
+  return (
+    <Link
+      href="/admin"
+      className={here ? "mw-editor-on" : "mw-signin"}
+      onClick={onNavigate}
+    >
+      {here ? "Digimon index editor: ON" : "Digimon index editor"}
+    </Link>
+  );
+}
+
 function AccountPortlet({
   admin,
   onNavigate,
@@ -52,9 +66,7 @@ function AccountPortlet({
               <EditorToggle />
             </li>
             <li>
-              <Link href="/admin" className="mw-signin" onClick={onNavigate}>
-                Digimon index editor
-              </Link>
+              <IndexEditorLink onNavigate={onNavigate} />
             </li>
             <li>
               <SignOutButton className="mw-text-out" />
@@ -151,11 +163,7 @@ function WikiChrome({ children }: { children: React.ReactNode }) {
             Guide
           </Link>
           {admin ? <EditorToggle /> : null}
-          {admin ? (
-            <Link href="/admin" className="mw-signin">
-              Digimon index editor
-            </Link>
-          ) : (
+          {admin ? <IndexEditorLink /> : (
             <SignInButton next={pathname || "/"} />
           )}
           {admin ? <SignOutButton className="mw-text-out" /> : null}
