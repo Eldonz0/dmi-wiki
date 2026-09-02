@@ -1,24 +1,15 @@
-import type { Metadata } from "next";
-import { Infobox, WikiArticle } from "@/components/wiki-article";
+import { PageCanvas } from "@/components/page-canvas";
+import { getLandPage } from "@/lib/pages";
 
-export const metadata: Metadata = { title: "Clothing" };
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Clothing" };
 
 export default function ClothingPage() {
+  const page = getLandPage("clothing");
   return (
-    <WikiArticle
-      title="Clothing"
-      category="Tamer"
-      infobox={
-        <Infobox
-          title="Clothing"
-          rows={[{ label: "Status", value: "Tables incoming" }]}
-        />
-      }
-    >
-      <p>
-        Tamer clothing and costumes. This page is a placeholder until set
-        bonuses and sources are entered from the catalog editor.
-      </p>
-    </WikiArticle>
+    <article className="mw-article">
+      <div className="mw-pre-title">From DMI Wiki · {page.category}</div>
+      <PageCanvas page={page} />
+    </article>
   );
 }

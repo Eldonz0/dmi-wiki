@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DigimonArticle } from "@/components/digimon-article";
-import { getDigimon, listDigimon } from "@/lib/digimon";
+import { FormEditor } from "@/components/form-editor";
+import { EditorSwitch } from "@/components/editor-switch";
+import {
+  allNames,
+  artMap,
+  evoTree,
+  getDigimon,
+  getForm,
+  iconMap,
+  listDigimon,
+  rankIconMap,
+} from "@/lib/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +35,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function DigimonPage({ params }: Props) {
   const { slug } = await params;
   const digimon = getDigimon(slug);
-  if (!digimon) notFound();
-  return <DigimonArticle digimon={digimon} />;
+  const form = getForm(slug);
+  if (!digimon || !form) notFound();
+  const tree = evoTree(slug);
+  const names = allNames();
+  const slugs = listDigimon().map((d) => ({ name: d.name, slug: d.slug }));
+  return (
+    <EditorSwitch
+      editor={
+        <FormEditor
+          form={form}
+          tree={tree}
+          names={names}
+          slugs={slugs}
+          icons={iconMap()}
+          art={artMap()}
+          rankIcons={rankIconMap()}
+        />
+      }
+    >
+      <DigimonArticle digimon={digimon} />
+    </EditorSwitch>
+  );
 }

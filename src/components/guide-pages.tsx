@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { GuidePost } from "@/lib/guide-types";
 import { GuideStage } from "@/components/guide-stage";
-import { AdminOnly } from "@/components/admin-only";
+import { EditorOnly } from "@/components/editor-switch";
 
 function when(iso: string) {
   const d = new Date(iso);
@@ -18,11 +18,11 @@ export function GuideTopicList({ posts }: { posts: GuidePost[] }) {
       <div className="mw-pre-title">From DMI Wiki · Board</div>
       <div className="guide-head">
         <h1 className="mw-firstHeading">Guide</h1>
-        <AdminOnly>
+        <EditorOnly>
           <Link className="guide-new" href="/guide/new">
             New topic
           </Link>
-        </AdminOnly>
+        </EditorOnly>
       </div>
       <p>
         Topics posted from the wiki. Open a thread to read the full guide.
@@ -30,11 +30,11 @@ export function GuideTopicList({ posts }: { posts: GuidePost[] }) {
       {posts.length === 0 ? (
         <div className="forum-empty">
           <p>No topics yet.</p>
-          <AdminOnly>
+          <EditorOnly>
             <p>
               <Link href="/guide/new">Start the first topic</Link>
             </p>
-          </AdminOnly>
+          </EditorOnly>
         </div>
       ) : (
         <table className="forum-board">
@@ -71,11 +71,11 @@ export function GuideThread({ post }: { post: GuidePost }) {
       </div>
       <div className="guide-head">
         <h1 className="mw-firstHeading">{post.title}</h1>
-        <AdminOnly>
+        <EditorOnly>
           <Link className="guide-new" href={`/guide/${post.slug}/edit`}>
             Edit topic
           </Link>
-        </AdminOnly>
+        </EditorOnly>
       </div>
       <section className="forum-post">
         <aside className="forum-meta">

@@ -80,7 +80,8 @@ function loadFile(): Catalog {
   raw.rankIcons ??= {};
   raw.trees ??= {};
   raw.home ??= defaultHome();
-  if (!raw.home.slugs?.length) raw.home = defaultHome();
+  raw.home.slugs ??= [];
+  raw.home.count ??= raw.home.slugs.length;
   return raw;
 }
 
@@ -220,6 +221,42 @@ export function evoTree(slug: string): NormalizedTree {
   return { nodes: [{ id: "n0", name: rec.name, x: 0, y: 0 }], edges: [] };
 }
 
+export function createForm(input: {
+  name: string;
+  rank?: RankCode;
+  role?: CatalogForm["role"];
+  hp?: number;
+  at?: number;
+  de?: number;
+  as?: number;
+}) {
+  const name = input.name.trim();
+  if (!name) throw new Error("Name required");
+  const catalog = readCatalog();
+  let slug = slugifyName(name);
+  let n = 2;
+  while (catalog.forms.some((f) => f.slug === slug)) {
+    slug = `${slugifyName(name)}-${n}`;
+    n += 1;
+  }
+  const form: CatalogForm = {
+    name,
+    slug,
+    rank: input.rank ?? "N",
+    role: input.role ?? "SK",
+    lines: [name],
+    hp: Number(input.hp) || 0,
+    at: Number(input.at) || 0,
+    de: Number(input.de) || 0,
+    as: Number(input.as) || 0,
+    listed: true,
+  };
+  return upsertForm(slug, form, {
+    nodes: [{ id: "n0", name, x: 0, y: 0 }],
+    edges: [],
+  });
+}
+
 export function upsertForm(slug: string, next: CatalogForm, tree?: EvoTree) {
   const catalog = readCatalog();
   const i = catalog.forms.findIndex((f) => f.slug === slug);
@@ -284,10 +321,11 @@ export function getHomeFeatured() {
 
 export function setHomeFeatured(count: number, slugs: string[]) {
   const catalog = readCatalog();
-  const n = Math.max(0, Math.min(40, Math.floor(count)));
+  const n = Math.max(1, Math.min(40, Math.floor(count) || slugs.length || 1));
   const clean = slugs
-    .map((s) => resolveSlug(s))
-    .filter((s) => catalog.forms.some((f) => f.slug === s));
+    .map((s) => String(s || "").trim())
+    .map((s) => resolveSlug(s) || s)
+    .filter(Boolean);
   catalog.home = { count: n, slugs: clean.slice(0, n) };
   saveCatalog(catalog);
   return catalog.home;

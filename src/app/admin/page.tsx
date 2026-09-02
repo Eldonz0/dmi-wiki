@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { listDigimon } from "@/lib/catalog";
 import { AdminTable } from "@/components/admin-table";
+import { AddDigimonButton } from "@/components/add-digimon";
 
 export const metadata: Metadata = { title: "Catalog" };
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default function AdminPage() {
           <button type="submit">Sign out</button>
         </form>
       </p>
+      <AddDigimonButton />
       <AdminTable forms={forms} />
     </article>
   );

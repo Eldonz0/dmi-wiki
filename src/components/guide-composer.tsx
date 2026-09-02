@@ -28,7 +28,7 @@ export function GuideComposer({ post }: { post?: GuidePost }) {
     form.set("file", file);
     form.set("kind", "post");
     form.set("name", "post");
-    const res = await fetch("/api/icons", { method: "POST", body: form });
+    const res = await fetch("/api/icons", { method: "POST", credentials: "include", body: form });
     const data = (await res.json()) as { url?: string; error?: string };
     if (!res.ok || !data.url) {
       setStatus(data.error || "Upload failed — sign in first.");
@@ -53,11 +53,13 @@ export function GuideComposer({ post }: { post?: GuidePost }) {
     const res = post
       ? await fetch(`/api/guides/${post.slug}`, {
           method: "PUT",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         })
       : await fetch("/api/guides", {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
@@ -73,7 +75,10 @@ export function GuideComposer({ post }: { post?: GuidePost }) {
   async function remove() {
     if (!post) return;
     if (!confirm("Delete this topic?")) return;
-    const res = await fetch(`/api/guides/${post.slug}`, { method: "DELETE" });
+    const res = await fetch(`/api/guides/${post.slug}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
     if (!res.ok) {
       setStatus("Could not delete.");
       return;

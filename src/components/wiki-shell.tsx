@@ -10,6 +10,10 @@ import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/hooks/use-admin";
 import { SignInButton, SignOutButton } from "@/components/sign-in-button";
 import {
+  EditorModeProvider,
+  useEditorMode,
+} from "@/components/editor-mode";
+import {
   Sheet,
   SheetContent,
   SheetHeader,
@@ -17,6 +21,19 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+
+function EditorToggle() {
+  const { editing, toggle } = useEditorMode();
+  return (
+    <button
+      type="button"
+      className={editing ? "mw-editor-on" : "mw-signin"}
+      onClick={toggle}
+    >
+      {editing ? "Editor mode: ON" : "Editor mode"}
+    </button>
+  );
+}
 
 function AccountPortlet({
   admin,
@@ -31,6 +48,9 @@ function AccountPortlet({
       <ul>
         {admin ? (
           <>
+            <li>
+              <EditorToggle />
+            </li>
             <li>
               <Link href="/admin" onClick={onNavigate}>
                 Catalog
@@ -92,9 +112,18 @@ function Portlets({
 }
 
 export function WikiShell({ children }: { children: React.ReactNode }) {
+  return (
+    <EditorModeProvider>
+      <WikiChrome>{children}</WikiChrome>
+    </EditorModeProvider>
+  );
+}
+
+function WikiChrome({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { admin } = useAdmin();
+  const { editing } = useEditorMode();
 
   return (
     <div className="mw-skin">
@@ -119,6 +148,7 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
           >
             Guide
           </Link>
+          {admin ? <EditorToggle /> : null}
           {admin ? (
             <Link
               href="/admin"
@@ -184,7 +214,15 @@ export function WikiShell({ children }: { children: React.ReactNode }) {
             )}
           </div>
 
-          <div className="mw-content">{children}</div>
+          <div className="mw-content">
+            {editing ? (
+              <p className="editor-banner">
+                Editor mode is on. Change this page and hit Save — it writes to
+                the wiki.
+              </p>
+            ) : null}
+            {children}
+          </div>
 
           <footer className="mw-footer">
             <p>

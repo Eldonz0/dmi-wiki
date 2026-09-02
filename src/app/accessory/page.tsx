@@ -1,24 +1,15 @@
-import type { Metadata } from "next";
-import { Infobox, WikiArticle } from "@/components/wiki-article";
+import { PageCanvas } from "@/components/page-canvas";
+import { getLandPage } from "@/lib/pages";
 
-export const metadata: Metadata = { title: "Accessory" };
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Accessory" };
 
 export default function AccessoryPage() {
+  const page = getLandPage("accessory");
   return (
-    <WikiArticle
-      title="Accessory"
-      category="Tamer"
-      infobox={
-        <Infobox
-          title="Accessory"
-          rows={[{ label: "Status", value: "Tables incoming" }]}
-        />
-      }
-    >
-      <p>
-        Tamer accessory stats, slots, and where they drop. This page is a
-        placeholder until those tables are entered from the catalog editor.
-      </p>
-    </WikiArticle>
+    <article className="mw-article">
+      <div className="mw-pre-title">From DMI Wiki · {page.category}</div>
+      <PageCanvas page={page} />
+    </article>
   );
 }

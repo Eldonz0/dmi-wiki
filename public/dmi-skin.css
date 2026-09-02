@@ -1708,3 +1708,80 @@ button.mw-text-out:hover {
     flex-wrap: wrap;
   }
 }
+
+.editor-banner {
+  background: rgba(255, 109, 0, 0.18);
+  border: 1px solid #ff6d00;
+  color: #ffd0b0;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  margin: 0 0 0.9rem;
+  font-weight: 600;
+}
+
+button.mw-editor-on {
+  display: inline-block;
+  width: 100%;
+  color: #04101c !important;
+  background: #ff6d00 !important;
+  border: 1px solid #ff6d00;
+  font-weight: 800;
+  padding: 0.35rem 0.75rem !important;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.dmi-top-nav button.mw-editor-on,
+.dmi-top-nav button.mw-signin {
+  width: auto;
+}
+
+.add-digimon {
+  margin: 0.4rem 0 0.8rem;
+}
+
+.add-digimon-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  padding: 0.8rem;
+  border: 1px solid var(--mw-line);
+  border-radius: 8px;
+  background: #0a0e27;
+}
+
+.add-digimon-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 13px;
+}
+
+.add-digimon-form input,
+.add-digimon-form select {
+  background: #070b1e;
+  border: 1px solid var(--mw-line);
+  color: var(--mw-text);
+  padding: 0.35rem 0.45rem;
+  border-radius: 6px;
+}
+
+.add-digimon-form p {
+  grid-column: 1 / -1;
+}
+
+.guide-hint {
+  color: var(--mw-muted);
+  font-size: 13px;
+}
+
+.newSlots select {
+  flex: 1;
+  background: #0a0e27;
+  border: 1px solid var(--mw-line);
+  color: var(--mw-text);
+  padding: 0.3rem 0.4rem;
+  border-radius: 6px;
+}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAdmin } from "@/hooks/use-admin";
+import { useEditorMode } from "@/components/editor-mode";
 
 export type FeaturedPick = {
   slug: string;
@@ -13,69 +13,70 @@ export type FeaturedPick = {
 
 export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
   const router = useRouter();
-  const { admin } = useAdmin();
-  const [editing, setEditing] = useState(false);
+  const { editing } = useEditorMode();
   const [count, setCount] = useState(Math.max(items.length, 1));
   const [slugs, setSlugs] = useState(items.map((i) => i.slug));
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
-  const [options, setOptions] = useState<FeaturedPick[]>([]);
+  const [options, setOptions] = useState<FeaturedPick[]>(items);
 
   useEffect(() => {
-    if (!admin) {
-      setOptions([]);
-      return;
-    }
+    setSlugs(items.map((i) => i.slug));
+    setCount(Math.max(items.length, 1));
+  }, [items]);
+
+  useEffect(() => {
+    if (!editing) return;
     let cancelled = false;
-    fetch("/api/catalog", { credentials: "same-origin" })
+    fetch("/api/catalog", { credentials: "include" })
       .then((res) => res.json())
       .then((data: { forms?: { slug: string; name: string; icon?: string; art?: string }[] }) => {
         if (cancelled) return;
-        setOptions(
-          (data.forms ?? []).map((d) => ({
-            slug: d.slug,
-            name: d.name,
-            thumb: d.icon || d.art || undefined,
-          })),
-        );
+        const next = (data.forms ?? []).map((d) => ({
+          slug: d.slug,
+          name: d.name,
+          thumb: d.icon || d.art || undefined,
+        }));
+        setOptions(next.length ? next : items);
       })
       .catch(() => {
-        if (!cancelled) setOptions([]);
+        if (!cancelled) setOptions(items);
       });
     return () => {
       cancelled = true;
     };
-  }, [admin]);
+  }, [editing, items]);
 
   const bySlug = useMemo(() => {
     const map = new Map(options.map((o) => [o.slug, o]));
+    for (const item of items) map.set(item.slug, item);
     return map;
-  }, [options]);
+  }, [options, items]);
 
-  const visible = editing
-    ? slugs
-        .slice(0, count)
-        .map((slug) => bySlug.get(slug))
-        .filter((d): d is FeaturedPick => Boolean(d))
-    : items;
+  const visible = slugs
+    .slice(0, count)
+    .map((slug) => bySlug.get(slug) ?? items.find((i) => i.slug === slug))
+    .filter((d): d is FeaturedPick => Boolean(d));
 
   const left = visible.filter((_, i) => i % 2 === 0);
   const right = visible.filter((_, i) => i % 2 === 1);
 
   const needle = query.trim().toLowerCase();
   const matches = useMemo(() => {
-    if (!needle) return options.slice(0, 40);
-    return options
+    const pool = options;
+    if (!needle) return pool.slice(0, 50);
+    return pool
       .filter(
         (o) =>
           o.name.toLowerCase().includes(needle) || o.slug.includes(needle),
       )
-      .slice(0, 40);
+      .slice(0, 50);
   }, [needle, options]);
 
   function setSlot(index: number, slug: string) {
     setSlugs((prev) => {
       const next = [...prev];
+      while (next.length <= index) next.push("");
       next[index] = slug;
       return next;
     });
@@ -83,49 +84,43 @@ export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
 
   function addSlug(slug: string) {
     setSlugs((prev) => {
-      if (prev.slice(0, count).includes(slug)) return prev;
       const next = [...prev];
+      while (next.length < count) next.push("");
       const empty = next.findIndex((s, i) => i < count && !s);
       if (empty >= 0) {
         next[empty] = slug;
         return next;
       }
-      if (next.length < count) return [...next, slug];
-      return next;
+      setCount((c) => Math.min(40, c + 1));
+      return [...next, slug];
     });
   }
 
   async function save() {
     setStatus("Saving…");
-    const n = Math.max(0, Math.min(40, count));
+    const n = Math.max(1, Math.min(40, count));
+    const payload = { count: n, slugs: slugs.slice(0, n).filter(Boolean) };
     const res = await fetch("/api/home", {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ count: n, slugs: slugs.slice(0, n) }),
+      body: JSON.stringify(payload),
     });
+    const data = (await res.json().catch(() => ({}))) as {
+      error?: string;
+      home?: { slugs: string[] };
+    };
     if (!res.ok) {
-      setStatus("Save failed — sign in first.");
+      setStatus(data.error || "Save failed — Sign in and turn on Editor mode.");
       return;
     }
     setStatus("Saved.");
-    setEditing(false);
     router.refresh();
   }
 
   return (
     <section className="newPack">
-      <div className="newBar">
-        New Digimon
-        {admin ? (
-          <button
-            type="button"
-            className="newBar-edit"
-            onClick={() => setEditing((v) => !v)}
-          >
-            {editing ? "Close" : "Edit box"}
-          </button>
-        ) : null}
-      </div>
+      <div className="newBar">New Digimon</div>
 
       {editing ? (
         <div className="newEdit">
@@ -140,44 +135,39 @@ export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
             />
           </label>
           <p className="section-lead">
-            Pick from the catalog. Slot order is left column, then right.
+            Pick a Digimon for each slot, then Save. Slot order is left column,
+            then right.
           </p>
           <ol className="newSlots">
             {Array.from({ length: count }, (_, i) => {
               const slug = slugs[i] ?? "";
-              const pick = bySlug.get(slug);
               return (
                 <li key={i}>
                   <span>{i + 1}.</span>
-                  <input
-                    list="home-digimon"
-                    value={pick?.name ?? slug}
-                    placeholder="Type a Digimon name"
-                    onChange={(e) => {
-                      const name = e.target.value;
-                      const hit =
-                        options.find((o) => o.name === name) ??
-                        options.find(
-                          (o) => o.name.toLowerCase() === name.toLowerCase(),
-                        );
-                      if (hit) setSlot(i, hit.slug);
-                    }}
-                  />
+                  <select
+                    value={slug}
+                    onChange={(e) => setSlot(i, e.target.value)}
+                  >
+                    <option value="">Choose…</option>
+                    {options.map((o) => (
+                      <option key={o.slug} value={o.slug}>
+                        {o.name}
+                      </option>
+                    ))}
+                    {slug && !options.some((o) => o.slug === slug) ? (
+                      <option value={slug}>{slug}</option>
+                    ) : null}
+                  </select>
                 </li>
               );
             })}
           </ol>
-          <datalist id="home-digimon">
-            {options.map((o) => (
-              <option key={o.slug} value={o.name} />
-            ))}
-          </datalist>
           <label>
             Search catalog
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Filter the list, then click to fill the next slot"
+              placeholder="Filter, then click a name to fill the next empty slot"
             />
           </label>
           <ul className="newHits">
@@ -196,7 +186,7 @@ export function NewDigimonPack({ items }: { items: FeaturedPick[] }) {
             ))}
           </ul>
           <p>
-            <button type="button" onClick={() => void save()}>
+            <button type="button" className="mw-signin" onClick={() => void save()}>
               Save New Digimon box
             </button>
             {status ? <span className="editor-status"> {status}</span> : null}

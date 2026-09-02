@@ -11,17 +11,17 @@ npm run dev -- --port 43127 --hostname 127.0.0.1
 
 Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
-Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**, **Clothing**. **Sign in** sits in the **Account** box on the left (and in the top bar / mobile bar). Clicking it logs you in immediately with no password (testing). Opening the site, prefetching links, or visiting `/login` does **not** sign you in. Tools, search, catalog, and the home **Edit box** only appear after that click. Use **Sign out** to go back to a visitor view.
+Public sidebar: **Main page**, **Digimon List**, **Guide**, **Dungeons**, **Accessory**, **Clothing**. **Sign in** sits in the **Account** box. Clicking it logs you in immediately with no password (testing). Then click **Editor mode** to edit the page you are on (New Digimon box, landing copy, Digimon articles, Guide topics). **Save** writes `data/catalog.json`, `data/pages.json`, or `data/guides.json`. Visitors never see editor chrome.
 
 ## Tamer catalog (one account)
 
-There is no register page. Click **Sign in** — while we are testing it logs you in immediately (no username/password). Then use **Catalog** or **Tools** to edit the site from the wiki itself.
+There is no register page. Click **Sign in**, then **Editor mode**. **Add Digimon** is on Digimon List and Catalog. New Digimon on the home page uses slot dropdowns and **Save New Digimon box**.
 
 The account is still `admin` / `infinite` if a password form is used later. Override with `DMI_ADMIN_USER` and `DMI_ADMIN_PASS`.
 
 Saves write `data/catalog.json` (seeded from the assignment PDF plus the wired evolution trees). Public Digimon pages read that file — HP / AT / DE / AS are not hardcoded.
 
-Signed in, the home **New Digimon** box has **Edit box**: set how many names to show and pick them from the catalog. Visitors never see that control.
+Landing page text lives in `data/pages.json`.
 
 ## Guide board
 

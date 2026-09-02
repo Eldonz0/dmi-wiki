@@ -1,7 +1,7 @@
-import { PortalBox } from "@/components/wiki-article";
 import { NewDigimonPack } from "@/components/new-digimon-pack";
+import { PageCanvas } from "@/components/page-canvas";
 import { getHomeFeatured } from "@/lib/catalog";
-import Link from "next/link";
+import { getLandPage } from "@/lib/pages";
 
 export const dynamic = "force-dynamic";
 
@@ -12,52 +12,12 @@ export default async function HomePage() {
     name: d.name,
     thumb: d.icon || d.art || undefined,
   }));
+  const page = getLandPage("home");
 
   return (
     <article className="mw-article">
       <NewDigimonPack items={items} />
-
-      <h1 className="mw-firstHeading">Main Page</h1>
-
-      <PortalBox title="Welcome">
-        <p>
-          Encyclopedia for <strong>Digimon Masters Infinite</strong>. Partner
-          pages follow DMO wiki shape — infobox, stats, and digivolution line.
-        </p>
-      </PortalBox>
-
-      <div className="portal-grid">
-        <PortalBox title="Digimon List">
-          <ul>
-            <li>
-              <Link href="/digimon">Every listed form</Link> — rank, role, and
-              default stats
-            </li>
-          </ul>
-        </PortalBox>
-
-        <PortalBox title="Guide">
-          <ul>
-            <li>
-              <Link href="/guide">Guide board</Link> — topics posted on the wiki
-            </li>
-            <li>
-              <Link href="/dungeons">Dungeons</Link> — farms and scan routes
-            </li>
-          </ul>
-        </PortalBox>
-
-        <PortalBox title="Tamer">
-          <ul>
-            <li>
-              <Link href="/accessory">Accessory</Link>
-            </li>
-            <li>
-              <Link href="/clothing">Clothing</Link>
-            </li>
-          </ul>
-        </PortalBox>
-      </div>
+      <PageCanvas page={page} />
     </article>
   );
 }

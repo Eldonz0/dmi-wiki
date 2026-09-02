@@ -6,6 +6,7 @@ import type { CatalogForm } from "@/lib/digimon-types";
 import { RANKS, rankSlug } from "@/lib/ranks";
 import { RankBadge, RoleBadge } from "@/components/rank-badge";
 import { iconFor } from "@/lib/wiki-lore";
+import { AddDigimonButton } from "@/components/add-digimon";
 
 export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
   const [q, setQ] = useState("");
@@ -26,7 +27,10 @@ export function DigimonIndex({ forms }: { forms: CatalogForm[] }) {
   return (
     <article className="mw-article">
       <div className="mw-pre-title">From DMI Wiki · Digimon List</div>
-      <h1 className="mw-firstHeading">Digimon List</h1>
+      <div className="guide-head">
+        <h1 className="mw-firstHeading">Digimon List</h1>
+        <AddDigimonButton />
+      </div>
       <p>
         Every form from the assignment sheet has a public page and a starting
         evolution board (sheet-mates on the same egg line, ranked by rank then

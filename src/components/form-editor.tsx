@@ -53,6 +53,7 @@ export function FormEditor({
     setStatus("Saving…");
     const res = await fetch("/api/catalog", {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         form: { ...draft, blurb },
@@ -60,7 +61,8 @@ export function FormEditor({
       }),
     });
     if (!res.ok) {
-      setStatus("Save failed — are you signed in?");
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      setStatus(data.error || "Save failed — turn on Editor mode and Sign in.");
       return;
     }
     setStatus("Saved. The public page matches this layout.");
@@ -73,7 +75,7 @@ export function FormEditor({
     body.set("name", key);
     body.set("kind", kind);
     setStatus("Uploading…");
-    const res = await fetch("/api/icons", { method: "POST", body });
+    const res = await fetch("/api/icons", { method: "POST", credentials: "include", body });
     if (!res.ok) {
       setStatus("Upload failed.");
       return;

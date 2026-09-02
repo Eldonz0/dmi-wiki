@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth";
 import {
+  createForm,
   readCatalog,
   upsertForm,
   type CatalogForm,
   type EvoTree,
 } from "@/lib/catalog";
+import type { RankCode } from "@/lib/ranks";
 
 export async function GET() {
   const catalog = readCatalog();
@@ -13,6 +15,44 @@ export async function GET() {
     forms: catalog.forms,
     trees: catalog.trees,
   });
+}
+
+export async function POST(request: Request) {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
+  const body = (await request.json()) as {
+    create?: {
+      name?: string;
+      rank?: RankCode;
+      role?: CatalogForm["role"];
+      hp?: number;
+      at?: number;
+      de?: number;
+      as?: number;
+    };
+  };
+  const name = body.create?.name?.trim() ?? "";
+  if (!name) {
+    return NextResponse.json({ error: "Name required" }, { status: 400 });
+  }
+  try {
+    const form = createForm({
+      name,
+      rank: body.create?.rank,
+      role: body.create?.role,
+      hp: body.create?.hp,
+      at: body.create?.at,
+      de: body.create?.de,
+      as: body.create?.as,
+    });
+    return NextResponse.json({ form });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Could not add" },
+      { status: 400 },
+    );
+  }
 }
 
 export async function PUT(request: Request) {
