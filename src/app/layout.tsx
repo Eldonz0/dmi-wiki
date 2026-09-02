@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Orbitron, Rajdhani } from "next/font/google";
+import { Inter, Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { WikiShell } from "@/components/wiki-shell";
 import { rankIconMap } from "@/lib/catalog";
@@ -8,6 +8,13 @@ const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -31,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`dark ${rajdhani.variable} ${orbitron.variable} h-full`}
+      className={`dark ${rajdhani.variable} ${orbitron.variable} ${inter.variable} h-full`}
     >
       <head>
         <link rel="stylesheet" href="/dmi-skin.css" />
