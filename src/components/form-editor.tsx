@@ -169,11 +169,6 @@ export function FormEditor({
               )}
               <div className="live-art-actions">
                 <FileBtn label="Upload thumbnail" kind="art" name={draft.name} />
-                <FileBtn
-                  label="Upload chip icon"
-                  kind="chip"
-                  name={chipName || draft.name}
-                />
               </div>
             </td>
           </tr>
@@ -229,15 +224,6 @@ export function FormEditor({
                   ))}
                 </select>
               </div>
-              <p className="live-hint">
-                Letter badges N → U+ stay. Optional image sits beside them for
-                later custom rank art.
-              </p>
-              <FileBtn
-                label="Upload rank icon"
-                kind="rank"
-                name={draft.rank}
-              />
             </td>
           </tr>
           <tr>
@@ -279,22 +265,6 @@ export function FormEditor({
           </tr>
         </tbody>
       </table>
-
-      <section className="evo-section" id="digivolution">
-        <h2>Digivolution Line</h2>
-        <p className="section-lead">
-          Drag chips, draw arrows. Selected chip for icon upload:{" "}
-          <strong>{chipName || draft.name}</strong>
-        </p>
-        <EvoCanvas
-          tree={layout}
-          current={draft.name}
-          names={names}
-          icons={iconBag}
-          onChange={setLayout}
-          onSelectName={setChipName}
-        />
-      </section>
 
       <div className="toc">
         <strong>Contents</strong>
@@ -351,6 +321,22 @@ export function FormEditor({
           ))}
         </tbody>
       </table>
+
+      <section className="evo-section" id="digivolution">
+        <h2>Digivolution Line</h2>
+        <EvoCanvas
+          tree={layout}
+          current={draft.name}
+          names={names}
+          icons={iconBag}
+          onChange={setLayout}
+          onSelectName={setChipName}
+          onUploadChip={(file) =>
+            void upload("chip", chipName || draft.name, file)
+          }
+          chipLabel={chipName || draft.name}
+        />
+      </section>
 
       <div className="catlinks">
         <strong>Categories:</strong>{" "}

@@ -27,6 +27,8 @@ export function EvoCanvas({
   icons,
   onChange,
   onSelectName,
+  onUploadChip,
+  chipLabel,
 }: {
   tree: EvoTree;
   current: string;
@@ -34,6 +36,8 @@ export function EvoCanvas({
   icons?: Record<string, string>;
   onChange: (tree: EvoTree) => void;
   onSelectName?: (name: string) => void;
+  onUploadChip?: (file: File) => void;
+  chipLabel?: string;
 }) {
   const layout = useMemo(() => normalizeTree(tree), [tree]);
   const [mode, setMode] = useState<Mode>("move");
@@ -82,7 +86,6 @@ export function EvoCanvas({
     setSelected(node.id);
     setEdgeId(null);
     onSelectName?.(node.name);
-    const rect = plane.current?.getBoundingClientRect();
     drag.current = {
       id: node.id,
       ox: e.clientX,
@@ -195,6 +198,21 @@ export function EvoCanvas({
         <button type="button" onClick={removeSelected} disabled={!selected && !edgeId}>
           Delete selected
         </button>
+        {onUploadChip ? (
+          <label className="live-file">
+            Upload chip icon
+            {chipLabel ? ` (${chipLabel})` : ""}
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) onUploadChip(file);
+                e.target.value = "";
+              }}
+            />
+          </label>
+        ) : null}
         {mode === "arrow" ? (
           <span className="section-lead">
             {fromId

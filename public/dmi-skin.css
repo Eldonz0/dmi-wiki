@@ -804,8 +804,8 @@ a.evo-card:hover {
 }
 
 .evo-section {
-  overflow: auto;
-  margin: 0 0 1rem;
+  clear: both;
+  margin: 1rem 0;
 }
 
 .evo-section h2 {
