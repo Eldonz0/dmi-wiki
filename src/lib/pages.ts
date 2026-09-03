@@ -16,7 +16,7 @@ const DEFAULTS: Record<string, WikiLandPage> = {
     category: "",
     infoboxTitle: "",
     infobox: [],
-    body: `Encyclopedia for **Digimon Masters Infinite**. Partner pages follow DMO wiki shape — infobox, stats, and digivolution line.
+    body: `DMI Wiki by ElDonz
 
 ## Digimon List
 - [Every listed form](/digimon) — rank, role, and default stats
